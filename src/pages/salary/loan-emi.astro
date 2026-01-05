@@ -1,0 +1,87 @@
+---
+import SalaryToolLayout from "../../layouts/SalaryToolLayout.astro";
+---
+
+<SalaryToolLayout
+  title="Loan EMI Calculator - Calculate Monthly Loan Payments"
+  description="Calculate your monthly EMI for home loans, car loans, or personal loans. See interest breakdown."
+  canonicalPath="/salary/loan-emi"
+  currentTool="Loan EMI Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Loan EMI Calculator</h1>
+    <p class="text-slate-500">Calculate your Equated Monthly Installment (EMI) for any loan.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-3 gap-4 mb-6">
+      <div>
+        <label for="principal" class="block font-medium text-slate-700 mb-1.5 text-sm">Loan Amount ($)</label>
+        <input type="number" id="principal" placeholder="200000" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div>
+        <label for="rate" class="block font-medium text-slate-700 mb-1.5 text-sm">Interest Rate (% per year)</label>
+        <input type="number" id="rate" placeholder="7" step="0.1" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div>
+        <label for="years" class="block font-medium text-slate-700 mb-1.5 text-sm">Loan Term (years)</label>
+        <input type="number" id="years" placeholder="30" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+    </div>
+
+    <div class="result-box p-4 bg-white rounded">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Monthly EMI</div>
+          <div class="text-2xl font-bold text-purple-600" id="emi">$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Total Interest</div>
+          <div class="text-xl font-bold text-red-500" id="totalInterest">$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Total Payment</div>
+          <div class="text-xl font-bold text-slate-900" id="totalPayment">$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Principal</div>
+          <div class="text-xl font-bold text-green-600" id="principalDisplay">$0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">EMI Formula</h2>
+    <p class="text-slate-600">EMI = [P × R × (1+R)^N] / [(1+R)^N - 1]</p>
+    <p class="text-sm text-slate-500 mt-2">Where P = Principal, R = Monthly interest rate, N = Number of months</p>
+  </section>
+
+  <script is:inline>
+    function calculate() {
+      const principal = parseFloat(document.getElementById("principal").value) || 0;
+      const annualRate = parseFloat(document.getElementById("rate").value) || 0;
+      const years = parseFloat(document.getElementById("years").value) || 0;
+
+      if (principal === 0 || annualRate === 0 || years === 0) {
+        document.getElementById("emi").innerText = "$0";
+        return;
+      }
+
+      const monthlyRate = annualRate / 12 / 100;
+      const months = years * 12;
+
+      // EMI Formula
+      const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+      const totalPayment = emi * months;
+      const totalInterest = totalPayment - principal;
+
+      const fmt = (n) => "$" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      document.getElementById("emi").innerText = fmt(emi);
+      document.getElementById("totalInterest").innerText = fmt(totalInterest);
+      document.getElementById("totalPayment").innerText = fmt(totalPayment);
+      document.getElementById("principalDisplay").innerText = fmt(principal);
+    }
+  </script>
+</SalaryToolLayout>

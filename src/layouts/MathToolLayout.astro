@@ -1,0 +1,47 @@
+---
+/**
+ * Math & Basic Calculators Layout
+ */
+
+import ToolLayout from "./ToolLayout.astro";
+import { CONSTANT } from "../constants";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  currentTool?: string;
+}
+
+const { title, description, canonicalPath, currentTool = "" } = Astro.props;
+
+const cluster = {
+  name: "Math & Calculators",
+  icon: "🧮",
+  color: "#1c398e",
+  url: "/math/",
+};
+
+const allTools = [
+  { name: "Square Root Calculator", url: "/math/square-root" },
+  { name: "Power Calculator", url: "/math/power-calculator" },
+  { name: "Average Calculator", url: "/math/average-calculator" },
+  { name: "LCM & GCD Calculator", url: "/math/lcm-gcd" },
+  { name: "Factor Calculator", url: "/math/factor-calculator" },
+  { name: "Random Number Generator", url: "/math/random-number" },
+];
+
+const relatedTools = allTools
+  .filter((tool) => tool.name !== currentTool)
+  .slice(0, 4);
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
+  cluster={cluster}
+  relatedTools={relatedTools}
+>
+  <slot />
+</ToolLayout>

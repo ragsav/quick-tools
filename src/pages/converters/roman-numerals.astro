@@ -1,0 +1,113 @@
+---
+import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+---
+
+<ConverterToolLayout
+  title="Roman Numeral Converter - Convert Roman Numerals"
+  description="Convert between Roman numerals and Arabic numbers. Free online Roman numeral converter."
+  canonicalPath="/converters/roman-numerals"
+  currentTool="Roman Numeral Converter"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Roman Numeral Converter</h1>
+    <p class="text-slate-500">Convert between Roman numerals and Arabic numbers.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Number to Roman -->
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <h3 class="font-medium text-slate-900 mb-4">Number → Roman</h3>
+        <input type="number" id="number" placeholder="e.g., 2024" min="1" max="3999" class="w-full px-4 py-3 border border-slate-300 rounded outline-none mb-3" oninput="toRoman()" />
+        <div class="text-3xl font-bold text-amber-600 font-serif" id="romanResult">—</div>
+      </div>
+
+      <!-- Roman to Number -->
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <h3 class="font-medium text-slate-900 mb-4">Roman → Number</h3>
+        <input type="text" id="roman" placeholder="e.g., MMXXIV" class="w-full px-4 py-3 border border-slate-300 rounded outline-none mb-3 uppercase font-serif" oninput="toNumber()" />
+        <div class="text-3xl font-bold text-amber-600" id="numberResult">—</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">Roman Numeral Reference</h2>
+    <div class="grid grid-cols-4 sm:grid-cols-7 gap-3 text-center">
+      <div class="p-3 bg-white border border-slate-200 rounded"><div class="text-xl font-serif">I</div><div class="text-sm text-slate-500">1</div></div>
+      <div class="p-3 bg-white border border-slate-200 rounded"><div class="text-xl font-serif">V</div><div class="text-sm text-slate-500">5</div></div>
+      <div class="p-3 bg-white border border-slate-200 rounded"><div class="text-xl font-serif">X</div><div class="text-sm text-slate-500">10</div></div>
+      <div class="p-3 bg-white border border-slate-200 rounded"><div class="text-xl font-serif">L</div><div class="text-sm text-slate-500">50</div></div>
+      <div class="p-3 bg-white border border-slate-200 rounded"><div class="text-xl font-serif">C</div><div class="text-sm text-slate-500">100</div></div>
+      <div class="p-3 bg-white border border-slate-200 rounded"><div class="text-xl font-serif">D</div><div class="text-sm text-slate-500">500</div></div>
+      <div class="p-3 bg-white border border-slate-200 rounded"><div class="text-xl font-serif">M</div><div class="text-sm text-slate-500">1000</div></div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const romanNumerals = [
+      { value: 1000, numeral: 'M' },
+      { value: 900, numeral: 'CM' },
+      { value: 500, numeral: 'D' },
+      { value: 400, numeral: 'CD' },
+      { value: 100, numeral: 'C' },
+      { value: 90, numeral: 'XC' },
+      { value: 50, numeral: 'L' },
+      { value: 40, numeral: 'XL' },
+      { value: 10, numeral: 'X' },
+      { value: 9, numeral: 'IX' },
+      { value: 5, numeral: 'V' },
+      { value: 4, numeral: 'IV' },
+      { value: 1, numeral: 'I' },
+    ];
+
+    function toRoman() {
+      let num = parseInt(document.getElementById("number").value);
+      
+      if (isNaN(num) || num < 1 || num > 3999) {
+        document.getElementById("romanResult").innerText = num > 3999 ? "Max is 3999" : "—";
+        return;
+      }
+
+      let result = '';
+      for (const { value, numeral } of romanNumerals) {
+        while (num >= value) {
+          result += numeral;
+          num -= value;
+        }
+      }
+
+      document.getElementById("romanResult").innerText = result;
+    }
+
+    function toNumber() {
+      const roman = document.getElementById("roman").value.toUpperCase();
+      
+      if (!roman) {
+        document.getElementById("numberResult").innerText = "—";
+        return;
+      }
+
+      const values = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+      let result = 0;
+      
+      for (let i = 0; i < roman.length; i++) {
+        const current = values[roman[i]];
+        const next = values[roman[i + 1]];
+        
+        if (!current) {
+          document.getElementById("numberResult").innerText = "Invalid";
+          return;
+        }
+        
+        if (next && current < next) {
+          result -= current;
+        } else {
+          result += current;
+        }
+      }
+
+      document.getElementById("numberResult").innerText = result;
+    }
+  </script>
+</ConverterToolLayout>

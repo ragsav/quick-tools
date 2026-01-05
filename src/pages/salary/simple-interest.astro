@@ -1,0 +1,78 @@
+---
+import SalaryToolLayout from "../../layouts/SalaryToolLayout.astro";
+---
+
+<SalaryToolLayout
+  title="Simple Interest Calculator - Calculate Interest Easily"
+  description="Calculate simple interest on principal amount. Find interest earned or owed over time."
+  canonicalPath="/salary/simple-interest"
+  currentTool="Simple Interest Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Simple Interest Calculator</h1>
+    <p class="text-slate-500">Calculate simple interest on investments or loans.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-3 gap-4 mb-6">
+      <div>
+        <label for="principal" class="block font-medium text-slate-700 mb-1.5 text-sm">Principal Amount ($)</label>
+        <input type="number" id="principal" placeholder="10000" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div>
+        <label for="rate" class="block font-medium text-slate-700 mb-1.5 text-sm">Annual Interest Rate (%)</label>
+        <input type="number" id="rate" placeholder="5" step="0.1" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div>
+        <label for="time" class="block font-medium text-slate-700 mb-1.5 text-sm">Time Period (years)</label>
+        <input type="number" id="time" placeholder="3" step="0.5" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+    </div>
+
+    <div class="result-box p-4 bg-white rounded">
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Principal</div>
+          <div class="text-xl font-bold text-slate-900" id="principalDisplay">$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Interest Earned</div>
+          <div class="text-2xl font-bold text-purple-600" id="interest">$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Total Amount</div>
+          <div class="text-2xl font-bold text-green-600" id="total">$0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">Simple Interest Formula</h2>
+    <div class="p-4 bg-white border border-slate-200 rounded">
+      <p class="font-mono text-lg text-center">I = P × R × T</p>
+      <div class="mt-3 text-sm text-slate-600 grid grid-cols-3 gap-4 text-center">
+        <div><strong>P</strong> = Principal</div>
+        <div><strong>R</strong> = Rate (decimal)</div>
+        <div><strong>T</strong> = Time (years)</div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    function calculate() {
+      const principal = parseFloat(document.getElementById("principal").value) || 0;
+      const rate = parseFloat(document.getElementById("rate").value) || 0;
+      const time = parseFloat(document.getElementById("time").value) || 0;
+
+      const interest = principal * (rate / 100) * time;
+      const total = principal + interest;
+
+      const fmt = (n) => "$" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      document.getElementById("principalDisplay").innerText = fmt(principal);
+      document.getElementById("interest").innerText = fmt(interest);
+      document.getElementById("total").innerText = fmt(total);
+    }
+  </script>
+</SalaryToolLayout>

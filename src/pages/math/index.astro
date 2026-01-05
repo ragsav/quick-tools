@@ -1,0 +1,47 @@
+---
+import MathToolLayout from "../../layouts/MathToolLayout.astro";
+---
+
+<MathToolLayout
+  title="Math & Calculators - Free Online Math Tools"
+  description="Free math calculators. Calculate square roots, powers, averages, LCM, GCD, factors, and more."
+  canonicalPath="/math"
+  currentTool=""
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">🧮 Math & Calculators</h1>
+    <p class="text-slate-500">Basic math and number calculations made easy.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+    <a href="/math/square-root" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-teal-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Square Root Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate the square root of any number</p>
+    </a>
+
+    <a href="/math/power-calculator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-teal-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Power Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate x raised to power n</p>
+    </a>
+
+    <a href="/math/average-calculator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-teal-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Average Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate mean, median, mode</p>
+    </a>
+
+    <a href="/math/lcm-gcd" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-teal-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">LCM & GCD</h3>
+      <p class="text-sm text-slate-500">Find LCM and GCD of numbers</p>
+    </a>
+
+    <a href="/math/factor-calculator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-teal-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Factor Calculator</h3>
+      <p class="text-sm text-slate-500">Find all factors and prime factorization</p>
+    </a>
+
+    <a href="/math/random-number" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-teal-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Random Number Generator</h3>
+      <p class="text-sm text-slate-500">Generate random numbers in a range</p>
+    </a>
+  </div>
+</MathToolLayout>

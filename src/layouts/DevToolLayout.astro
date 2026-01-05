@@ -1,0 +1,47 @@
+---
+/**
+ * Web / Dev Utilities Layout
+ */
+
+import ToolLayout from "./ToolLayout.astro";
+import { CONSTANT } from "../constants";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  currentTool?: string;
+}
+
+const { title, description, canonicalPath, currentTool = "" } = Astro.props;
+
+const cluster = {
+  name: "Web / Dev Utilities",
+  icon: "🌐",
+  color: "#1c398e",
+  url: "/dev/",
+};
+
+const allTools = [
+  { name: "JSON Formatter", url: "/dev/json-formatter" },
+  { name: "Base64 Encoder/Decoder", url: "/dev/base64" },
+  { name: "Hash Generator", url: "/dev/hash-generator" },
+  { name: "Lorem Ipsum Generator", url: "/dev/lorem-ipsum" },
+  { name: "Color Picker & Converter", url: "/dev/color-picker" },
+  { name: "Password Generator", url: "/dev/password-generator" },
+];
+
+const relatedTools = allTools
+  .filter((tool) => tool.name !== currentTool)
+  .slice(0, 4);
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
+  cluster={cluster}
+  relatedTools={relatedTools}
+>
+  <slot />
+</ToolLayout>

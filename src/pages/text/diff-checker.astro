@@ -1,0 +1,102 @@
+---
+import TextToolLayout from "../../layouts/TextToolLayout.astro";
+---
+
+<TextToolLayout
+  title="Text Diff Checker - Compare Two Texts Online"
+  description="Compare two texts and highlight the differences. Find what changed between versions. Free online diff tool."
+  canonicalPath="/text/diff-checker"
+  currentTool="Text Diff Checker"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Text Diff Checker</h1>
+    <p class="text-slate-500">Compare two texts and see the differences highlighted.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label for="text1" class="block font-medium text-slate-700 mb-1.5 text-sm">Original Text</label>
+        <textarea id="text1" rows="8" placeholder="Paste original text..." class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono text-sm"></textarea>
+      </div>
+      <div>
+        <label for="text2" class="block font-medium text-slate-700 mb-1.5 text-sm">Modified Text</label>
+        <textarea id="text2" rows="8" placeholder="Paste modified text..." class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono text-sm"></textarea>
+      </div>
+    </div>
+
+    <div class="flex gap-4 items-center mb-4">
+      <button onclick="compare()" class="btn-primary px-6 py-2 font-semibold text-white rounded">Compare</button>
+      <label class="flex items-center gap-2 text-sm text-slate-600">
+        <input type="checkbox" id="ignoreCase" class="w-4 h-4" />
+        Ignore case
+      </label>
+      <label class="flex items-center gap-2 text-sm text-slate-600">
+        <input type="checkbox" id="ignoreWhitespace" class="w-4 h-4" />
+        Ignore whitespace
+      </label>
+    </div>
+
+    <div id="result" class="hidden">
+      <div class="flex gap-4 mb-4 text-sm">
+        <span class="flex items-center gap-1"><span class="w-4 h-4 bg-red-200 rounded"></span> Removed</span>
+        <span class="flex items-center gap-1"><span class="w-4 h-4 bg-green-200 rounded"></span> Added</span>
+      </div>
+      <div id="diffOutput" class="p-4 bg-white border border-slate-200 rounded font-mono text-sm whitespace-pre-wrap"></div>
+      <div class="mt-3 text-sm text-slate-600" id="stats"></div>
+    </div>
+  </div>
+
+  <script is:inline>
+    function compare() {
+      let text1 = document.getElementById("text1").value;
+      let text2 = document.getElementById("text2").value;
+      
+      if (document.getElementById("ignoreCase").checked) {
+        text1 = text1.toLowerCase();
+        text2 = text2.toLowerCase();
+      }
+      
+      if (document.getElementById("ignoreWhitespace").checked) {
+        text1 = text1.replace(/\s+/g, ' ').trim();
+        text2 = text2.replace(/\s+/g, ' ').trim();
+      }
+
+      const lines1 = text1.split('\n');
+      const lines2 = text2.split('\n');
+      
+      let html = '';
+      let added = 0, removed = 0, unchanged = 0;
+      const maxLines = Math.max(lines1.length, lines2.length);
+      
+      for (let i = 0; i < maxLines; i++) {
+        const line1 = lines1[i] || '';
+        const line2 = lines2[i] || '';
+        
+        if (line1 === line2) {
+          html += `<div class="py-0.5">${escapeHtml(line1) || '&nbsp;'}</div>`;
+          unchanged++;
+        } else {
+          if (line1) {
+            html += `<div class="py-0.5 bg-red-100 text-red-800"><span class="text-red-500 mr-2">−</span>${escapeHtml(line1)}</div>`;
+            removed++;
+          }
+          if (line2) {
+            html += `<div class="py-0.5 bg-green-100 text-green-800"><span class="text-green-500 mr-2">+</span>${escapeHtml(line2)}</div>`;
+            added++;
+          }
+        }
+      }
+      
+      document.getElementById("diffOutput").innerHTML = html || '<div class="text-slate-500">No differences found!</div>';
+      document.getElementById("stats").innerText = `${added} additions, ${removed} deletions, ${unchanged} unchanged lines`;
+      document.getElementById("result").classList.remove("hidden");
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</TextToolLayout>

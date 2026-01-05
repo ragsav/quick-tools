@@ -1,0 +1,82 @@
+---
+import SalaryToolLayout from "../../layouts/SalaryToolLayout.astro";
+---
+
+<SalaryToolLayout
+  title="Overtime Pay Calculator - Calculate OT Pay"
+  description="Calculate overtime pay based on your hourly rate. Supports 1.5x and 2x overtime rates."
+  canonicalPath="/salary/overtime-pay"
+  currentTool="Overtime Pay Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Overtime Pay Calculator</h1>
+    <p class="text-slate-500">Calculate your overtime earnings based on hours worked.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label for="hourlyRate" class="block font-medium text-slate-700 mb-1.5 text-sm">Regular Hourly Rate ($)</label>
+        <input type="number" id="hourlyRate" placeholder="20" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div>
+        <label for="otMultiplier" class="block font-medium text-slate-700 mb-1.5 text-sm">Overtime Rate</label>
+        <select id="otMultiplier" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" onchange="calculate()">
+          <option value="1.5">1.5x (Time and a half)</option>
+          <option value="2">2x (Double time)</option>
+          <option value="1.25">1.25x</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label for="regularHours" class="block font-medium text-slate-700 mb-1.5 text-sm">Regular Hours</label>
+        <input type="number" id="regularHours" value="40" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div>
+        <label for="overtimeHours" class="block font-medium text-slate-700 mb-1.5 text-sm">Overtime Hours</label>
+        <input type="number" id="overtimeHours" placeholder="10" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+    </div>
+
+    <div class="result-box p-4 bg-white rounded">
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Regular Pay</div>
+          <div class="text-xl font-bold text-slate-900" id="regularPay">$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Overtime Pay</div>
+          <div class="text-xl font-bold text-purple-600" id="otPay">$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Total Pay</div>
+          <div class="text-xl font-bold text-green-600" id="totalPay">$0</div>
+        </div>
+      </div>
+      <div class="text-center mt-4 text-sm text-slate-500" id="otRate">—</div>
+    </div>
+  </div>
+
+  <script is:inline>
+    function calculate() {
+      const hourlyRate = parseFloat(document.getElementById("hourlyRate").value) || 0;
+      const otMultiplier = parseFloat(document.getElementById("otMultiplier").value) || 1.5;
+      const regularHours = parseFloat(document.getElementById("regularHours").value) || 0;
+      const overtimeHours = parseFloat(document.getElementById("overtimeHours").value) || 0;
+
+      const regularPay = hourlyRate * regularHours;
+      const otRate = hourlyRate * otMultiplier;
+      const otPay = otRate * overtimeHours;
+      const totalPay = regularPay + otPay;
+
+      const fmt = (n) => "$" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      document.getElementById("regularPay").innerText = fmt(regularPay);
+      document.getElementById("otPay").innerText = fmt(otPay);
+      document.getElementById("totalPay").innerText = fmt(totalPay);
+      document.getElementById("otRate").innerText = `Overtime rate: ${fmt(otRate)}/hr`;
+    }
+  </script>
+</SalaryToolLayout>

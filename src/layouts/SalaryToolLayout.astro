@@ -1,0 +1,50 @@
+---
+/**
+ * Salary & Finance Layout
+ */
+
+import ToolLayout from "./ToolLayout.astro";
+import { CONSTANT } from "../constants";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  currentTool?: string;
+}
+
+const { title, description, canonicalPath, currentTool = "" } = Astro.props;
+
+const cluster = {
+  name: "Salary & Finance",
+  icon: "💰",
+  color: "#1c398e",
+  url: "/salary/",
+};
+
+const allTools = [
+  { name: "Salary to Hourly", url: "/salary/salary-to-hourly" },
+  { name: "Hourly to Monthly", url: "/salary/hourly-to-monthly" },
+  { name: "Overtime Pay Calculator", url: "/salary/overtime-pay" },
+  { name: "Bonus Calculator", url: "/salary/bonus-calculator" },
+  { name: "Pay Raise Calculator", url: "/salary/pay-raise" },
+  { name: "Freelance Rate Calculator", url: "/salary/freelance-rate" },
+  { name: "Commission Calculator", url: "/salary/commission" },
+  { name: "Loan EMI Calculator", url: "/salary/loan-emi" },
+  { name: "Simple Interest Calculator", url: "/salary/simple-interest" },
+];
+
+const relatedTools = allTools
+  .filter((tool) => tool.name !== currentTool)
+  .slice(0, 4);
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
+  cluster={cluster}
+  relatedTools={relatedTools}
+>
+  <slot />
+</ToolLayout>

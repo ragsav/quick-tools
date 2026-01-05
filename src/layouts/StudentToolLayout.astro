@@ -1,0 +1,48 @@
+---
+/**
+ * Student Tools Layout
+ */
+
+import ToolLayout from "./ToolLayout.astro";
+import { CONSTANT } from "../constants";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  currentTool?: string;
+}
+
+const { title, description, canonicalPath, currentTool = "" } = Astro.props;
+
+const cluster = {
+  name: "Student Tools",
+  icon: "🎓",
+  color: "#1c398e",
+  url: "/student/",
+};
+
+const allTools = [
+  { name: "CGPA Calculator", url: "/student/cgpa-calculator" },
+  { name: "GPA to Percentage", url: "/student/gpa-to-percentage" },
+  { name: "Percentage to GPA", url: "/student/percentage-to-gpa" },
+  { name: "Marks Percentage", url: "/student/marks-percentage" },
+  { name: "Study Hours Calculator", url: "/student/study-hours" },
+  { name: "Reading Time Estimator", url: "/student/reading-time" },
+  { name: "Grade Average Calculator", url: "/student/grade-average" },
+];
+
+const relatedTools = allTools
+  .filter((tool) => tool.name !== currentTool)
+  .slice(0, 4);
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
+  cluster={cluster}
+  relatedTools={relatedTools}
+>
+  <slot />
+</ToolLayout>

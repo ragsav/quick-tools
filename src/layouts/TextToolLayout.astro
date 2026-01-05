@@ -1,0 +1,56 @@
+---
+/**
+ * Text & String Tools Layout
+ *
+ * Extends ToolLayout with Text cluster-specific configuration.
+ */
+
+import ToolLayout from "./ToolLayout.astro";
+import { CONSTANT } from "../constants";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  currentTool?: string;
+}
+
+const { title, description, canonicalPath, currentTool = "" } = Astro.props;
+
+const cluster = {
+  name: "Text & String",
+  icon: "✍️",
+  color: "#1c398e",
+  url: "/text/",
+};
+
+const allTools = [
+  { name: "Word Counter", url: "/text/word-counter" },
+  { name: "Character Counter", url: "/text/character-counter" },
+  { name: "Case Converter", url: "/text/case-converter" },
+  { name: "Remove Duplicate Lines", url: "/text/remove-duplicates" },
+  { name: "Whitespace Cleaner", url: "/text/whitespace-cleaner" },
+  { name: "Text Diff Checker", url: "/text/diff-checker" },
+  { name: "Line Sorter", url: "/text/line-sorter" },
+  { name: "Remove Empty Lines", url: "/text/remove-empty-lines" },
+  { name: "Find & Replace", url: "/text/find-replace" },
+  { name: "Text to List", url: "/text/text-to-list" },
+  { name: "List to Text", url: "/text/list-to-text" },
+  { name: "Slug Generator", url: "/text/slug-generator" },
+  { name: "URL Encoder/Decoder", url: "/text/url-encoder" },
+];
+
+const relatedTools = allTools
+  .filter((tool) => tool.name !== currentTool)
+  .slice(0, 4);
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
+  cluster={cluster}
+  relatedTools={relatedTools}
+>
+  <slot />
+</ToolLayout>

@@ -1,0 +1,106 @@
+---
+import MathToolLayout from "../../layouts/MathToolLayout.astro";
+---
+
+<MathToolLayout
+  title="Random Number Generator - Generate Random Numbers"
+  description="Generate random numbers within a range. Support for multiple numbers, decimals, and unique values."
+  canonicalPath="/math/random-number"
+  currentTool="Random Number Generator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Random Number Generator</h1>
+    <p class="text-slate-500">Generate random numbers within your specified range.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-4 gap-4 mb-6">
+      <div>
+        <label for="min" class="block font-medium text-slate-700 mb-1.5 text-sm">Minimum</label>
+        <input type="number" id="min" value="1" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+      <div>
+        <label for="max" class="block font-medium text-slate-700 mb-1.5 text-sm">Maximum</label>
+        <input type="number" id="max" value="100" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+      <div>
+        <label for="count" class="block font-medium text-slate-700 mb-1.5 text-sm">How Many?</label>
+        <input type="number" id="count" value="1" min="1" max="100" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+      <div class="flex items-end">
+        <button onclick="generate()" class="btn-primary w-full px-6 py-3 font-semibold text-white rounded">Generate</button>
+      </div>
+    </div>
+
+    <div class="flex gap-4 mb-6">
+      <label class="flex items-center gap-2 text-sm text-slate-600">
+        <input type="checkbox" id="unique" class="w-4 h-4" />
+        Unique numbers only
+      </label>
+      <label class="flex items-center gap-2 text-sm text-slate-600">
+        <input type="checkbox" id="decimal" class="w-4 h-4" />
+        Allow decimals
+      </label>
+    </div>
+
+    <div class="result-box p-6 bg-white rounded text-center">
+      <div class="text-xs text-slate-500 uppercase mb-2">Random Number(s)</div>
+      <div class="text-3xl font-bold text-teal-600" id="result">Click Generate</div>
+    </div>
+
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button onclick="quickGen(1, 10, 1)" class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:border-teal-500">1-10</button>
+      <button onclick="quickGen(1, 100, 1)" class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:border-teal-500">1-100</button>
+      <button onclick="quickGen(1, 6, 1)" class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:border-teal-500">🎲 Dice</button>
+      <button onclick="quickGen(0, 1, 1)" class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:border-teal-500">🪙 Coin (0/1)</button>
+      <button onclick="quickGen(1, 6, 6)" class="px-3 py-1 bg-white border border-slate-200 rounded text-sm hover:border-teal-500">🎲 6 Dice</button>
+    </div>
+  </div>
+
+  <script is:inline>
+    function quickGen(min, max, count) {
+      document.getElementById("min").value = min;
+      document.getElementById("max").value = max;
+      document.getElementById("count").value = count;
+      generate();
+    }
+
+    function generate() {
+      const min = parseFloat(document.getElementById("min").value);
+      const max = parseFloat(document.getElementById("max").value);
+      const count = parseInt(document.getElementById("count").value) || 1;
+      const unique = document.getElementById("unique").checked;
+      const decimal = document.getElementById("decimal").checked;
+
+      if (min >= max) {
+        document.getElementById("result").innerText = "Max must be > Min";
+        return;
+      }
+
+      if (unique && count > (max - min + 1) && !decimal) {
+        document.getElementById("result").innerText = "Not enough unique numbers in range";
+        return;
+      }
+
+      const results = [];
+      const used = new Set();
+
+      while (results.length < count) {
+        let num;
+        if (decimal) {
+          num = Math.random() * (max - min) + min;
+          num = parseFloat(num.toFixed(2));
+        } else {
+          num = Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        if (unique && used.has(num)) continue;
+        
+        used.add(num);
+        results.push(num);
+      }
+
+      document.getElementById("result").innerText = results.join(", ");
+    }
+  </script>
+</MathToolLayout>

@@ -1,0 +1,157 @@
+---
+import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
+---
+
+<TimeToolLayout
+  title="Countdown Timer - Days Until Date Calculator"
+  description="Calculate days, hours, minutes until any date. Create countdown to events, deadlines, holidays. Free online countdown calculator."
+  canonicalPath="/time/countdown-calculator"
+  currentTool="Countdown to Date"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Countdown to Date</h1>
+    <p class="text-slate-500">
+      See exactly how much time remains until your target date or event.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="flex flex-wrap gap-6 mb-6">
+      <div class="flex-1 min-w-48">
+        <label for="eventName" class="block font-medium text-slate-700 mb-1.5 text-sm">Event Name (optional)</label>
+        <input type="text" id="eventName" placeholder="e.g., My Birthday" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+      <div class="flex-1 min-w-48">
+        <label for="targetDate" class="block font-medium text-slate-700 mb-1.5 text-sm">Target Date</label>
+        <input type="date" id="targetDate" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+    </div>
+
+    <button class="btn-primary inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded cursor-pointer" onclick="calculate()">
+      Start Countdown
+    </button>
+
+    <div class="result-box mt-6 p-6 bg-white rounded hidden" id="resultBox">
+      <div class="text-center mb-4">
+        <div class="text-sm text-slate-500 uppercase tracking-wider" id="eventLabel">Time Remaining</div>
+      </div>
+      <div class="grid grid-cols-4 gap-4 text-center">
+        <div class="bg-blue-50 rounded-lg p-4">
+          <div class="text-3xl font-bold text-blue-600" id="days">0</div>
+          <div class="text-xs text-slate-500 uppercase">Days</div>
+        </div>
+        <div class="bg-blue-50 rounded-lg p-4">
+          <div class="text-3xl font-bold text-blue-600" id="hours">0</div>
+          <div class="text-xs text-slate-500 uppercase">Hours</div>
+        </div>
+        <div class="bg-blue-50 rounded-lg p-4">
+          <div class="text-3xl font-bold text-blue-600" id="minutes">0</div>
+          <div class="text-xs text-slate-500 uppercase">Minutes</div>
+        </div>
+        <div class="bg-blue-50 rounded-lg p-4">
+          <div class="text-3xl font-bold text-blue-600" id="seconds">0</div>
+          <div class="text-xs text-slate-500 uppercase">Seconds</div>
+        </div>
+      </div>
+      <div class="text-center mt-4 text-sm text-slate-500" id="totalInfo">—</div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">Popular Countdowns</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <button onclick="setQuickDate('new-year')" class="p-3 bg-white border border-slate-200 rounded text-sm hover:border-blue-500 transition-colors">🎆 New Year</button>
+      <button onclick="setQuickDate('christmas')" class="p-3 bg-white border border-slate-200 rounded text-sm hover:border-blue-500 transition-colors">🎄 Christmas</button>
+      <button onclick="setQuickDate('halloween')" class="p-3 bg-white border border-slate-200 rounded text-sm hover:border-blue-500 transition-colors">🎃 Halloween</button>
+      <button onclick="setQuickDate('valentines')" class="p-3 bg-white border border-slate-200 rounded text-sm hover:border-blue-500 transition-colors">💕 Valentine's</button>
+    </div>
+  </section>
+
+  <script is:inline>
+    let countdownInterval = null;
+
+    function setQuickDate(event) {
+      const now = new Date();
+      let year = now.getFullYear();
+      let date;
+
+
+
+      switch(event) {
+        case 'new-year':
+          date = new Date(year + 1, 0, 1);
+          document.getElementById("eventName").value = "New Year " + (year + 1);
+          break;
+        case 'christmas':
+          date = new Date(year, 11, 25);
+          if (date < now) date = new Date(year + 1, 11, 25);
+          document.getElementById("eventName").value = "Christmas";
+          break;
+        case 'halloween':
+          date = new Date(year, 9, 31);
+          if (date < now) date = new Date(year + 1, 9, 31);
+          document.getElementById("eventName").value = "Halloween";
+          break;
+        case 'valentines':
+          date = new Date(year, 1, 14);
+          if (date < now) date = new Date(year + 1, 1, 14);
+          document.getElementById("eventName").value = "Valentine's Day";
+          break;
+      }
+
+      document.getElementById("targetDate").valueAsDate = date;
+      calculate();
+    }
+
+    function calculate() {
+      const targetInput = document.getElementById("targetDate");
+      const eventName = document.getElementById("eventName").value;
+      const resultBox = document.getElementById("resultBox");
+
+      const target = new Date(targetInput.value);
+      target.setHours(0, 0, 0, 0);
+
+      if (isNaN(target.getTime())) {
+        alert("Please select a target date");
+        return;
+      }
+
+      document.getElementById("eventLabel").innerText = eventName ? `Until ${eventName}` : "Time Remaining";
+      resultBox.classList.remove("hidden");
+
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      function updateCountdown() {
+        const now = new Date();
+        const diff = target - now;
+
+        if (diff <= 0) {
+          document.getElementById("days").innerText = "0";
+          document.getElementById("hours").innerText = "0";
+          document.getElementById("minutes").innerText = "0";
+          document.getElementById("seconds").innerText = "0";
+          document.getElementById("totalInfo").innerText = "🎉 The date has arrived!";
+          clearInterval(countdownInterval);
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerText = days;
+        document.getElementById("hours").innerText = hours;
+        document.getElementById("minutes").innerText = minutes;
+        document.getElementById("seconds").innerText = seconds;
+
+        const totalHours = Math.floor(diff / (1000 * 60 * 60));
+        const totalMinutes = Math.floor(diff / (1000 * 60));
+        document.getElementById("totalInfo").innerText = `${totalHours.toLocaleString()} hours or ${totalMinutes.toLocaleString()} minutes total`;
+      }
+
+      updateCountdown();
+      countdownInterval = setInterval(updateCountdown, 1000);
+    }
+  </script>
+</TimeToolLayout>

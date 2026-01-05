@@ -1,0 +1,112 @@
+---
+import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
+---
+
+<TimeToolLayout
+  title="Business Days Calculator - Exclude Weekends & Holidays"
+  description="Calculate business days between two dates, excluding weekends and common holidays. Free online tool."
+  canonicalPath="/time/business-days-calculator"
+  currentTool="Business Days Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Business Days Calculator</h1>
+    <p class="text-slate-500">
+      Count business days between dates, excluding weekends and optionally holidays.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="flex flex-wrap gap-6 mb-6">
+      <div class="flex-1 min-w-48">
+        <label for="startDate" class="block font-medium text-slate-700 mb-1.5 text-sm">Start Date</label>
+        <input type="date" id="startDate" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+      <div class="flex-1 min-w-48">
+        <label for="endDate" class="block font-medium text-slate-700 mb-1.5 text-sm">End Date</label>
+        <input type="date" id="endDate" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-2 text-sm">Exclude Holidays (comma-separated dates)</label>
+      <input type="text" id="holidays" placeholder="e.g., 2024-12-25, 2024-01-01" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      <p class="text-xs text-slate-400 mt-1">Format: YYYY-MM-DD</p>
+    </div>
+
+    <button class="btn-primary inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded cursor-pointer" onclick="calculate()">
+      Calculate Business Days
+    </button>
+
+    <div class="result-box mt-6 p-4 bg-white rounded hidden" id="resultBox">
+      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Business Days</div>
+      <div class="text-3xl font-bold text-slate-900" id="result">—</div>
+      <div class="text-sm text-slate-500 mt-2" id="breakdown"></div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">How to Use</h2>
+    <ul class="list-disc pl-6 text-slate-600 space-y-2">
+      <li>Select start and end dates</li>
+      <li>Add any holidays to exclude (optional)</li>
+      <li>Weekends are automatically excluded</li>
+      <li>Get accurate business day count</li>
+    </ul>
+  </section>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">FAQ</h2>
+    <h3 class="text-base font-semibold text-slate-700 mt-4 mb-2">What's the difference vs Working Days?</h3>
+    <p class="text-slate-600">Business Days Calculator lets you exclude specific holidays, while Working Days only excludes weekends.</p>
+  </section>
+
+  <script is:inline>
+    function calculate() {
+      const startInput = document.getElementById("startDate");
+      const endInput = document.getElementById("endDate");
+      const holidaysInput = document.getElementById("holidays").value;
+      const resultEl = document.getElementById("result");
+      const breakdownEl = document.getElementById("breakdown");
+      const resultBox = document.getElementById("resultBox");
+
+      const start = new Date(startInput.value);
+      const end = new Date(endInput.value);
+
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        resultEl.innerText = "Please select both dates";
+        breakdownEl.innerText = "";
+        resultBox.classList.remove("hidden");
+        return;
+      }
+
+      const holidays = holidaysInput
+        .split(",")
+        .map(d => d.trim())
+        .filter(d => d)
+        .map(d => new Date(d).toDateString());
+
+      let businessDays = 0;
+      let weekendDays = 0;
+      let holidayCount = 0;
+      let current = new Date(start);
+
+      while (current < end) {
+        const day = current.getDay();
+        const dateStr = current.toDateString();
+        
+        if (day === 0 || day === 6) {
+          weekendDays++;
+        } else if (holidays.includes(dateStr)) {
+          holidayCount++;
+        } else {
+          businessDays++;
+        }
+        current.setDate(current.getDate() + 1);
+      }
+
+      resultEl.innerText = businessDays + " business days";
+      breakdownEl.innerText = `${weekendDays} weekend days + ${holidayCount} holidays excluded`;
+      resultBox.classList.remove("hidden");
+    }
+  </script>
+</TimeToolLayout>

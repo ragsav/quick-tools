@@ -1,0 +1,82 @@
+---
+import TextToolLayout from "../../layouts/TextToolLayout.astro";
+---
+
+<TextToolLayout
+  title="Text & String Tools - Free Online Text Utilities"
+  description="Free online text manipulation tools. Count words, convert case, remove duplicates, diff text, and more."
+  canonicalPath="/text"
+  currentTool=""
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">✍️ Text & String Tools</h1>
+    <p class="text-slate-500">Format, clean, and transform text with these free tools.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+    <a href="/text/word-counter" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Word Counter</h3>
+      <p class="text-sm text-slate-500">Count words, characters, sentences</p>
+    </a>
+
+    <a href="/text/character-counter" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Character Counter</h3>
+      <p class="text-sm text-slate-500">Count characters with/without spaces</p>
+    </a>
+
+    <a href="/text/case-converter" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Case Converter</h3>
+      <p class="text-sm text-slate-500">UPPER, lower, Title, camelCase</p>
+    </a>
+
+    <a href="/text/remove-duplicates" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Remove Duplicates</h3>
+      <p class="text-sm text-slate-500">Remove duplicate lines from text</p>
+    </a>
+
+    <a href="/text/whitespace-cleaner" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Whitespace Cleaner</h3>
+      <p class="text-sm text-slate-500">Trim and normalize whitespace</p>
+    </a>
+
+    <a href="/text/diff-checker" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Text Diff Checker</h3>
+      <p class="text-sm text-slate-500">Compare two texts side by side</p>
+    </a>
+
+    <a href="/text/line-sorter" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Line Sorter</h3>
+      <p class="text-sm text-slate-500">Sort lines alphabetically or reverse</p>
+    </a>
+
+    <a href="/text/remove-empty-lines" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Remove Empty Lines</h3>
+      <p class="text-sm text-slate-500">Clean up blank lines in text</p>
+    </a>
+
+    <a href="/text/find-replace" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Find & Replace</h3>
+      <p class="text-sm text-slate-500">Search and replace text patterns</p>
+    </a>
+
+    <a href="/text/text-to-list" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Text to List</h3>
+      <p class="text-sm text-slate-500">Convert text to bulleted/numbered list</p>
+    </a>
+
+    <a href="/text/list-to-text" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">List to Text</h3>
+      <p class="text-sm text-slate-500">Convert list items to plain text</p>
+    </a>
+
+    <a href="/text/slug-generator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Slug Generator</h3>
+      <p class="text-sm text-slate-500">Create URL-friendly slugs</p>
+    </a>
+
+    <a href="/text/url-encoder" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-emerald-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">URL Encoder/Decoder</h3>
+      <p class="text-sm text-slate-500">Encode or decode URL strings</p>
+    </a>
+  </div>
+</TextToolLayout>

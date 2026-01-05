@@ -1,0 +1,52 @@
+---
+import StudentToolLayout from "../../layouts/StudentToolLayout.astro";
+---
+
+<StudentToolLayout
+  title="Student Tools - Free GPA & Study Calculators"
+  description="Free student tools. Calculate GPA, CGPA, grades, study hours, and more. Perfect for students."
+  canonicalPath="/student"
+  currentTool=""
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">🎓 Student Tools</h1>
+    <p class="text-slate-500">GPA calculators, grade tools, and study planning utilities.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+    <a href="/student/cgpa-calculator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-pink-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">CGPA Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate cumulative GPA</p>
+    </a>
+
+    <a href="/student/gpa-to-percentage" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-pink-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">GPA to Percentage</h3>
+      <p class="text-sm text-slate-500">Convert GPA to percentage</p>
+    </a>
+
+    <a href="/student/percentage-to-gpa" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-pink-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Percentage to GPA</h3>
+      <p class="text-sm text-slate-500">Convert percentage to GPA</p>
+    </a>
+
+    <a href="/student/marks-percentage" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-pink-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Marks Percentage</h3>
+      <p class="text-sm text-slate-500">Calculate percentage from marks</p>
+    </a>
+
+    <a href="/student/study-hours" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-pink-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Study Hours Calculator</h3>
+      <p class="text-sm text-slate-500">Plan your study schedule</p>
+    </a>
+
+    <a href="/student/reading-time" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-pink-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Reading Time Estimator</h3>
+      <p class="text-sm text-slate-500">Estimate reading time for text</p>
+    </a>
+
+    <a href="/student/grade-average" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-pink-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Grade Average</h3>
+      <p class="text-sm text-slate-500">Calculate weighted grade average</p>
+    </a>
+  </div>
+</StudentToolLayout>

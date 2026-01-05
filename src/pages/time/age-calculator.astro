@@ -1,0 +1,129 @@
+---
+import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
+---
+
+<TimeToolLayout
+  title="Age Calculator - Calculate Exact Age in Years, Months, Days"
+  description="Calculate your exact age in years, months, and days. Find out how old you are down to the day. Free online age calculator."
+  canonicalPath="/time/age-calculator"
+  currentTool="Age Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Age Calculator</h1>
+    <p class="text-slate-500">
+      Calculate your exact age in years, months, and days from your date of birth.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="flex flex-wrap gap-6 mb-6">
+      <div class="flex-1 min-w-48">
+        <label for="birthDate" class="block font-medium text-slate-700 mb-1.5 text-sm">Date of Birth</label>
+        <input type="date" id="birthDate" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+      <div class="flex-1 min-w-48">
+        <label for="targetDate" class="block font-medium text-slate-700 mb-1.5 text-sm">Calculate Age On</label>
+        <input type="date" id="targetDate" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+    </div>
+
+    <button class="btn-primary inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded cursor-pointer" onclick="calculate()">
+      Calculate Age
+    </button>
+
+    <div class="result-box mt-6 p-4 bg-white rounded hidden" id="resultBox">
+      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Your Age</div>
+      <div class="text-3xl font-bold text-slate-900" id="result">—</div>
+      <div class="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-slate-100">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-600" id="totalDays">—</div>
+          <div class="text-xs text-slate-500">Total Days</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-600" id="totalWeeks">—</div>
+          <div class="text-xs text-slate-500">Total Weeks</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-600" id="totalMonths">—</div>
+          <div class="text-xs text-slate-500">Total Months</div>
+        </div>
+      </div>
+      <div class="text-center mt-4 pt-4 border-t border-slate-100">
+        <div class="text-sm text-slate-500" id="nextBirthday">—</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">How It Works</h2>
+    <p class="text-slate-600">Enter your date of birth and optionally select a target date (defaults to today). The calculator shows your exact age broken down into years, months, and days, plus total counts and days until your next birthday.</p>
+  </section>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">FAQ</h2>
+    <h3 class="text-base font-semibold text-slate-700 mt-4 mb-2">How accurate is this?</h3>
+    <p class="text-slate-600">The calculator is accurate to the day, accounting for varying month lengths and leap years.</p>
+  </section>
+
+  <script is:inline>
+    document.getElementById("targetDate").valueAsDate = new Date();
+
+    function calculate() {
+      const birthInput = document.getElementById("birthDate");
+      const targetInput = document.getElementById("targetDate");
+      const resultEl = document.getElementById("result");
+      const resultBox = document.getElementById("resultBox");
+
+      const birth = new Date(birthInput.value);
+      const target = new Date(targetInput.value);
+
+      if (isNaN(birth.getTime())) {
+        resultEl.innerText = "Please enter your birth date";
+        resultBox.classList.remove("hidden");
+        return;
+      }
+
+      if (birth > target) {
+        resultEl.innerText = "Birth date must be before target date";
+        resultBox.classList.remove("hidden");
+        return;
+      }
+
+      // Calculate age
+      let years = target.getFullYear() - birth.getFullYear();
+      let months = target.getMonth() - birth.getMonth();
+      let days = target.getDate() - birth.getDate();
+
+      if (days < 0) {
+        months--;
+        const prevMonth = new Date(target.getFullYear(), target.getMonth(), 0);
+        days += prevMonth.getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      // Total calculations
+      const diffMs = target - birth;
+      const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const totalWeeks = Math.floor(totalDays / 7);
+      const totalMonths = years * 12 + months;
+
+      // Next birthday
+      let nextBirthday = new Date(target.getFullYear(), birth.getMonth(), birth.getDate());
+      if (nextBirthday <= target) {
+        nextBirthday = new Date(target.getFullYear() + 1, birth.getMonth(), birth.getDate());
+      }
+      const daysUntilBirthday = Math.ceil((nextBirthday - target) / (1000 * 60 * 60 * 24));
+
+      resultEl.innerText = `${years} years, ${months} months, ${days} days`;
+      document.getElementById("totalDays").innerText = totalDays.toLocaleString();
+      document.getElementById("totalWeeks").innerText = totalWeeks.toLocaleString();
+      document.getElementById("totalMonths").innerText = totalMonths;
+      document.getElementById("nextBirthday").innerText = `🎂 ${daysUntilBirthday} days until your next birthday`;
+      resultBox.classList.remove("hidden");
+    }
+  </script>
+</TimeToolLayout>

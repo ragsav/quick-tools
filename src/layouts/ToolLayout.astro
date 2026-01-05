@@ -1,0 +1,228 @@
+---
+/**
+ * Base Tool Layout
+ *
+ * Provides consistent header, footer, styles, and SEO for all tool pages.
+ * Cluster-specific layouts extend this with their own colors and related tools.
+ */
+
+import { CONSTANT } from "../constants";
+import { Image } from "astro:assets";
+import logo from "../assets/favicon.svg";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  cluster: {
+    name: string;
+    icon: string;
+    color: string;
+    url: string;
+  };
+  relatedTools?: Array<{ name: string; url: string }>;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  cluster,
+  relatedTools = [],
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Favicons & PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#1e293b" />
+
+    <!-- SEO -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- JSON-LD -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        name: title,
+        description: description,
+        url: canonical,
+        applicationCategory: "UtilityApplication",
+        operatingSystem: "Any",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+        },
+      })}
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body
+    class="font-['Inter',system-ui,sans-serif] bg-slate-50 text-slate-800 min-h-screen flex flex-col leading-relaxed"
+  >
+    <!-- HEADER -->
+    <header class="bg-blue-900 text-white p-4">
+      <div
+        class="max-w-4xl mx-auto flex items-center justify-between flex-wrap gap-4"
+      >
+        <a
+          href="/"
+          class="flex items-center gap-2 no-underline text-white font-bold text-xl"
+        >
+          <Image
+            src={logo}
+            alt="Quick Tools Logo"
+            class="w-8 h-8 lg:w-9 lg:h-9"
+          />
+          <span>Quick Tools</span>
+        </a>
+        <nav class="flex items-center gap-2 text-sm">
+          <a
+            href="/"
+            class="text-slate-400 no-underline hover:text-white transition-colors"
+            >Home</a
+          >
+          <span class="text-slate-500">/</span>
+          <a
+            href={cluster.url}
+            class="text-slate-400 no-underline hover:text-white transition-colors"
+            >{cluster.icon} {cluster.name}</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-4 py-8">
+      <div
+        class="bg-white rounded border border-slate-200 shadow-sm p-6 sm:p-8 mb-8"
+        style={`--cluster-color: ${cluster.color}`}
+      >
+        <slot />
+      </div>
+
+      <!-- RELATED TOOLS -->
+      {
+        relatedTools.length > 0 && (
+          <section class="mb-8">
+            <h2 class="text-xl font-semibold text-slate-900 mb-4">
+              Related {cluster.name} Tools
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {relatedTools.map((tool) => (
+                <a
+                  href={tool.url}
+                  class="flex justify-between items-center p-4 bg-white border border-slate-200 rounded no-underline text-slate-700 font-medium hover:border-blue-500 hover:shadow-md transition-all group"
+                >
+                  <span>{tool.name}</span>
+                  <span class="text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all">
+                    →
+                  </span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- AD SLOT -->
+      <div class="min-h-24 mb-8">
+        <!-- Adsense code later -->
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-800 text-slate-400 p-8 mt-auto">
+      <div
+        class="max-w-4xl mx-auto flex flex-col items-center gap-4 text-center"
+      >
+        <div class="text-xl font-semibold text-white flex items-center gap-2">
+          <Image src={logo} alt="Quick Tools Logo" class="w-6 h-6" />
+          <span>Quick Tools</span>
+        </div>
+        <p class="text-sm">
+          © 2024–{new Date().getFullYear()} Quick Tools. Free tools for everyone.
+        </p>
+        <div class="flex gap-6">
+          <a
+            href="/"
+            class="text-slate-400 no-underline text-sm hover:text-white transition-colors"
+            >All Tools</a
+          >
+          <a
+            href="/about"
+            class="text-slate-400 no-underline text-sm hover:text-white transition-colors"
+            >About</a
+          >
+          <a
+            href="/privacy"
+            class="text-slate-400 no-underline text-sm hover:text-white transition-colors"
+            >Privacy</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <!-- Minimal custom styles for cluster-color CSS variable usage -->
+    <style is:global>
+      .tool-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid var(--cluster-color, #1c398e);
+      }
+
+      .result-box {
+        border: 2px solid var(--cluster-color, #1c398e);
+      }
+
+      .btn-primary {
+        background-color: var(--cluster-color, #1c398e);
+      }
+
+      .btn-primary:hover {
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--cluster-color, #1c398e);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+    </style>
+  </body>
+</html>

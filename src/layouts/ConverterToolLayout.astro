@@ -1,0 +1,50 @@
+---
+/**
+ * Converters Layout
+ */
+
+import ToolLayout from "./ToolLayout.astro";
+import { CONSTANT } from "../constants";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  currentTool?: string;
+}
+
+const { title, description, canonicalPath, currentTool = "" } = Astro.props;
+
+const cluster = {
+  name: "Converters",
+  icon: "🔄",
+  color: "#1c398e",
+  url: "/converters/",
+};
+
+const allTools = [
+  { name: "Unit Converter", url: "/converters/unit-converter" },
+  { name: "Number to Words", url: "/converters/number-to-words" },
+  { name: "Currency Converter", url: "/converters/currency-converter" },
+  { name: "Decimal ↔ Fraction", url: "/converters/decimal-fraction" },
+  { name: "Binary ↔ Decimal", url: "/converters/binary-decimal" },
+  { name: "Percentage Calculator", url: "/converters/percentage" },
+  { name: "Roman Numeral Converter", url: "/converters/roman-numerals" },
+  { name: "File Size Converter", url: "/converters/file-size" },
+  { name: "Time Unit Converter", url: "/converters/time-units" },
+];
+
+const relatedTools = allTools
+  .filter((tool) => tool.name !== currentTool)
+  .slice(0, 4);
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
+  cluster={cluster}
+  relatedTools={relatedTools}
+>
+  <slot />
+</ToolLayout>

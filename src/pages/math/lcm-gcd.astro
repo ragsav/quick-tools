@@ -1,0 +1,87 @@
+---
+import MathToolLayout from "../../layouts/MathToolLayout.astro";
+---
+
+<MathToolLayout
+  title="LCM & GCD Calculator - Least Common Multiple & Greatest Common Divisor"
+  description="Calculate LCM (Least Common Multiple) and GCD (Greatest Common Divisor) of two or more numbers."
+  canonicalPath="/math/lcm-gcd"
+  currentTool="LCM & GCD Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">LCM & GCD Calculator</h1>
+    <p class="text-slate-500">Find the Least Common Multiple and Greatest Common Divisor.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label for="numbers" class="block font-medium text-slate-700 mb-1.5 text-sm">Enter Numbers (comma separated)</label>
+      <input type="text" id="numbers" placeholder="e.g., 12, 18, 24" class="w-full px-4 py-3 text-lg border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono" oninput="calculate()" />
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="p-6 bg-white border border-slate-200 rounded text-center">
+        <div class="text-xs text-slate-500 uppercase mb-2">GCD (Greatest Common Divisor)</div>
+        <div class="text-4xl font-bold text-teal-600" id="gcd">—</div>
+        <div class="text-sm text-slate-500 mt-1">Also called HCF</div>
+      </div>
+      <div class="p-6 bg-white border border-slate-200 rounded text-center">
+        <div class="text-xs text-slate-500 uppercase mb-2">LCM (Least Common Multiple)</div>
+        <div class="text-4xl font-bold text-teal-600" id="lcm">—</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">Formulas</h2>
+    <div class="grid md:grid-cols-2 gap-4 text-sm">
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <div class="font-medium mb-2">GCD Relationship</div>
+        <div class="text-slate-600">LCM(a,b) × GCD(a,b) = a × b</div>
+      </div>
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <div class="font-medium mb-2">Finding LCM</div>
+        <div class="text-slate-600">LCM(a,b) = (a × b) / GCD(a,b)</div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    function gcd(a, b) {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b) {
+        const t = b;
+        b = a % b;
+        a = t;
+      }
+      return a;
+    }
+
+    function lcm(a, b) {
+      return Math.abs(a * b) / gcd(a, b);
+    }
+
+    function calculate() {
+      const input = document.getElementById("numbers").value;
+      const nums = input.split(",").map(n => parseInt(n.trim())).filter(n => !isNaN(n) && n > 0);
+      
+      if (nums.length < 2) {
+        document.getElementById("gcd").innerText = "—";
+        document.getElementById("lcm").innerText = "—";
+        return;
+      }
+
+      let resultGcd = nums[0];
+      let resultLcm = nums[0];
+
+      for (let i = 1; i < nums.length; i++) {
+        resultGcd = gcd(resultGcd, nums[i]);
+        resultLcm = lcm(resultLcm, nums[i]);
+      }
+
+      document.getElementById("gcd").innerText = resultGcd;
+      document.getElementById("lcm").innerText = resultLcm.toLocaleString();
+    }
+  </script>
+</MathToolLayout>

@@ -1,0 +1,167 @@
+---
+import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
+---
+
+<TimeToolLayout
+  title="Time Zone Converter - Convert Time Between Time Zones"
+  description="Convert time between any time zones instantly. Free online time zone converter for scheduling across regions."
+  canonicalPath="/time/timezone-converter"
+  currentTool="Time Zone Converter"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Time Zone Converter</h1>
+    <p class="text-slate-500">
+      Convert time between different time zones around the world.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="flex flex-wrap gap-6 mb-6">
+      <div class="flex-1 min-w-48">
+        <label for="fromTime" class="block font-medium text-slate-700 mb-1.5 text-sm">Time</label>
+        <input type="time" id="fromTime" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+      <div class="flex-1 min-w-48">
+        <label for="fromDate" class="block font-medium text-slate-700 mb-1.5 text-sm">Date</label>
+        <input type="date" id="fromDate" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-6 mb-6">
+      <div class="flex-1 min-w-48">
+        <label for="fromZone" class="block font-medium text-slate-700 mb-1.5 text-sm">From Time Zone</label>
+        <select id="fromZone" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none"></select>
+      </div>
+      <div class="flex-1 min-w-48">
+        <label for="toZone" class="block font-medium text-slate-700 mb-1.5 text-sm">To Time Zone</label>
+        <select id="toZone" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none"></select>
+      </div>
+    </div>
+
+    <button class="btn-primary inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded cursor-pointer" onclick="convert()">
+      Convert Time
+    </button>
+
+    <div class="result-box mt-6 p-4 bg-white rounded hidden" id="resultBox">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="text-center">
+          <div class="text-xs text-slate-500 uppercase tracking-wider mb-1" id="fromLabel">From</div>
+          <div class="text-2xl font-bold text-slate-900" id="fromResult">—</div>
+        </div>
+        <div class="text-center">
+          <div class="text-xs text-slate-500 uppercase tracking-wider mb-1" id="toLabel">To</div>
+          <div class="text-2xl font-bold text-blue-600" id="toResult">—</div>
+        </div>
+      </div>
+      <div class="text-center mt-4 text-sm text-slate-500" id="diffInfo">—</div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">Popular Time Zones</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+      <div class="p-3 bg-white border border-slate-200 rounded">
+        <div class="font-medium">New York (EST)</div>
+        <div class="text-slate-500">UTC-5</div>
+      </div>
+      <div class="p-3 bg-white border border-slate-200 rounded">
+        <div class="font-medium">London (GMT)</div>
+        <div class="text-slate-500">UTC+0</div>
+      </div>
+      <div class="p-3 bg-white border border-slate-200 rounded">
+        <div class="font-medium">Mumbai (IST)</div>
+        <div class="text-slate-500">UTC+5:30</div>
+      </div>
+      <div class="p-3 bg-white border border-slate-200 rounded">
+        <div class="font-medium">Tokyo (JST)</div>
+        <div class="text-slate-500">UTC+9</div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const timezones = [
+      { name: "UTC", offset: 0 },
+      { name: "New York (EST)", offset: -5 },
+      { name: "Chicago (CST)", offset: -6 },
+      { name: "Denver (MST)", offset: -7 },
+      { name: "Los Angeles (PST)", offset: -8 },
+      { name: "London (GMT)", offset: 0 },
+      { name: "Paris (CET)", offset: 1 },
+      { name: "Berlin (CET)", offset: 1 },
+      { name: "Moscow (MSK)", offset: 3 },
+      { name: "Dubai (GST)", offset: 4 },
+      { name: "Mumbai (IST)", offset: 5.5 },
+      { name: "Singapore (SGT)", offset: 8 },
+      { name: "Hong Kong (HKT)", offset: 8 },
+      { name: "Tokyo (JST)", offset: 9 },
+      { name: "Sydney (AEST)", offset: 10 },
+      { name: "Auckland (NZST)", offset: 12 },
+    ];
+
+    const fromSelect = document.getElementById("fromZone");
+    const toSelect = document.getElementById("toZone");
+
+    timezones.forEach((tz, i) => {
+      const offsetStr = tz.offset >= 0 ? `+${tz.offset}` : tz.offset;
+      const option = `<option value="${i}">${tz.name} (UTC${offsetStr})</option>`;
+      fromSelect.innerHTML += option;
+      toSelect.innerHTML += option;
+    });
+
+    // Set defaults
+    fromSelect.value = "0";
+    toSelect.value = "10";
+    document.getElementById("fromDate").valueAsDate = new Date();
+    document.getElementById("fromTime").value = new Date().toTimeString().slice(0, 5);
+
+    function convert() {
+      const time = document.getElementById("fromTime").value;
+      const date = document.getElementById("fromDate").value;
+      const fromIdx = parseInt(fromSelect.value);
+      const toIdx = parseInt(toSelect.value);
+
+      if (!time || !date) {
+        alert("Please enter time and date");
+        return;
+      }
+
+      const fromTz = timezones[fromIdx];
+      const toTz = timezones[toIdx];
+
+      // Parse input as UTC, then adjust
+      const [hours, minutes] = time.split(":").map(Number);
+      const inputDate = new Date(date);
+      
+      // Convert to UTC first, then to target timezone
+      const utcHours = hours - fromTz.offset;
+      const targetHours = utcHours + toTz.offset;
+
+      // Handle day overflow
+      let resultDate = new Date(inputDate);
+      let displayHours = targetHours;
+      
+      if (displayHours >= 24) {
+        displayHours -= 24;
+        resultDate.setDate(resultDate.getDate() + 1);
+      } else if (displayHours < 0) {
+        displayHours += 24;
+        resultDate.setDate(resultDate.getDate() - 1);
+      }
+
+      const hourStr = Math.floor(displayHours).toString().padStart(2, "0");
+      const minStr = minutes.toString().padStart(2, "0");
+
+      document.getElementById("fromLabel").innerText = fromTz.name;
+      document.getElementById("toLabel").innerText = toTz.name;
+      document.getElementById("fromResult").innerText = `${time} on ${inputDate.toLocaleDateString()}`;
+      document.getElementById("toResult").innerText = `${hourStr}:${minStr} on ${resultDate.toLocaleDateString()}`;
+
+      const diff = toTz.offset - fromTz.offset;
+      const diffStr = diff >= 0 ? `+${diff}` : diff;
+      document.getElementById("diffInfo").innerText = `Difference: ${diffStr} hours`;
+
+      document.getElementById("resultBox").classList.remove("hidden");
+    }
+  </script>
+</TimeToolLayout>

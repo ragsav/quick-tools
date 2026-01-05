@@ -1,0 +1,62 @@
+---
+import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+---
+
+<ConverterToolLayout
+  title="Converters - Free Online Unit & Number Converters"
+  description="Free online converters. Convert units, currency, numbers, binary, roman numerals, and more."
+  canonicalPath="/converters"
+  currentTool=""
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">🔄 Converters</h1>
+    <p class="text-slate-500">Convert between units, numbers, and formats.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+    <a href="/converters/unit-converter" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-amber-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Unit Converter</h3>
+      <p class="text-sm text-slate-500">Length, weight, temperature, area, volume</p>
+    </a>
+
+    <a href="/converters/number-to-words" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-amber-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Number to Words</h3>
+      <p class="text-sm text-slate-500">Convert numbers to written words</p>
+    </a>
+
+    <a href="/converters/currency-converter" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-amber-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Currency Converter</h3>
+      <p class="text-sm text-slate-500">Convert between world currencies</p>
+    </a>
+
+    <a href="/converters/decimal-fraction" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-amber-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Decimal ↔ Fraction</h3>
+      <p class="text-sm text-slate-500">Convert decimals to fractions</p>
+    </a>
+
+    <a href="/converters/binary-decimal" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-amber-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Binary ↔ Decimal</h3>
+      <p class="text-sm text-slate-500">Binary, decimal, hex, octal</p>
+    </a>
+
+    <a href="/converters/percentage" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-amber-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Percentage Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate percentages easily</p>
+    </a>
+
+    <a href="/converters/roman-numerals" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-amber-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Roman Numerals</h3>
+      <p class="text-sm text-slate-500">Convert to/from Roman numerals</p>
+    </a>
+
+    <a href="/converters/file-size" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-amber-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">File Size Converter</h3>
+      <p class="text-sm text-slate-500">Bytes, KB, MB, GB, TB</p>
+    </a>
+
+    <a href="/converters/time-units" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-amber-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Time Unit Converter</h3>
+      <p class="text-sm text-slate-500">Seconds, minutes, hours, days, years</p>
+    </a>
+  </div>
+</ConverterToolLayout>

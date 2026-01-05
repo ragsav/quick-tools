@@ -1,0 +1,63 @@
+---
+import SalaryToolLayout from "../../layouts/SalaryToolLayout.astro";
+---
+
+<SalaryToolLayout
+  title="Freelance Rate Calculator - Find Your Hourly Rate"
+  description="Calculate your freelance hourly rate based on desired income and expenses. Set profitable rates."
+  canonicalPath="/salary/freelance-rate"
+  currentTool="Freelance Rate Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Freelance Rate Calculator</h1>
+    <p class="text-slate-500">Calculate what hourly rate you should charge as a freelancer.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <label for="desiredIncome" class="block font-medium text-slate-700 mb-1.5 text-sm">Desired Annual Income ($)</label>
+        <input type="number" id="desiredIncome" placeholder="75000" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div>
+        <label for="expenses" class="block font-medium text-slate-700 mb-1.5 text-sm">Annual Business Expenses ($)</label>
+        <input type="number" id="expenses" placeholder="10000" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div>
+        <label for="billableHours" class="block font-medium text-slate-700 mb-1.5 text-sm">Billable Hours per Week</label>
+        <input type="number" id="billableHours" value="30" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+        <p class="text-xs text-slate-400 mt-1">Tip: Freelancers usually bill 60-70% of work hours</p>
+      </div>
+      <div>
+        <label for="weeksOff" class="block font-medium text-slate-700 mb-1.5 text-sm">Weeks Off per Year</label>
+        <input type="number" id="weeksOff" value="4" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+    </div>
+
+    <div class="result-box p-6 bg-white rounded text-center">
+      <div class="text-xs text-slate-500 uppercase mb-2">Your Minimum Hourly Rate</div>
+      <div class="text-5xl font-bold text-purple-600" id="hourlyRate">$0</div>
+      <div class="mt-4 text-sm text-slate-500" id="breakdown">—</div>
+    </div>
+  </div>
+
+  <script is:inline>
+    function calculate() {
+      const income = parseFloat(document.getElementById("desiredIncome").value) || 0;
+      const expenses = parseFloat(document.getElementById("expenses").value) || 0;
+      const billableHours = parseFloat(document.getElementById("billableHours").value) || 30;
+      const weeksOff = parseFloat(document.getElementById("weeksOff").value) || 0;
+
+      const workingWeeks = 52 - weeksOff;
+      const totalBillableHours = billableHours * workingWeeks;
+      const totalNeeded = income + expenses;
+      const hourlyRate = totalNeeded / totalBillableHours;
+
+      const fmt = (n) => "$" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      document.getElementById("hourlyRate").innerText = fmt(hourlyRate);
+      document.getElementById("breakdown").innerText = 
+        `${totalBillableHours} billable hours/year × ${fmt(hourlyRate)} = ${fmt(totalNeeded)} (${fmt(income)} income + ${fmt(expenses)} expenses)`;
+    }
+  </script>
+</SalaryToolLayout>

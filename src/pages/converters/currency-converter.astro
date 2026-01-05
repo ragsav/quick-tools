@@ -1,0 +1,104 @@
+---
+import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+---
+
+<ConverterToolLayout
+  title="Currency Converter - Convert Money Between Currencies"
+  description="Convert between major world currencies with approximate rates. Free online currency converter."
+  canonicalPath="/converters/currency-converter"
+  currentTool="Currency Converter"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Currency Converter</h1>
+    <p class="text-slate-500">Convert between major world currencies (approximate rates).</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4">
+      <div>
+        <label for="amount" class="block font-medium text-slate-700 mb-1.5 text-sm">Amount</label>
+        <input type="number" id="amount" value="100" class="w-full px-4 py-3 text-lg border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="convert()" />
+      </div>
+      <div>
+        <label for="fromCurrency" class="block font-medium text-slate-700 mb-1.5 text-sm">From</label>
+        <select id="fromCurrency" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" onchange="convert()"></select>
+      </div>
+      <div class="flex items-center justify-center">
+        <button onclick="swap()" class="p-2 rounded hover:bg-slate-200">⇄</button>
+      </div>
+      <div>
+        <label for="toCurrency" class="block font-medium text-slate-700 mb-1.5 text-sm">To</label>
+        <select id="toCurrency" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" onchange="convert()"></select>
+      </div>
+    </div>
+
+    <div class="result-box p-4 bg-white rounded">
+      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Converted Amount</div>
+      <div class="text-3xl font-bold text-amber-600" id="result">—</div>
+      <div class="text-sm text-slate-500 mt-2" id="rate">—</div>
+    </div>
+
+    <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded text-sm text-amber-800">
+      ⚠️ Rates are approximate and for reference only. Use a financial service for actual transactions.
+    </div>
+  </div>
+
+  <script is:inline>
+    // Approximate rates (USD as base) - update periodically
+    const rates = {
+      USD: { name: "US Dollar", rate: 1, symbol: "$" },
+      EUR: { name: "Euro", rate: 0.92, symbol: "€" },
+      GBP: { name: "British Pound", rate: 0.79, symbol: "£" },
+      JPY: { name: "Japanese Yen", rate: 149.50, symbol: "¥" },
+      INR: { name: "Indian Rupee", rate: 83.12, symbol: "₹" },
+      CAD: { name: "Canadian Dollar", rate: 1.36, symbol: "C$" },
+      AUD: { name: "Australian Dollar", rate: 1.53, symbol: "A$" },
+      CHF: { name: "Swiss Franc", rate: 0.88, symbol: "Fr" },
+      CNY: { name: "Chinese Yuan", rate: 7.24, symbol: "¥" },
+      SGD: { name: "Singapore Dollar", rate: 1.34, symbol: "S$" },
+      AED: { name: "UAE Dirham", rate: 3.67, symbol: "د.إ" },
+      MXN: { name: "Mexican Peso", rate: 17.15, symbol: "$" },
+      BRL: { name: "Brazilian Real", rate: 4.97, symbol: "R$" },
+      KRW: { name: "South Korean Won", rate: 1320, symbol: "₩" },
+    };
+
+    const fromSel = document.getElementById("fromCurrency");
+    const toSel = document.getElementById("toCurrency");
+
+    Object.entries(rates).forEach(([code, data]) => {
+      fromSel.innerHTML += `<option value="${code}">${code} - ${data.name}</option>`;
+      toSel.innerHTML += `<option value="${code}">${code} - ${data.name}</option>`;
+    });
+
+    fromSel.value = "USD";
+    toSel.value = "EUR";
+
+    function swap() {
+      const temp = fromSel.value;
+      fromSel.value = toSel.value;
+      toSel.value = temp;
+      convert();
+    }
+
+    function convert() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const from = fromSel.value;
+      const to = toSel.value;
+
+      if (isNaN(amount)) {
+        document.getElementById("result").innerText = "Enter an amount";
+        return;
+      }
+
+      // Convert via USD
+      const inUSD = amount / rates[from].rate;
+      const result = inUSD * rates[to].rate;
+      const exchangeRate = rates[to].rate / rates[from].rate;
+
+      document.getElementById("result").innerText = `${rates[to].symbol} ${result.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById("rate").innerText = `1 ${from} = ${exchangeRate.toFixed(4)} ${to}`;
+    }
+
+    convert();
+  </script>
+</ConverterToolLayout>

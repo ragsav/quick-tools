@@ -1,0 +1,99 @@
+---
+import TextToolLayout from "../../layouts/TextToolLayout.astro";
+---
+
+<TextToolLayout
+  title="Line Sorter - Sort Text Lines A-Z Online"
+  description="Sort lines of text alphabetically (A-Z or Z-A), numerically, or by length. Free online line sorter."
+  canonicalPath="/text/line-sorter"
+  currentTool="Line Sorter"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Line Sorter</h1>
+    <p class="text-slate-500">Sort lines alphabetically, numerically, or by length.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label for="input" class="block font-medium text-slate-700 mb-1.5 text-sm">Enter lines to sort</label>
+      <textarea id="input" rows="8" placeholder="Enter text with multiple lines..." class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono text-sm"></textarea>
+    </div>
+
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button onclick="sort('az')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-emerald-500">A → Z</button>
+      <button onclick="sort('za')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-emerald-500">Z → A</button>
+      <button onclick="sort('num')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-emerald-500">Numeric (1, 2, 10)</button>
+      <button onclick="sort('length')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-emerald-500">By Length (Short → Long)</button>
+      <button onclick="sort('reverse')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-emerald-500">Reverse Order</button>
+      <button onclick="sort('random')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-emerald-500">🎲 Randomize</button>
+    </div>
+
+    <div class="flex gap-4 mb-4">
+      <label class="flex items-center gap-2 text-sm text-slate-600">
+        <input type="checkbox" id="ignoreCase" checked class="w-4 h-4" />
+        Ignore case
+      </label>
+      <label class="flex items-center gap-2 text-sm text-slate-600">
+        <input type="checkbox" id="removeEmpty" class="w-4 h-4" />
+        Remove empty lines
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">Sorted Result</label>
+      <textarea id="output" rows="8" readonly class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono text-sm"></textarea>
+    </div>
+
+    <button onclick="copyResult()" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:border-emerald-500">📋 Copy Result</button>
+  </div>
+
+  <script is:inline>
+    function sort(type) {
+      const input = document.getElementById("input").value;
+      const ignoreCase = document.getElementById("ignoreCase").checked;
+      const removeEmpty = document.getElementById("removeEmpty").checked;
+      
+      let lines = input.split('\n');
+      
+      if (removeEmpty) {
+        lines = lines.filter(l => l.trim().length > 0);
+      }
+
+      switch(type) {
+        case 'az':
+          lines.sort((a, b) => (ignoreCase ? a.toLowerCase() : a).localeCompare(ignoreCase ? b.toLowerCase() : b));
+          break;
+        case 'za':
+          lines.sort((a, b) => (ignoreCase ? b.toLowerCase() : b).localeCompare(ignoreCase ? a.toLowerCase() : a));
+          break;
+        case 'num':
+          lines.sort((a, b) => {
+            const numA = parseFloat(a.match(/[\d.]+/)?.[0] || 0);
+            const numB = parseFloat(b.match(/[\d.]+/)?.[0] || 0);
+            return numA - numB;
+          });
+          break;
+        case 'length':
+          lines.sort((a, b) => a.length - b.length);
+          break;
+        case 'reverse':
+          lines.reverse();
+          break;
+        case 'random':
+          for (let i = lines.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [lines[i], lines[j]] = [lines[j], lines[i]];
+          }
+          break;
+      }
+
+      document.getElementById("output").value = lines.join('\n');
+    }
+
+    function copyResult() {
+      document.getElementById("output").select();
+      document.execCommand("copy");
+      alert("Copied!");
+    }
+  </script>
+</TextToolLayout>

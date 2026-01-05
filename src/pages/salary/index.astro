@@ -1,0 +1,62 @@
+---
+import SalaryToolLayout from "../../layouts/SalaryToolLayout.astro";
+---
+
+<SalaryToolLayout
+  title="Salary & Finance Tools - Free Online Calculators"
+  description="Free salary and finance calculators. Calculate hourly rates, overtime, bonuses, loans, and more."
+  canonicalPath="/salary"
+  currentTool=""
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">💰 Salary & Finance Tools</h1>
+    <p class="text-slate-500">Calculate salaries, loans, and other financial figures.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+    <a href="/salary/salary-to-hourly" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-purple-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Salary to Hourly</h3>
+      <p class="text-sm text-slate-500">Convert annual salary to hourly rate</p>
+    </a>
+
+    <a href="/salary/hourly-to-monthly" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-purple-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Hourly to Salary</h3>
+      <p class="text-sm text-slate-500">Convert hourly rate to annual salary</p>
+    </a>
+
+    <a href="/salary/overtime-pay" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-purple-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Overtime Pay</h3>
+      <p class="text-sm text-slate-500">Calculate overtime earnings</p>
+    </a>
+
+    <a href="/salary/bonus-calculator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-purple-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Bonus Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate bonus after tax</p>
+    </a>
+
+    <a href="/salary/pay-raise" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-purple-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Pay Raise Calculator</h3>
+      <p class="text-sm text-slate-500">See your new salary after a raise</p>
+    </a>
+
+    <a href="/salary/freelance-rate" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-purple-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Freelance Rate</h3>
+      <p class="text-sm text-slate-500">Calculate your freelance hourly rate</p>
+    </a>
+
+    <a href="/salary/commission" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-purple-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Commission Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate sales commission</p>
+    </a>
+
+    <a href="/salary/loan-emi" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-purple-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Loan EMI Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate monthly loan payments</p>
+    </a>
+
+    <a href="/salary/simple-interest" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-purple-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Simple Interest</h3>
+      <p class="text-sm text-slate-500">Calculate simple interest</p>
+    </a>
+  </div>
+</SalaryToolLayout>

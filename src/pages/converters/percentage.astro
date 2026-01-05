@@ -1,0 +1,112 @@
+---
+import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+---
+
+<ConverterToolLayout
+  title="Percentage Calculator - Calculate Percentages Online"
+  description="Calculate percentages easily. Find percent of number, percentage change, and more. Free online calculator."
+  canonicalPath="/converters/percentage"
+  currentTool="Percentage Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Percentage Calculator</h1>
+    <p class="text-slate-500">Calculate percentages with multiple methods.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="space-y-6">
+      <!-- What is X% of Y? -->
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <h3 class="font-medium text-slate-900 mb-3">What is X% of Y?</h3>
+        <div class="flex flex-wrap items-center gap-2">
+          <span>What is</span>
+          <input type="number" id="p1" class="w-20 px-3 py-2 border border-slate-300 rounded outline-none" oninput="calc1()" />
+          <span>% of</span>
+          <input type="number" id="y1" class="w-24 px-3 py-2 border border-slate-300 rounded outline-none" oninput="calc1()" />
+          <span>=</span>
+          <span class="font-bold text-amber-600" id="r1">?</span>
+        </div>
+      </div>
+
+      <!-- X is what % of Y? -->
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <h3 class="font-medium text-slate-900 mb-3">X is what % of Y?</h3>
+        <div class="flex flex-wrap items-center gap-2">
+          <input type="number" id="x2" class="w-24 px-3 py-2 border border-slate-300 rounded outline-none" oninput="calc2()" />
+          <span>is what % of</span>
+          <input type="number" id="y2" class="w-24 px-3 py-2 border border-slate-300 rounded outline-none" oninput="calc2()" />
+          <span>=</span>
+          <span class="font-bold text-amber-600" id="r2">?</span>
+          <span>%</span>
+        </div>
+      </div>
+
+      <!-- Percentage change -->
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <h3 class="font-medium text-slate-900 mb-3">Percentage Change</h3>
+        <div class="flex flex-wrap items-center gap-2">
+          <span>From</span>
+          <input type="number" id="from3" class="w-24 px-3 py-2 border border-slate-300 rounded outline-none" oninput="calc3()" />
+          <span>to</span>
+          <input type="number" id="to3" class="w-24 px-3 py-2 border border-slate-300 rounded outline-none" oninput="calc3()" />
+          <span>=</span>
+          <span class="font-bold text-amber-600" id="r3">?</span>
+          <span>% change</span>
+        </div>
+      </div>
+
+      <!-- Increase/Decrease by % -->
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <h3 class="font-medium text-slate-900 mb-3">Increase/Decrease by Percentage</h3>
+        <div class="flex flex-wrap items-center gap-2">
+          <input type="number" id="v4" class="w-24 px-3 py-2 border border-slate-300 rounded outline-none" oninput="calc4()" />
+          <select id="op4" class="px-3 py-2 border border-slate-300 rounded outline-none" onchange="calc4()">
+            <option value="increase">increased by</option>
+            <option value="decrease">decreased by</option>
+          </select>
+          <input type="number" id="p4" class="w-20 px-3 py-2 border border-slate-300 rounded outline-none" oninput="calc4()" />
+          <span>% =</span>
+          <span class="font-bold text-amber-600" id="r4">?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    function calc1() {
+      const p = parseFloat(document.getElementById("p1").value);
+      const y = parseFloat(document.getElementById("y1").value);
+      document.getElementById("r1").innerText = (isNaN(p) || isNaN(y)) ? "?" : (p / 100 * y).toFixed(2);
+    }
+
+    function calc2() {
+      const x = parseFloat(document.getElementById("x2").value);
+      const y = parseFloat(document.getElementById("y2").value);
+      document.getElementById("r2").innerText = (isNaN(x) || isNaN(y) || y === 0) ? "?" : (x / y * 100).toFixed(2);
+    }
+
+    function calc3() {
+      const from = parseFloat(document.getElementById("from3").value);
+      const to = parseFloat(document.getElementById("to3").value);
+      if (isNaN(from) || isNaN(to) || from === 0) {
+        document.getElementById("r3").innerText = "?";
+        return;
+      }
+      const change = ((to - from) / Math.abs(from)) * 100;
+      document.getElementById("r3").innerText = (change >= 0 ? "+" : "") + change.toFixed(2);
+    }
+
+    function calc4() {
+      const v = parseFloat(document.getElementById("v4").value);
+      const p = parseFloat(document.getElementById("p4").value);
+      const op = document.getElementById("op4").value;
+      if (isNaN(v) || isNaN(p)) {
+        document.getElementById("r4").innerText = "?";
+        return;
+      }
+      const change = v * (p / 100);
+      const result = op === "increase" ? v + change : v - change;
+      document.getElementById("r4").innerText = result.toFixed(2);
+    }
+  </script>
+</ConverterToolLayout>

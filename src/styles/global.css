@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+/* Tell Tailwind v4 to scan these paths */
+@source "../pages/**/*.astro";
+@source "../layouts/**/*.astro";
+@source "../components/**/*.astro";
+
+/* Custom button styling using cluster color */
+.btn-primary {
+  background-color: var(--cluster-color, #1c398e);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+}

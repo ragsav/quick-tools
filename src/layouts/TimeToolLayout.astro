@@ -1,0 +1,61 @@
+---
+/**
+ * Time & Date Tools Layout
+ *
+ * Extends ToolLayout with Time cluster-specific configuration.
+ * Sets cluster color to blue (#1c398e) and provides time-related tools.
+ */
+
+import ToolLayout from "./ToolLayout.astro";
+import { CONSTANT } from "../constants";
+
+interface Props {
+    title: string;
+    description: string;
+    canonicalPath: string;
+    currentTool?: string;
+}
+
+const { title, description, canonicalPath, currentTool = "" } = Astro.props;
+
+// Time & Date cluster config
+const cluster = {
+    name: "Time & Date",
+    icon: "🕒",
+    color: "#1c398e",
+    url: "/time/",
+};
+
+// All tools in this cluster (for related tools section)
+const allTimeTools = [
+    {
+        name: "Date Difference Calculator",
+        url: "/time/date-difference-calculator",
+    },
+    { name: "Working Days Calculator", url: "/time/working-days-calculator" },
+    { name: "Business Days Calculator", url: "/time/business-days-calculator" },
+    { name: "Age Calculator", url: "/time/age-calculator" },
+    { name: "Countdown to Date", url: "/time/countdown-calculator" },
+    { name: "Time Zone Converter", url: "/time/timezone-converter" },
+    { name: "Weeks Between Dates", url: "/time/weeks-between-dates" },
+    { name: "Months Between Dates", url: "/time/months-between-dates" },
+    { name: "Leap Year Checker", url: "/time/leap-year-checker" },
+    { name: "Day of Week Calculator", url: "/time/day-of-week" },
+    { name: "Date Add/Subtract", url: "/time/date-add-subtract" },
+];
+
+// Filter out current tool from related tools, show max 4
+const relatedTools = allTimeTools
+    .filter((tool) => tool.name !== currentTool)
+    .slice(0, 4);
+---
+
+<ToolLayout
+    title={title}
+    description={description}
+    canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
+    cluster={cluster}
+    relatedTools={relatedTools}
+>
+    <slot />
+</ToolLayout>

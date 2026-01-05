@@ -1,0 +1,47 @@
+---
+import DevToolLayout from "../../layouts/DevToolLayout.astro";
+---
+
+<DevToolLayout
+  title="Web & Dev Utilities - Free Developer Tools"
+  description="Free developer tools. JSON formatter, Base64 encoder, hash generator, color picker, and more."
+  canonicalPath="/dev"
+  currentTool=""
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">🌐 Web / Dev Utilities</h1>
+    <p class="text-slate-500">Developer tools and formatters for everyday coding tasks.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+    <a href="/dev/json-formatter" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-orange-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">JSON Formatter</h3>
+      <p class="text-sm text-slate-500">Format, beautify, and validate JSON</p>
+    </a>
+
+    <a href="/dev/base64" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-orange-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Base64 Encoder/Decoder</h3>
+      <p class="text-sm text-slate-500">Encode and decode Base64</p>
+    </a>
+
+    <a href="/dev/hash-generator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-orange-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Hash Generator</h3>
+      <p class="text-sm text-slate-500">Generate SHA-1, SHA-256, SHA-512</p>
+    </a>
+
+    <a href="/dev/lorem-ipsum" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-orange-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Lorem Ipsum Generator</h3>
+      <p class="text-sm text-slate-500">Generate placeholder text</p>
+    </a>
+
+    <a href="/dev/color-picker" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-orange-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Color Picker</h3>
+      <p class="text-sm text-slate-500">Pick colors, convert HEX/RGB/HSL</p>
+    </a>
+
+    <a href="/dev/password-generator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-orange-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Password Generator</h3>
+      <p class="text-sm text-slate-500">Generate strong, secure passwords</p>
+    </a>
+  </div>
+</DevToolLayout>

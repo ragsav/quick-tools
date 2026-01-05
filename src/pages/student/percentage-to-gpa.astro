@@ -1,0 +1,60 @@
+---
+import StudentToolLayout from "../../layouts/StudentToolLayout.astro";
+---
+
+<StudentToolLayout
+  title="Percentage to GPA Converter - Convert Percent to GPA"
+  description="Convert percentage marks to GPA for different grading scales. Free online converter."
+  canonicalPath="/student/percentage-to-gpa"
+  currentTool="Percentage to GPA"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Percentage to GPA Converter</h1>
+    <p class="text-slate-500">Convert your percentage to GPA on different scales.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label for="percentage" class="block font-medium text-slate-700 mb-1.5 text-sm">Your Percentage (%)</label>
+        <input type="number" id="percentage" step="0.1" max="100" placeholder="e.g., 85" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="convert()" />
+      </div>
+      <div>
+        <label for="scale" class="block font-medium text-slate-700 mb-1.5 text-sm">Target GPA Scale</label>
+        <select id="scale" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" onchange="convert()">
+          <option value="4">4.0 Scale (US)</option>
+          <option value="10">10.0 Scale (India)</option>
+          <option value="5">5.0 Scale</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="result-box p-6 bg-white rounded text-center">
+      <div class="text-xs text-slate-500 uppercase mb-2">GPA</div>
+      <div class="text-5xl font-bold text-pink-600" id="result">—</div>
+    </div>
+  </div>
+
+  <script is:inline>
+    function convert() {
+      const percentage = parseFloat(document.getElementById("percentage").value);
+      const scale = parseFloat(document.getElementById("scale").value);
+      
+      if (isNaN(percentage) || percentage < 0 || percentage > 100) {
+        document.getElementById("result").innerText = "—";
+        return;
+      }
+
+      let gpa;
+      if (scale === 4) {
+        gpa = (percentage / 100) * 4;
+      } else if (scale === 10) {
+        gpa = percentage / 9.5; // Common Indian conversion
+      } else {
+        gpa = (percentage / 100) * scale;
+      }
+
+      document.getElementById("result").innerText = gpa.toFixed(2);
+    }
+  </script>
+</StudentToolLayout>

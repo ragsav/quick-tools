@@ -1,0 +1,76 @@
+---
+import DevToolLayout from "../../layouts/DevToolLayout.astro";
+---
+
+<DevToolLayout
+  title="Base64 Encoder & Decoder - Encode/Decode Base64 Online"
+  description="Encode text to Base64 or decode Base64 to text. Free online Base64 converter."
+  canonicalPath="/dev/base64"
+  currentTool="Base64 Encoder/Decoder"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Base64 Encoder / Decoder</h1>
+    <p class="text-slate-500">Encode and decode Base64 strings instantly.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label for="input" class="block font-medium text-slate-700 mb-1.5 text-sm">Input</label>
+      <textarea id="input" rows="5" placeholder="Enter text to encode or Base64 to decode..." class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono resize-y"></textarea>
+    </div>
+
+    <div class="flex gap-3 mb-4">
+      <button onclick="encode()" class="btn-primary px-6 py-2 font-semibold text-white rounded">Encode to Base64</button>
+      <button onclick="decode()" class="px-4 py-2 bg-white border border-orange-500 text-orange-600 rounded font-medium">Decode from Base64</button>
+      <button onclick="swap()" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm">⇅ Swap</button>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">Output</label>
+      <textarea id="output" rows="5" readonly class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-slate-50 text-slate-800 outline-none font-mono resize-y"></textarea>
+    </div>
+
+    <button onclick="copyResult()" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm">📋 Copy Output</button>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">What is Base64?</h2>
+    <p class="text-slate-600">Base64 is a binary-to-text encoding scheme that represents binary data using 64 ASCII characters. It's commonly used for embedding images in HTML/CSS, sending attachments in emails, and storing complex data in JSON.</p>
+  </section>
+
+  <script is:inline>
+    function encode() {
+      try {
+        const input = document.getElementById("input").value;
+        const encoded = btoa(unescape(encodeURIComponent(input)));
+        document.getElementById("output").value = encoded;
+      } catch (e) {
+        document.getElementById("output").value = "Error encoding: " + e.message;
+      }
+    }
+
+    function decode() {
+      try {
+        const input = document.getElementById("input").value;
+        const decoded = decodeURIComponent(escape(atob(input)));
+        document.getElementById("output").value = decoded;
+      } catch (e) {
+        document.getElementById("output").value = "Error decoding: Invalid Base64 string";
+      }
+    }
+
+    function swap() {
+      const input = document.getElementById("input");
+      const output = document.getElementById("output");
+      const temp = input.value;
+      input.value = output.value;
+      output.value = temp;
+    }
+
+    function copyResult() {
+      document.getElementById("output").select();
+      document.execCommand("copy");
+      alert("Copied!");
+    }
+  </script>
+</DevToolLayout>

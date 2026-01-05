@@ -1,0 +1,61 @@
+---
+import MathToolLayout from "../../layouts/MathToolLayout.astro";
+---
+
+<MathToolLayout
+  title="Power Calculator - Calculate x^n (Exponents)"
+  description="Calculate powers and exponents. Find x raised to the power of n. Free online exponent calculator."
+  canonicalPath="/math/power-calculator"
+  currentTool="Power Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Power Calculator</h1>
+    <p class="text-slate-500">Calculate x raised to the power of n (x^n).</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="flex items-center gap-4 mb-6">
+      <div>
+        <label for="base" class="block font-medium text-slate-700 mb-1.5 text-sm">Base (x)</label>
+        <input type="number" id="base" placeholder="2" class="w-28 px-4 py-3 text-xl border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div class="text-3xl text-slate-400 mt-6">^</div>
+      <div>
+        <label for="exponent" class="block font-medium text-slate-700 mb-1.5 text-sm">Exponent (n)</label>
+        <input type="number" id="exponent" placeholder="3" class="w-28 px-4 py-3 text-xl border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+    </div>
+
+    <div class="result-box p-6 bg-white rounded text-center">
+      <div class="text-xl text-slate-500 mb-2"><span id="baseDisplay">?</span><sup id="expDisplay">?</sup> =</div>
+      <div class="text-4xl font-bold text-teal-600" id="result">?</div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">Power Rules</h2>
+    <div class="grid md:grid-cols-3 gap-4 text-sm">
+      <div class="p-3 bg-white border border-slate-200 rounded">x<sup>0</sup> = 1</div>
+      <div class="p-3 bg-white border border-slate-200 rounded">x<sup>1</sup> = x</div>
+      <div class="p-3 bg-white border border-slate-200 rounded">x<sup>-n</sup> = 1/x<sup>n</sup></div>
+    </div>
+  </section>
+
+  <script is:inline>
+    function calculate() {
+      const base = parseFloat(document.getElementById("base").value);
+      const exp = parseFloat(document.getElementById("exponent").value);
+      
+      document.getElementById("baseDisplay").innerText = isNaN(base) ? "?" : base;
+      document.getElementById("expDisplay").innerText = isNaN(exp) ? "?" : exp;
+
+      if (isNaN(base) || isNaN(exp)) {
+        document.getElementById("result").innerText = "?";
+        return;
+      }
+
+      const result = Math.pow(base, exp);
+      document.getElementById("result").innerText = result.toLocaleString(undefined, { maximumFractionDigits: 10 });
+    }
+  </script>
+</MathToolLayout>

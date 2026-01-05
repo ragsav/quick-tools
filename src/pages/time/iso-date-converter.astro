@@ -1,0 +1,119 @@
+---
+import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
+---
+
+<TimeToolLayout
+  title="ISO Date Converter - Convert to/from ISO 8601 Format"
+  description="Convert dates to and from ISO 8601 format. Parse and format ISO date strings. Free online tool."
+  canonicalPath="/time/iso-date-converter"
+  currentTool="ISO Date Converter"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">ISO Date Converter</h1>
+    <p class="text-slate-500">Convert between human-readable dates and ISO 8601 format.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid gap-6 md:grid-cols-2">
+      <!-- Date to ISO -->
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <h3 class="font-medium text-slate-900 mb-4">Date → ISO String</h3>
+        <div class="mb-4">
+          <label for="dateInput" class="block text-sm text-slate-600 mb-1">Select Date & Time</label>
+          <input type="datetime-local" id="dateInput" class="w-full px-3 py-2 border border-slate-300 rounded text-slate-800 outline-none" />
+        </div>
+        <button onclick="dateToIso()" class="btn-primary px-4 py-2 text-sm font-semibold text-white rounded">Convert to ISO</button>
+        <div class="mt-4 p-3 bg-slate-50 rounded font-mono text-sm break-all" id="isoOutput">—</div>
+      </div>
+
+      <!-- ISO to Date -->
+      <div class="p-4 bg-white border border-slate-200 rounded">
+        <h3 class="font-medium text-slate-900 mb-4">ISO String → Date</h3>
+        <div class="mb-4">
+          <label for="isoInput" class="block text-sm text-slate-600 mb-1">Enter ISO String</label>
+          <input type="text" id="isoInput" placeholder="2024-01-15T10:30:00Z" class="w-full px-3 py-2 border border-slate-300 rounded text-slate-800 outline-none font-mono" />
+        </div>
+        <button onclick="isoToDate()" class="btn-primary px-4 py-2 text-sm font-semibold text-white rounded">Parse ISO</button>
+        <div class="mt-4 p-3 bg-slate-50 rounded text-sm" id="dateOutput">—</div>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-slate-200">
+      <h3 class="font-medium text-slate-700 mb-3">Current Time in ISO</h3>
+      <div class="p-3 bg-white border border-slate-200 rounded font-mono text-sm" id="currentIso">—</div>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">ISO 8601 Format</h2>
+    <p class="text-slate-600 mb-3">ISO 8601 is the international standard for date and time representation:</p>
+    <ul class="list-disc pl-6 text-slate-600 space-y-2">
+      <li><code class="bg-slate-100 px-1 rounded">2024-01-15</code> — Date only</li>
+      <li><code class="bg-slate-100 px-1 rounded">2024-01-15T10:30:00</code> — Date and time</li>
+      <li><code class="bg-slate-100 px-1 rounded">2024-01-15T10:30:00Z</code> — UTC time (Z = Zulu)</li>
+      <li><code class="bg-slate-100 px-1 rounded">2024-01-15T10:30:00+05:30</code> — With timezone offset</li>
+    </ul>
+  </section>
+
+  <script is:inline>
+    // Set current datetime as default
+    const now = new Date();
+    document.getElementById("dateInput").value = now.toISOString().slice(0, 16);
+
+    // Show current ISO time
+    function updateCurrentIso() {
+      document.getElementById("currentIso").innerText = new Date().toISOString();
+    }
+    updateCurrentIso();
+    setInterval(updateCurrentIso, 1000);
+
+    function dateToIso() {
+      const input = document.getElementById("dateInput").value;
+      if (!input) {
+        document.getElementById("isoOutput").innerText = "Please select a date";
+        return;
+      }
+
+      const date = new Date(input);
+      const isoString = date.toISOString();
+      
+      document.getElementById("isoOutput").innerHTML = `
+        <div class="mb-2"><strong>Full:</strong> ${isoString}</div>
+        <div class="mb-2"><strong>Date:</strong> ${isoString.split('T')[0]}</div>
+        <div><strong>Unix:</strong> ${date.getTime()}</div>
+      `;
+    }
+
+    function isoToDate() {
+      const input = document.getElementById("isoInput").value.trim();
+      if (!input) {
+        document.getElementById("dateOutput").innerText = "Please enter an ISO string";
+        return;
+      }
+
+      try {
+        const date = new Date(input);
+        if (isNaN(date.getTime())) throw new Error("Invalid date");
+
+        const options = { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          timeZoneName: 'short'
+        };
+
+        document.getElementById("dateOutput").innerHTML = `
+          <div class="mb-2"><strong>Local:</strong> ${date.toLocaleString('en-US', options)}</div>
+          <div class="mb-2"><strong>UTC:</strong> ${date.toUTCString()}</div>
+          <div><strong>Unix timestamp:</strong> ${date.getTime()}</div>
+        `;
+      } catch (e) {
+        document.getElementById("dateOutput").innerText = "Invalid ISO format";
+      }
+    }
+  </script>
+</TimeToolLayout>

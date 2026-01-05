@@ -1,0 +1,66 @@
+---
+import SalaryToolLayout from "../../layouts/SalaryToolLayout.astro";
+---
+
+<SalaryToolLayout
+  title="Pay Raise Calculator - Calculate Salary Increase"
+  description="Calculate how much more you'll earn with a pay raise. See annual and monthly differences."
+  canonicalPath="/salary/pay-raise"
+  currentTool="Pay Raise Calculator"
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Pay Raise Calculator</h1>
+    <p class="text-slate-500">See how much more you'll earn with a salary increase.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label for="currentSalary" class="block font-medium text-slate-700 mb-1.5 text-sm">Current Salary ($)</label>
+        <input type="number" id="currentSalary" placeholder="50000" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+      <div>
+        <label for="raisePercent" class="block font-medium text-slate-700 mb-1.5 text-sm">Raise Percentage (%)</label>
+        <input type="number" id="raisePercent" placeholder="5" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      </div>
+    </div>
+
+    <div class="result-box p-4 bg-white rounded">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">New Salary</div>
+          <div class="text-2xl font-bold text-purple-600" id="newSalary">$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Annual Increase</div>
+          <div class="text-xl font-bold text-green-600" id="annualIncrease">+$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Monthly Increase</div>
+          <div class="text-xl font-bold text-green-600" id="monthlyIncrease">+$0</div>
+        </div>
+        <div>
+          <div class="text-xs text-slate-500 uppercase mb-1">Per Paycheck (Bi-weekly)</div>
+          <div class="text-xl font-bold text-green-600" id="biweeklyIncrease">+$0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    function calculate() {
+      const current = parseFloat(document.getElementById("currentSalary").value) || 0;
+      const raisePercent = parseFloat(document.getElementById("raisePercent").value) || 0;
+
+      const increase = current * (raisePercent / 100);
+      const newSalary = current + increase;
+
+      const fmt = (n) => "$" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      document.getElementById("newSalary").innerText = fmt(newSalary);
+      document.getElementById("annualIncrease").innerText = "+" + fmt(increase);
+      document.getElementById("monthlyIncrease").innerText = "+" + fmt(increase / 12);
+      document.getElementById("biweeklyIncrease").innerText = "+" + fmt(increase / 26);
+    }
+  </script>
+</SalaryToolLayout>
