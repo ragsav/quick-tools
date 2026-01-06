@@ -1,5 +1,23 @@
 ---
 import MathToolLayout from "../../layouts/MathToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What is a perfect square?",
+    answer:
+      "A perfect square is a number whose square root is a whole number, like 4, 9, 16, 25.",
+  },
+  {
+    question: "Can I calculate square root of negative numbers?",
+    answer:
+      "No, the square root of negative numbers is undefined in real numbers.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <MathToolLayout
@@ -7,20 +25,38 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
   description="Calculate the square root of any number. Support for perfect and imperfect squares. Free online tool."
   canonicalPath="/math/square-root"
   currentTool="Square Root Calculator"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Square Root Calculator</h1>
-    <p class="text-slate-500">Calculate the square root of any positive number.</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Square Root Calculator
+    </h1>
+    <p class="text-slate-500">
+      Calculate the square root of any positive number.
+    </p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="mb-4">
-      <label for="number" class="block font-medium text-slate-700 mb-1.5 text-sm">Enter a Number</label>
-      <input type="number" id="number" placeholder="e.g., 144" min="0" class="w-full max-w-xs px-4 py-3 text-xl border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      <label
+        for="number"
+        class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Enter a Number</label
+      >
+      <input
+        type="number"
+        id="number"
+        placeholder="e.g., 144"
+        min="0"
+        class="w-full max-w-xs px-4 py-3 text-xl border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        oninput="calculate()"
+      />
     </div>
 
     <div class="result-box p-6 bg-white rounded text-center">
-      <div class="text-xl text-slate-500 mb-2">√<span id="inputDisplay">?</span> =</div>
+      <div class="text-xl text-slate-500 mb-2">
+        √<span id="inputDisplay">?</span> =
+      </div>
       <div class="text-5xl font-bold text-teal-600" id="result">?</div>
       <div class="text-sm text-slate-500 mt-2" id="info">—</div>
     </div>
@@ -29,15 +65,51 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
   <section class="mt-8 pt-6 border-t border-slate-200">
     <h2 class="text-xl font-semibold text-slate-900 mb-4">Perfect Squares</h2>
     <div class="flex flex-wrap gap-2 text-sm">
-      <button onclick="setNumber(4)" class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500">√4 = 2</button>
-      <button onclick="setNumber(9)" class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500">√9 = 3</button>
-      <button onclick="setNumber(16)" class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500">√16 = 4</button>
-      <button onclick="setNumber(25)" class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500">√25 = 5</button>
-      <button onclick="setNumber(36)" class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500">√36 = 6</button>
-      <button onclick="setNumber(49)" class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500">√49 = 7</button>
-      <button onclick="setNumber(64)" class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500">√64 = 8</button>
-      <button onclick="setNumber(81)" class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500">√81 = 9</button>
-      <button onclick="setNumber(100)" class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500">√100 = 10</button>
+      <button
+        onclick="setNumber(4)"
+        class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500"
+        >√4 = 2</button
+      >
+      <button
+        onclick="setNumber(9)"
+        class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500"
+        >√9 = 3</button
+      >
+      <button
+        onclick="setNumber(16)"
+        class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500"
+        >√16 = 4</button
+      >
+      <button
+        onclick="setNumber(25)"
+        class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500"
+        >√25 = 5</button
+      >
+      <button
+        onclick="setNumber(36)"
+        class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500"
+        >√36 = 6</button
+      >
+      <button
+        onclick="setNumber(49)"
+        class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500"
+        >√49 = 7</button
+      >
+      <button
+        onclick="setNumber(64)"
+        class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500"
+        >√64 = 8</button
+      >
+      <button
+        onclick="setNumber(81)"
+        class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500"
+        >√81 = 9</button
+      >
+      <button
+        onclick="setNumber(100)"
+        class="px-3 py-1 bg-white border border-slate-200 rounded hover:border-teal-500"
+        >√100 = 10</button
+      >
     </div>
   </section>
 
@@ -49,10 +121,11 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
 
     function calculate() {
       const num = parseFloat(document.getElementById("number").value);
-      
+
       if (isNaN(num) || num < 0) {
         document.getElementById("inputDisplay").innerText = "?";
-        document.getElementById("result").innerText = num < 0 ? "Undefined (negative)" : "?";
+        document.getElementById("result").innerText =
+          num < 0 ? "Undefined (negative)" : "?";
         document.getElementById("info").innerText = "—";
         return;
       }
@@ -61,8 +134,12 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
       const isPerfect = Number.isInteger(sqrt);
 
       document.getElementById("inputDisplay").innerText = num;
-      document.getElementById("result").innerText = sqrt.toFixed(isPerfect ? 0 : 8);
-      document.getElementById("info").innerText = isPerfect ? "Perfect square" : "Irrational number";
+      document.getElementById("result").innerText = sqrt.toFixed(
+        isPerfect ? 0 : 8,
+      );
+      document.getElementById("info").innerText = isPerfect
+        ? "Perfect square"
+        : "Irrational number";
     }
   </script>
 </MathToolLayout>

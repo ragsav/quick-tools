@@ -6,14 +6,26 @@
 import ToolLayout from "./ToolLayout.astro";
 import { CONSTANT } from "../constants";
 
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 interface Props {
   title: string;
   description: string;
   canonicalPath: string;
   currentTool?: string;
+  faqItems?: FAQItem[];
 }
 
-const { title, description, canonicalPath, currentTool = "" } = Astro.props;
+const {
+  title,
+  description,
+  canonicalPath,
+  currentTool = "",
+  faqItems = [],
+} = Astro.props;
 
 const cluster = {
   name: "Student Tools",
@@ -43,6 +55,7 @@ const relatedTools = allTools
   canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
   cluster={cluster}
   relatedTools={relatedTools}
+  faqItems={faqItems}
 >
   <slot />
 </ToolLayout>

@@ -1,5 +1,23 @@
 ---
 import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What time units are supported?",
+    answer:
+      "Seconds, minutes, hours, days, weeks, months (30 days), and years (365 days).",
+  },
+  {
+    question: "How are months and years calculated?",
+    answer:
+      "For simplicity, months are treated as 30 days and years as 365 days.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -7,21 +25,40 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
   description="Convert between time units: seconds, minutes, hours, days, weeks, months, years. Free online tool."
   canonicalPath="/converters/time-units"
   currentTool="Time Unit Converter"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Time Unit Converter</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Time Unit Converter
+    </h1>
     <p class="text-slate-500">Convert between different time units.</p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="flex flex-wrap gap-4 items-end mb-6">
       <div class="flex-1 min-w-48">
-        <label for="value" class="block font-medium text-slate-700 mb-1.5 text-sm">Value</label>
-        <input type="number" id="value" value="1" class="w-full px-4 py-3 text-lg border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="convert()" />
+        <label
+          for="value"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">Value</label
+        >
+        <input
+          type="number"
+          id="value"
+          value="1"
+          class="w-full px-4 py-3 text-lg border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="convert()"
+        />
       </div>
       <div class="flex-1 min-w-48">
-        <label for="unit" class="block font-medium text-slate-700 mb-1.5 text-sm">Unit</label>
-        <select id="unit" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" onchange="convert()">
+        <label
+          for="unit"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">Unit</label
+        >
+        <select
+          id="unit"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          onchange="convert()"
+        >
           <option value="1">Seconds</option>
           <option value="60">Minutes</option>
           <option value="3600" selected>Hours</option>
@@ -36,35 +73,54 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Seconds</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="seconds">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="seconds">
+          —
+        </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Minutes</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="minutes">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="minutes">
+          —
+        </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Hours</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="hours">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="hours">
+          —
+        </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Days</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="days">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="days">
+          —
+        </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Weeks</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="weeks">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="weeks">
+          —
+        </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Months</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="months">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="months">
+          —
+        </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Years</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="years">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="years">
+          —
+        </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Milliseconds</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="milliseconds">—</div>
+        <div
+          class="font-mono text-lg font-bold text-slate-900"
+          id="milliseconds"
+        >
+          —
+        </div>
       </div>
     </div>
   </div>
@@ -79,11 +135,14 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
       const seconds = value * multiplier;
 
       const format = (n) => {
-        if (n >= 1) return n.toLocaleString(undefined, { maximumFractionDigits: 4 });
+        if (n >= 1)
+          return n.toLocaleString(undefined, { maximumFractionDigits: 4 });
         return n.toPrecision(4);
       };
 
-      document.getElementById("milliseconds").innerText = format(seconds * 1000);
+      document.getElementById("milliseconds").innerText = format(
+        seconds * 1000,
+      );
       document.getElementById("seconds").innerText = format(seconds);
       document.getElementById("minutes").innerText = format(seconds / 60);
       document.getElementById("hours").innerText = format(seconds / 3600);

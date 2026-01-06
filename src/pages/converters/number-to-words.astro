@@ -1,5 +1,23 @@
 ---
 import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What is the maximum number supported?",
+    answer:
+      "This tool can convert numbers up to 999 trillion, and also handles decimals.",
+  },
+  {
+    question: "When would I need to spell out numbers?",
+    answer:
+      "Common uses include writing checks, legal documents, contracts, and formal writing.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -7,20 +25,35 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
   description="Convert numbers to words in English. Spell out numbers for checks, legal documents, and more. Free online tool."
   canonicalPath="/converters/number-to-words"
   currentTool="Number to Words"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Number to Words</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Number to Words
+    </h1>
     <p class="text-slate-500">Convert numbers to written words (English).</p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="mb-4">
-      <label for="number" class="block font-medium text-slate-700 mb-1.5 text-sm">Enter Number</label>
-      <input type="text" id="number" placeholder="e.g., 1234.56" class="w-full max-w-md px-4 py-3 text-xl border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono" oninput="convert()" />
+      <label
+        for="number"
+        class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Enter Number</label
+      >
+      <input
+        type="text"
+        id="number"
+        placeholder="e.g., 1234.56"
+        class="w-full max-w-md px-4 py-3 text-xl border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono"
+        oninput="convert()"
+      />
     </div>
 
     <div class="result-box p-4 bg-white rounded">
-      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">In Words</div>
+      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">
+        In Words
+      </div>
       <div class="text-xl font-medium text-slate-900" id="result">—</div>
     </div>
 
@@ -52,27 +85,58 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
   </section>
 
   <script is:inline>
-    const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
-      'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
-    const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-    const scales = ['', 'thousand', 'million', 'billion', 'trillion'];
+    const ones = [
+      "",
+      "one",
+      "two",
+      "three",
+      "four",
+      "five",
+      "six",
+      "seven",
+      "eight",
+      "nine",
+      "ten",
+      "eleven",
+      "twelve",
+      "thirteen",
+      "fourteen",
+      "fifteen",
+      "sixteen",
+      "seventeen",
+      "eighteen",
+      "nineteen",
+    ];
+    const tens = [
+      "",
+      "",
+      "twenty",
+      "thirty",
+      "forty",
+      "fifty",
+      "sixty",
+      "seventy",
+      "eighty",
+      "ninety",
+    ];
+    const scales = ["", "thousand", "million", "billion", "trillion"];
 
     function convertHundreds(n) {
-      if (n === 0) return '';
+      if (n === 0) return "";
       if (n < 20) return ones[n];
       if (n < 100) {
         const t = Math.floor(n / 10);
         const o = n % 10;
-        return tens[t] + (o ? '-' + ones[o] : '');
+        return tens[t] + (o ? "-" + ones[o] : "");
       }
       const h = Math.floor(n / 100);
       const rest = n % 100;
-      return ones[h] + ' hundred' + (rest ? ' ' + convertHundreds(rest) : '');
+      return ones[h] + " hundred" + (rest ? " " + convertHundreds(rest) : "");
     }
 
     function numberToWords(n) {
-      if (n === 0) return 'zero';
-      if (n < 0) return 'negative ' + numberToWords(-n);
+      if (n === 0) return "zero";
+      if (n < 0) return "negative " + numberToWords(-n);
 
       let words = [];
       let scaleIndex = 0;
@@ -82,7 +146,7 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
         if (chunk > 0) {
           const chunkWords = convertHundreds(chunk);
           if (scales[scaleIndex]) {
-            words.unshift(chunkWords + ' ' + scales[scaleIndex]);
+            words.unshift(chunkWords + " " + scales[scaleIndex]);
           } else {
             words.unshift(chunkWords);
           }
@@ -91,36 +155,41 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
         scaleIndex++;
       }
 
-      return words.join(' ');
+      return words.join(" ");
     }
 
     function convert() {
       const input = document.getElementById("number").value.trim();
-      
+
       if (!input) {
         document.getElementById("result").innerText = "—";
         return;
       }
 
-      const num = parseFloat(input.replace(/,/g, ''));
+      const num = parseFloat(input.replace(/,/g, ""));
       if (isNaN(num)) {
-        document.getElementById("result").innerText = "Please enter a valid number";
+        document.getElementById("result").innerText =
+          "Please enter a valid number";
         return;
       }
 
       if (Math.abs(num) >= 1e15) {
-        document.getElementById("result").innerText = "Number too large (max: 999 trillion)";
+        document.getElementById("result").innerText =
+          "Number too large (max: 999 trillion)";
         return;
       }
 
-      const [intPart, decPart] = input.replace(/,/g, '').split('.');
+      const [intPart, decPart] = input.replace(/,/g, "").split(".");
       let result = numberToWords(Math.abs(parseInt(intPart)));
-      
-      if (num < 0) result = 'negative ' + result;
-      
+
+      if (num < 0) result = "negative " + result;
+
       if (decPart) {
-        const decimalWords = decPart.split('').map(d => ones[parseInt(d)] || 'zero').join(' ');
-        result += ' point ' + decimalWords;
+        const decimalWords = decPart
+          .split("")
+          .map((d) => ones[parseInt(d)] || "zero")
+          .join(" ");
+        result += " point " + decimalWords;
       }
 
       document.getElementById("result").innerText = result;

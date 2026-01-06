@@ -1,5 +1,23 @@
 ---
 import StudentToolLayout from "../../layouts/StudentToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How many hours should I study per day?",
+    answer:
+      "Experts recommend 4-6 focused hours for students, with breaks. Quality matters more than quantity.",
+  },
+  {
+    question: "How is feasibility calculated?",
+    answer:
+      "Easy if daily hours needed ≤70% of your limit, Tight if close to limit, Not possible if it exceeds your limit.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <StudentToolLayout
@@ -7,29 +25,79 @@ import StudentToolLayout from "../../layouts/StudentToolLayout.astro";
   description="Calculate how many hours you need to study based on subjects and exam dates. Study planner."
   canonicalPath="/student/study-hours"
   currentTool="Study Hours Calculator"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Study Hours Calculator</h1>
-    <p class="text-slate-500">Plan your study schedule based on available time.</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Study Hours Calculator
+    </h1>
+    <p class="text-slate-500">
+      Plan your study schedule based on available time.
+    </p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="grid md:grid-cols-2 gap-4 mb-6">
       <div>
-        <label for="subjects" class="block font-medium text-slate-700 mb-1.5 text-sm">Number of Subjects</label>
-        <input type="number" id="subjects" value="5" min="1" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+        <label
+          for="subjects"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Number of Subjects</label
+        >
+        <input
+          type="number"
+          id="subjects"
+          value="5"
+          min="1"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="calculate()"
+        />
       </div>
       <div>
-        <label for="hoursPerSubject" class="block font-medium text-slate-700 mb-1.5 text-sm">Hours Needed per Subject</label>
-        <input type="number" id="hoursPerSubject" value="10" min="1" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+        <label
+          for="hoursPerSubject"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Hours Needed per Subject</label
+        >
+        <input
+          type="number"
+          id="hoursPerSubject"
+          value="10"
+          min="1"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="calculate()"
+        />
       </div>
       <div>
-        <label for="daysLeft" class="block font-medium text-slate-700 mb-1.5 text-sm">Days Until Exam</label>
-        <input type="number" id="daysLeft" value="14" min="1" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+        <label
+          for="daysLeft"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Days Until Exam</label
+        >
+        <input
+          type="number"
+          id="daysLeft"
+          value="14"
+          min="1"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="calculate()"
+        />
       </div>
       <div>
-        <label for="dailyLimit" class="block font-medium text-slate-700 mb-1.5 text-sm">Max Hours per Day</label>
-        <input type="number" id="dailyLimit" value="8" min="1" max="16" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+        <label
+          for="dailyLimit"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Max Hours per Day</label
+        >
+        <input
+          type="number"
+          id="dailyLimit"
+          value="8"
+          min="1"
+          max="16"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="calculate()"
+        />
       </div>
     </div>
 
@@ -54,9 +122,11 @@ import StudentToolLayout from "../../layouts/StudentToolLayout.astro";
   <script is:inline>
     function calculate() {
       const subjects = parseInt(document.getElementById("subjects").value) || 0;
-      const hoursPerSubject = parseInt(document.getElementById("hoursPerSubject").value) || 0;
+      const hoursPerSubject =
+        parseInt(document.getElementById("hoursPerSubject").value) || 0;
       const daysLeft = parseInt(document.getElementById("daysLeft").value) || 1;
-      const dailyLimit = parseInt(document.getElementById("dailyLimit").value) || 8;
+      const dailyLimit =
+        parseInt(document.getElementById("dailyLimit").value) || 8;
 
       const totalHours = subjects * hoursPerSubject;
       const hoursPerDay = totalHours / daysLeft;

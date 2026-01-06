@@ -1,5 +1,23 @@
 ---
 import TextToolLayout from "../../layouts/TextToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What's the Twitter character limit?",
+    answer:
+      "Twitter allows 280 characters per tweet. This tool shows you how close you are to that limit.",
+  },
+  {
+    question: "What's the difference between with and without spaces?",
+    answer:
+      "With spaces includes all characters; without spaces excludes space characters from the count.",
+  },
+  {
+    question: "Is this tool free to use?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -7,25 +25,43 @@ import TextToolLayout from "../../layouts/TextToolLayout.astro";
   description="Count characters with and without spaces. Check Twitter, SMS, and meta description limits. Free online tool."
   canonicalPath="/text/character-counter"
   currentTool="Character Counter"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Character Counter</h1>
-    <p class="text-slate-500">Count characters, check limits for Twitter, SMS, and more.</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Character Counter
+    </h1>
+    <p class="text-slate-500">
+      Count characters, check limits for Twitter, SMS, and more.
+    </p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="mb-4">
-      <label for="textInput" class="block font-medium text-slate-700 mb-1.5 text-sm">Enter your text</label>
-      <textarea id="textInput" rows="6" placeholder="Type or paste text here..." class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y" oninput="analyze()"></textarea>
+      <label
+        for="textInput"
+        class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Enter your text</label
+      >
+      <textarea
+        id="textInput"
+        rows="6"
+        placeholder="Type or paste text here..."
+        class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y"
+        oninput="analyze()"></textarea>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
       <div class="bg-white p-4 rounded border border-slate-200 text-center">
-        <div class="text-3xl font-bold text-emerald-600" id="charWithSpaces">0</div>
+        <div class="text-3xl font-bold text-emerald-600" id="charWithSpaces">
+          0
+        </div>
         <div class="text-xs text-slate-500">With Spaces</div>
       </div>
       <div class="bg-white p-4 rounded border border-slate-200 text-center">
-        <div class="text-3xl font-bold text-emerald-600" id="charWithoutSpaces">0</div>
+        <div class="text-3xl font-bold text-emerald-600" id="charWithoutSpaces">
+          0
+        </div>
         <div class="text-xs text-slate-500">Without Spaces</div>
       </div>
       <div class="bg-white p-4 rounded border border-slate-200 text-center">
@@ -43,23 +79,44 @@ import TextToolLayout from "../../layouts/TextToolLayout.astro";
       <div class="flex items-center gap-3">
         <span class="w-32 text-sm text-slate-600">Twitter (280)</span>
         <div class="flex-1 bg-slate-200 rounded-full h-2">
-          <div id="twitterBar" class="h-2 rounded-full bg-emerald-500 transition-all" style="width: 0%"></div>
+          <div
+            id="twitterBar"
+            class="h-2 rounded-full bg-emerald-500 transition-all"
+            style="width: 0%"
+          >
+          </div>
         </div>
-        <span class="text-sm text-slate-600 w-16 text-right" id="twitterCount">0/280</span>
+        <span class="text-sm text-slate-600 w-16 text-right" id="twitterCount"
+          >0/280</span
+        >
       </div>
       <div class="flex items-center gap-3">
         <span class="w-32 text-sm text-slate-600">SMS (160)</span>
         <div class="flex-1 bg-slate-200 rounded-full h-2">
-          <div id="smsBar" class="h-2 rounded-full bg-emerald-500 transition-all" style="width: 0%"></div>
+          <div
+            id="smsBar"
+            class="h-2 rounded-full bg-emerald-500 transition-all"
+            style="width: 0%"
+          >
+          </div>
         </div>
-        <span class="text-sm text-slate-600 w-16 text-right" id="smsCount">0/160</span>
+        <span class="text-sm text-slate-600 w-16 text-right" id="smsCount"
+          >0/160</span
+        >
       </div>
       <div class="flex items-center gap-3">
         <span class="w-32 text-sm text-slate-600">Meta Desc (160)</span>
         <div class="flex-1 bg-slate-200 rounded-full h-2">
-          <div id="metaBar" class="h-2 rounded-full bg-emerald-500 transition-all" style="width: 0%"></div>
+          <div
+            id="metaBar"
+            class="h-2 rounded-full bg-emerald-500 transition-all"
+            style="width: 0%"
+          >
+          </div>
         </div>
-        <span class="text-sm text-slate-600 w-16 text-right" id="metaCount">0/160</span>
+        <span class="text-sm text-slate-600 w-16 text-right" id="metaCount"
+          >0/160</span
+        >
       </div>
     </div>
   </div>
@@ -67,16 +124,19 @@ import TextToolLayout from "../../layouts/TextToolLayout.astro";
   <script is:inline>
     function analyze() {
       const text = document.getElementById("textInput").value;
-      
+
       document.getElementById("charWithSpaces").innerText = text.length;
-      document.getElementById("charWithoutSpaces").innerText = text.replace(/\s/g, '').length;
-      
+      document.getElementById("charWithoutSpaces").innerText = text.replace(
+        /\s/g,
+        "",
+      ).length;
+
       const words = text.trim() ? text.trim().split(/\s+/) : [];
       document.getElementById("wordCount").innerText = words.length;
-      
-      const lines = text.split('\n');
+
+      const lines = text.split("\n");
       document.getElementById("lineCount").innerText = lines.length;
-      
+
       // Progress bars
       updateBar("twitter", text.length, 280);
       updateBar("sms", text.length, 160);
@@ -87,11 +147,11 @@ import TextToolLayout from "../../layouts/TextToolLayout.astro";
       const percent = Math.min((current / max) * 100, 100);
       const bar = document.getElementById(name + "Bar");
       const count = document.getElementById(name + "Count");
-      
+
       bar.style.width = percent + "%";
-      bar.className = `h-2 rounded-full transition-all ${current > max ? 'bg-red-500' : 'bg-emerald-500'}`;
+      bar.className = `h-2 rounded-full transition-all ${current > max ? "bg-red-500" : "bg-emerald-500"}`;
       count.innerText = `${current}/${max}`;
-      count.className = `text-sm w-16 text-right ${current > max ? 'text-red-600 font-medium' : 'text-slate-600'}`;
+      count.className = `text-sm w-16 text-right ${current > max ? "text-red-600 font-medium" : "text-slate-600"}`;
     }
   </script>
 </TextToolLayout>

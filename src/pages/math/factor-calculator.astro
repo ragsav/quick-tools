@@ -1,5 +1,23 @@
 ---
 import MathToolLayout from "../../layouts/MathToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What is a factor?",
+    answer:
+      "A factor is a number that divides evenly into another number. For example, factors of 12 are 1, 2, 3, 4, 6, and 12.",
+  },
+  {
+    question: "What is prime factorization?",
+    answer:
+      "Breaking a number down into the product of its prime factors, like 12 = 2² × 3.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <MathToolLayout
@@ -7,16 +25,32 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
   description="Find all factors (divisors) of any number. Also shows prime factorization. Free online tool."
   canonicalPath="/math/factor-calculator"
   currentTool="Factor Calculator"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Factor Calculator</h1>
-    <p class="text-slate-500">Find all factors and prime factorization of a number.</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Factor Calculator
+    </h1>
+    <p class="text-slate-500">
+      Find all factors and prime factorization of a number.
+    </p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="mb-4">
-      <label for="number" class="block font-medium text-slate-700 mb-1.5 text-sm">Enter a Number</label>
-      <input type="number" id="number" placeholder="e.g., 24" min="1" class="w-full max-w-xs px-4 py-3 text-xl border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+      <label
+        for="number"
+        class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Enter a Number</label
+      >
+      <input
+        type="number"
+        id="number"
+        placeholder="e.g., 24"
+        min="1"
+        class="w-full max-w-xs px-4 py-3 text-xl border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        oninput="calculate()"
+      />
     </div>
 
     <div class="space-y-4">
@@ -25,7 +59,9 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
         <div class="text-lg font-medium text-slate-900" id="factors">—</div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
-        <div class="text-xs text-slate-500 uppercase mb-2">Prime Factorization</div>
+        <div class="text-xs text-slate-500 uppercase mb-2">
+          Prime Factorization
+        </div>
         <div class="text-lg font-mono text-teal-600" id="primeFactors">—</div>
       </div>
       <div class="grid grid-cols-3 gap-4">
@@ -48,7 +84,7 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
   <script is:inline>
     function calculate() {
       const num = parseInt(document.getElementById("number").value);
-      
+
       if (isNaN(num) || num < 1) {
         document.getElementById("factors").innerText = "—";
         document.getElementById("primeFactors").innerText = "—";
@@ -85,10 +121,14 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
       const sum = factors.reduce((a, b) => a + b, 0);
 
       document.getElementById("factors").innerText = factors.join(", ");
-      document.getElementById("primeFactors").innerText = primeFactors.join(" × ") || num;
+      document.getElementById("primeFactors").innerText =
+        primeFactors.join(" × ") || num;
       document.getElementById("count").innerText = factors.length;
-      document.getElementById("isPrime").innerText = isPrime ? "✅ Yes" : "❌ No";
-      document.getElementById("isPrime").className = `text-xl font-bold ${isPrime ? "text-green-600" : "text-slate-700"}`;
+      document.getElementById("isPrime").innerText = isPrime
+        ? "✅ Yes"
+        : "❌ No";
+      document.getElementById("isPrime").className =
+        `text-xl font-bold ${isPrime ? "text-green-600" : "text-slate-700"}`;
       document.getElementById("sum").innerText = sum;
     }
   </script>

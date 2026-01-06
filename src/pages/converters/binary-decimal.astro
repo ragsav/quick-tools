@@ -1,5 +1,23 @@
 ---
 import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What number systems does this tool support?",
+    answer:
+      "It converts between decimal (base 10), binary (base 2), hexadecimal (base 16), and octal (base 8).",
+  },
+  {
+    question: "What is binary used for?",
+    answer:
+      "Binary is the fundamental language of computers, representing data using only 0s and 1s.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -7,36 +25,75 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
   description="Convert between binary and decimal numbers. Also supports hexadecimal and octal. Free online tool."
   canonicalPath="/converters/binary-decimal"
   currentTool="Binary ↔ Decimal"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Binary ↔ Decimal Converter</h1>
-    <p class="text-slate-500">Convert between binary, decimal, hexadecimal, and octal.</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Binary ↔ Decimal Converter
+    </h1>
+    <p class="text-slate-500">
+      Convert between binary, decimal, hexadecimal, and octal.
+    </p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="mb-4">
-      <label for="input" class="block font-medium text-slate-700 mb-1.5 text-sm">Enter a number</label>
-      <input type="text" id="input" placeholder="e.g., 42 or 101010" class="w-full max-w-md px-4 py-3 text-xl font-mono border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="convert()" />
+      <label for="input" class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Enter a number</label
+      >
+      <input
+        type="text"
+        id="input"
+        placeholder="e.g., 42 or 101010"
+        class="w-full max-w-md px-4 py-3 text-xl font-mono border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        oninput="convert()"
+      />
     </div>
 
     <div class="mb-6">
-      <label class="block font-medium text-slate-700 mb-2 text-sm">Input Type</label>
+      <label class="block font-medium text-slate-700 mb-2 text-sm"
+        >Input Type</label
+      >
       <div class="flex flex-wrap gap-2">
-        <button onclick="setBase(10)" id="base-10" class="px-4 py-2 rounded text-sm bg-amber-50 border border-amber-500 text-amber-700">Decimal (10)</button>
-        <button onclick="setBase(2)" id="base-2" class="px-4 py-2 border border-slate-200 rounded text-sm">Binary (2)</button>
-        <button onclick="setBase(16)" id="base-16" class="px-4 py-2 border border-slate-200 rounded text-sm">Hex (16)</button>
-        <button onclick="setBase(8)" id="base-8" class="px-4 py-2 border border-slate-200 rounded text-sm">Octal (8)</button>
+        <button
+          onclick="setBase(10)"
+          id="base-10"
+          class="px-4 py-2 rounded text-sm bg-amber-50 border border-amber-500 text-amber-700"
+          >Decimal (10)</button
+        >
+        <button
+          onclick="setBase(2)"
+          id="base-2"
+          class="px-4 py-2 border border-slate-200 rounded text-sm"
+          >Binary (2)</button
+        >
+        <button
+          onclick="setBase(16)"
+          id="base-16"
+          class="px-4 py-2 border border-slate-200 rounded text-sm"
+          >Hex (16)</button
+        >
+        <button
+          onclick="setBase(8)"
+          id="base-8"
+          class="px-4 py-2 border border-slate-200 rounded text-sm"
+          >Octal (8)</button
+        >
       </div>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Decimal</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="decimal">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="decimal">
+          —
+        </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Binary</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="binary">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="binary">
+          —
+        </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Hex</div>
@@ -44,7 +101,9 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <div class="text-xs text-slate-500 uppercase mb-1">Octal</div>
-        <div class="font-mono text-lg font-bold text-slate-900" id="octal">—</div>
+        <div class="font-mono text-lg font-bold text-slate-900" id="octal">
+          —
+        </div>
       </div>
     </div>
   </div>
@@ -54,18 +113,19 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
 
     function setBase(base) {
       currentBase = base;
-      [10, 2, 16, 8].forEach(b => {
-        const btn = document.getElementById('base-' + b);
-        btn.className = b === base 
-          ? 'px-4 py-2 rounded text-sm bg-amber-50 border border-amber-500 text-amber-700'
-          : 'px-4 py-2 border border-slate-200 rounded text-sm';
+      [10, 2, 16, 8].forEach((b) => {
+        const btn = document.getElementById("base-" + b);
+        btn.className =
+          b === base
+            ? "px-4 py-2 rounded text-sm bg-amber-50 border border-amber-500 text-amber-700"
+            : "px-4 py-2 border border-slate-200 rounded text-sm";
       });
       convert();
     }
 
     function convert() {
       const input = document.getElementById("input").value.trim();
-      
+
       if (!input) {
         document.getElementById("decimal").innerText = "—";
         document.getElementById("binary").innerText = "—";
@@ -80,7 +140,9 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
 
         document.getElementById("decimal").innerText = decimal.toString(10);
         document.getElementById("binary").innerText = decimal.toString(2);
-        document.getElementById("hex").innerText = decimal.toString(16).toUpperCase();
+        document.getElementById("hex").innerText = decimal
+          .toString(16)
+          .toUpperCase();
         document.getElementById("octal").innerText = decimal.toString(8);
       } catch (e) {
         document.getElementById("decimal").innerText = "Invalid";

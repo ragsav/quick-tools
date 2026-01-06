@@ -1,5 +1,23 @@
 ---
 import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How does the time zone converter work?",
+    answer:
+      "Enter a time and date, select your source and target time zones, and the converter calculates the equivalent time.",
+  },
+  {
+    question: "Does this account for daylight saving time?",
+    answer:
+      "This tool uses fixed offsets. For DST-aware conversion, check the current offset for your specific date.",
+  },
+  {
+    question: "Is this tool free to use?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -7,9 +25,12 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
   description="Convert time between any time zones instantly. Free online time zone converter for scheduling across regions."
   canonicalPath="/time/timezone-converter"
   currentTool="Time Zone Converter"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Time Zone Converter</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Time Zone Converter
+    </h1>
     <p class="text-slate-500">
       Convert time between different time zones around the world.
     </p>
@@ -18,38 +39,79 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="flex flex-wrap gap-6 mb-6">
       <div class="flex-1 min-w-48">
-        <label for="fromTime" class="block font-medium text-slate-700 mb-1.5 text-sm">Time</label>
-        <input type="time" id="fromTime" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+        <label
+          for="fromTime"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">Time</label
+        >
+        <input
+          type="time"
+          id="fromTime"
+          class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        />
       </div>
       <div class="flex-1 min-w-48">
-        <label for="fromDate" class="block font-medium text-slate-700 mb-1.5 text-sm">Date</label>
-        <input type="date" id="fromDate" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+        <label
+          for="fromDate"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">Date</label
+        >
+        <input
+          type="date"
+          id="fromDate"
+          class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        />
       </div>
     </div>
 
     <div class="flex flex-wrap gap-6 mb-6">
       <div class="flex-1 min-w-48">
-        <label for="fromZone" class="block font-medium text-slate-700 mb-1.5 text-sm">From Time Zone</label>
-        <select id="fromZone" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none"></select>
+        <label
+          for="fromZone"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >From Time Zone</label
+        >
+        <select
+          id="fromZone"
+          class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        ></select>
       </div>
       <div class="flex-1 min-w-48">
-        <label for="toZone" class="block font-medium text-slate-700 mb-1.5 text-sm">To Time Zone</label>
-        <select id="toZone" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none"></select>
+        <label
+          for="toZone"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >To Time Zone</label
+        >
+        <select
+          id="toZone"
+          class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        ></select>
       </div>
     </div>
 
-    <button class="btn-primary inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded cursor-pointer" onclick="convert()">
+    <button
+      class="btn-primary inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-white rounded cursor-pointer"
+      onclick="convert()"
+    >
       Convert Time
     </button>
 
     <div class="result-box mt-6 p-4 bg-white rounded hidden" id="resultBox">
       <div class="grid grid-cols-2 gap-6">
         <div class="text-center">
-          <div class="text-xs text-slate-500 uppercase tracking-wider mb-1" id="fromLabel">From</div>
+          <div
+            class="text-xs text-slate-500 uppercase tracking-wider mb-1"
+            id="fromLabel"
+          >
+            From
+          </div>
           <div class="text-2xl font-bold text-slate-900" id="fromResult">—</div>
         </div>
         <div class="text-center">
-          <div class="text-xs text-slate-500 uppercase tracking-wider mb-1" id="toLabel">To</div>
+          <div
+            class="text-xs text-slate-500 uppercase tracking-wider mb-1"
+            id="toLabel"
+          >
+            To
+          </div>
           <div class="text-2xl font-bold text-blue-600" id="toResult">—</div>
         </div>
       </div>
@@ -58,7 +120,9 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
   </div>
 
   <section class="mt-8 pt-6 border-t border-slate-200">
-    <h2 class="text-xl font-semibold text-slate-900 mb-4">Popular Time Zones</h2>
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">
+      Popular Time Zones
+    </h2>
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
       <div class="p-3 bg-white border border-slate-200 rounded">
         <div class="font-medium">New York (EST)</div>
@@ -113,7 +177,9 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
     fromSelect.value = "0";
     toSelect.value = "10";
     document.getElementById("fromDate").valueAsDate = new Date();
-    document.getElementById("fromTime").value = new Date().toTimeString().slice(0, 5);
+    document.getElementById("fromTime").value = new Date()
+      .toTimeString()
+      .slice(0, 5);
 
     function convert() {
       const time = document.getElementById("fromTime").value;
@@ -132,7 +198,7 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
       // Parse input as UTC, then adjust
       const [hours, minutes] = time.split(":").map(Number);
       const inputDate = new Date(date);
-      
+
       // Convert to UTC first, then to target timezone
       const utcHours = hours - fromTz.offset;
       const targetHours = utcHours + toTz.offset;
@@ -140,7 +206,7 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
       // Handle day overflow
       let resultDate = new Date(inputDate);
       let displayHours = targetHours;
-      
+
       if (displayHours >= 24) {
         displayHours -= 24;
         resultDate.setDate(resultDate.getDate() + 1);
@@ -154,12 +220,15 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
 
       document.getElementById("fromLabel").innerText = fromTz.name;
       document.getElementById("toLabel").innerText = toTz.name;
-      document.getElementById("fromResult").innerText = `${time} on ${inputDate.toLocaleDateString()}`;
-      document.getElementById("toResult").innerText = `${hourStr}:${minStr} on ${resultDate.toLocaleDateString()}`;
+      document.getElementById("fromResult").innerText =
+        `${time} on ${inputDate.toLocaleDateString()}`;
+      document.getElementById("toResult").innerText =
+        `${hourStr}:${minStr} on ${resultDate.toLocaleDateString()}`;
 
       const diff = toTz.offset - fromTz.offset;
       const diffStr = diff >= 0 ? `+${diff}` : diff;
-      document.getElementById("diffInfo").innerText = `Difference: ${diffStr} hours`;
+      document.getElementById("diffInfo").innerText =
+        `Difference: ${diffStr} hours`;
 
       document.getElementById("resultBox").classList.remove("hidden");
     }

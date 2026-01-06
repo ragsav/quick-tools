@@ -1,5 +1,22 @@
 ---
 import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What categories of units are supported?",
+    answer: "Length, weight/mass, temperature, area, volume, and speed.",
+  },
+  {
+    question: "Does this handle temperature conversion correctly?",
+    answer:
+      "Yes, temperature conversions between Celsius, Fahrenheit, and Kelvin use the correct formulas.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -7,16 +24,26 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
   description="Convert between units of length, weight, temperature, and more. Fast, free online unit converter."
   canonicalPath="/converters/unit-converter"
   currentTool="Unit Converter"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Unit Converter</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Unit Converter
+    </h1>
     <p class="text-slate-500">Convert between common units of measurement.</p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="mb-4">
-      <label for="category" class="block font-medium text-slate-700 mb-1.5 text-sm">Category</label>
-      <select id="category" onchange="updateUnits()" class="w-full max-w-xs px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none">
+      <label
+        for="category"
+        class="block font-medium text-slate-700 mb-1.5 text-sm">Category</label
+      >
+      <select
+        id="category"
+        onchange="updateUnits()"
+        class="w-full max-w-xs px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+      >
         <option value="length">Length</option>
         <option value="weight">Weight / Mass</option>
         <option value="temperature">Temperature</option>
@@ -28,21 +55,44 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-6">
       <div>
-        <label for="fromValue" class="block font-medium text-slate-700 mb-1.5 text-sm">Value</label>
-        <input type="number" id="fromValue" value="1" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="convert()" />
+        <label
+          for="fromValue"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">Value</label
+        >
+        <input
+          type="number"
+          id="fromValue"
+          value="1"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="convert()"
+        />
       </div>
       <div>
-        <label for="fromUnit" class="block font-medium text-slate-700 mb-1.5 text-sm">From</label>
-        <select id="fromUnit" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" onchange="convert()"></select>
+        <label
+          for="fromUnit"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">From</label
+        >
+        <select
+          id="fromUnit"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          onchange="convert()"></select>
       </div>
       <div>
-        <label for="toUnit" class="block font-medium text-slate-700 mb-1.5 text-sm">To</label>
-        <select id="toUnit" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" onchange="convert()"></select>
+        <label
+          for="toUnit"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">To</label
+        >
+        <select
+          id="toUnit"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          onchange="convert()"></select>
       </div>
     </div>
 
     <div class="result-box p-4 bg-white rounded">
-      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Result</div>
+      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">
+        Result
+      </div>
       <div class="text-3xl font-bold text-amber-600" id="result">—</div>
     </div>
   </div>
@@ -50,25 +100,46 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
   <script is:inline>
     const units = {
       length: {
-        meter: 1, kilometer: 0.001, centimeter: 100, millimeter: 1000,
-        mile: 0.000621371, yard: 1.09361, foot: 3.28084, inch: 39.3701
+        meter: 1,
+        kilometer: 0.001,
+        centimeter: 100,
+        millimeter: 1000,
+        mile: 0.000621371,
+        yard: 1.09361,
+        foot: 3.28084,
+        inch: 39.3701,
       },
       weight: {
-        kilogram: 1, gram: 1000, milligram: 1000000, pound: 2.20462,
-        ounce: 35.274, ton: 0.001
+        kilogram: 1,
+        gram: 1000,
+        milligram: 1000000,
+        pound: 2.20462,
+        ounce: 35.274,
+        ton: 0.001,
       },
-      temperature: { celsius: 'c', fahrenheit: 'f', kelvin: 'k' },
+      temperature: { celsius: "c", fahrenheit: "f", kelvin: "k" },
       area: {
-        'square meter': 1, 'square kilometer': 0.000001, 'square foot': 10.7639,
-        acre: 0.000247105, hectare: 0.0001
+        "square meter": 1,
+        "square kilometer": 0.000001,
+        "square foot": 10.7639,
+        acre: 0.000247105,
+        hectare: 0.0001,
       },
       volume: {
-        liter: 1, milliliter: 1000, 'cubic meter': 0.001, gallon: 0.264172,
-        quart: 1.05669, pint: 2.11338, cup: 4.22675
+        liter: 1,
+        milliliter: 1000,
+        "cubic meter": 0.001,
+        gallon: 0.264172,
+        quart: 1.05669,
+        pint: 2.11338,
+        cup: 4.22675,
       },
       speed: {
-        'meters/second': 1, 'km/hour': 3.6, 'miles/hour': 2.23694, knot: 1.94384
-      }
+        "meters/second": 1,
+        "km/hour": 3.6,
+        "miles/hour": 2.23694,
+        knot: 1.94384,
+      },
     };
 
     function updateUnits() {
@@ -76,9 +147,13 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
       const fromSel = document.getElementById("fromUnit");
       const toSel = document.getElementById("toUnit");
       const unitList = Object.keys(units[cat]);
-      
-      fromSel.innerHTML = unitList.map(u => `<option value="${u}">${u}</option>`).join('');
-      toSel.innerHTML = unitList.map(u => `<option value="${u}">${u}</option>`).join('');
+
+      fromSel.innerHTML = unitList
+        .map((u) => `<option value="${u}">${u}</option>`)
+        .join("");
+      toSel.innerHTML = unitList
+        .map((u) => `<option value="${u}">${u}</option>`)
+        .join("");
       toSel.selectedIndex = 1;
       convert();
     }
@@ -88,14 +163,14 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
       const value = parseFloat(document.getElementById("fromValue").value);
       const from = document.getElementById("fromUnit").value;
       const to = document.getElementById("toUnit").value;
-      
+
       if (isNaN(value)) {
         document.getElementById("result").innerText = "Enter a number";
         return;
       }
 
       let result;
-      if (cat === 'temperature') {
+      if (cat === "temperature") {
         result = convertTemp(value, from, to);
       } else {
         // Convert to base unit then to target
@@ -103,17 +178,18 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
         result = toBase * units[cat][to];
       }
 
-      document.getElementById("result").innerText = `${result.toLocaleString(undefined, {maximumFractionDigits: 6})} ${to}`;
+      document.getElementById("result").innerText =
+        `${result.toLocaleString(undefined, { maximumFractionDigits: 6 })} ${to}`;
     }
 
     function convertTemp(val, from, to) {
       let celsius;
-      if (from === 'celsius') celsius = val;
-      else if (from === 'fahrenheit') celsius = (val - 32) * 5/9;
+      if (from === "celsius") celsius = val;
+      else if (from === "fahrenheit") celsius = ((val - 32) * 5) / 9;
       else celsius = val - 273.15;
 
-      if (to === 'celsius') return celsius;
-      if (to === 'fahrenheit') return celsius * 9/5 + 32;
+      if (to === "celsius") return celsius;
+      if (to === "fahrenheit") return (celsius * 9) / 5 + 32;
       return celsius + 273.15;
     }
 

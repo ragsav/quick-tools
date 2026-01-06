@@ -1,5 +1,23 @@
 ---
 import TextToolLayout from "../../layouts/TextToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What list formats are supported?",
+    answer:
+      "Bullet points (•, ●, ○), dashes, numbered lists (1., (1)), and HTML li tags.",
+  },
+  {
+    question: "Will it remove HTML tags?",
+    answer:
+      "Yes, HTML list tags like ul, ol, and li are automatically removed.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -7,27 +25,56 @@ import TextToolLayout from "../../layouts/TextToolLayout.astro";
   description="Convert bullet lists, numbered lists, and HTML lists to plain text. Free online list parser."
   canonicalPath="/text/list-to-text"
   currentTool="List to Text"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">List to Text Converter</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      List to Text Converter
+    </h1>
     <p class="text-slate-500">Extract plain text from formatted lists.</p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="grid md:grid-cols-2 gap-6">
       <div>
-        <label for="input" class="block font-medium text-slate-700 mb-1.5 text-sm">Input List</label>
-        <textarea id="input" rows="10" placeholder="• Item 1&#10;• Item 2&#10;1. Item 3" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono text-sm"></textarea>
+        <label
+          for="input"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Input List</label
+        >
+        <textarea
+          id="input"
+          rows="10"
+          placeholder="• Item 1
+• Item 2
+1. Item 3"
+          class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono text-sm"
+        ></textarea>
       </div>
       <div>
-        <label class="block font-medium text-slate-700 mb-1.5 text-sm">Plain Text Output</label>
-        <textarea id="output" rows="10" readonly class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono text-sm"></textarea>
+        <label class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Plain Text Output</label
+        >
+        <textarea
+          id="output"
+          rows="10"
+          readonly
+          class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono text-sm"
+        ></textarea>
       </div>
     </div>
 
     <div class="flex gap-3 mt-4">
-      <button onclick="convert()" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to Plain Text</button>
-      <button onclick="copyResult()" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm">📋 Copy</button>
+      <button
+        onclick="convert()"
+        class="btn-primary px-6 py-2 font-semibold text-white rounded"
+        >Convert to Plain Text</button
+      >
+      <button
+        onclick="copyResult()"
+        class="px-4 py-2 bg-white border border-slate-300 rounded text-sm"
+        >📋 Copy</button
+      >
     </div>
   </div>
 
@@ -45,22 +92,25 @@ import TextToolLayout from "../../layouts/TextToolLayout.astro";
   <script is:inline>
     function convert() {
       let input = document.getElementById("input").value;
-      
-      // Remove HTML list tags
-      input = input.replace(/<\/?(?:ul|ol|li)[^>]*>/gi, '');
-      
-      // Process line by line
-      const lines = input.split('\n').map(line => {
-        // Remove common list prefixes
-        return line
-          .replace(/^[\s]*[•●○▪▸\-–—\*]\s*/g, '')  // Bullets and dashes
-          .replace(/^[\s]*\d+[\.\)]\s*/g, '')        // Numbered (1. or 1))
-          .replace(/^[\s]*\[\d+\]\s*/g, '')          // [1] style
-          .replace(/^[\s]*\(\d+\)\s*/g, '')          // (1) style
-          .trim();
-      }).filter(line => line.length > 0);
 
-      document.getElementById("output").value = lines.join('\n');
+      // Remove HTML list tags
+      input = input.replace(/<\/?(?:ul|ol|li)[^>]*>/gi, "");
+
+      // Process line by line
+      const lines = input
+        .split("\n")
+        .map((line) => {
+          // Remove common list prefixes
+          return line
+            .replace(/^[\s]*[•●○▪▸\-–—\*]\s*/g, "") // Bullets and dashes
+            .replace(/^[\s]*\d+[\.\)]\s*/g, "") // Numbered (1. or 1))
+            .replace(/^[\s]*\[\d+\]\s*/g, "") // [1] style
+            .replace(/^[\s]*\(\d+\)\s*/g, "") // (1) style
+            .trim();
+        })
+        .filter((line) => line.length > 0);
+
+      document.getElementById("output").value = lines.join("\n");
     }
 
     function copyResult() {

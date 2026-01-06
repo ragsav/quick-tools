@@ -1,5 +1,23 @@
 ---
 import StudentToolLayout from "../../layouts/StudentToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How is weighted average calculated?",
+    answer:
+      "Sum of (grade × weight) divided by total weight. Higher weights count more.",
+  },
+  {
+    question: "What weights should I use?",
+    answer:
+      "Use 1 for equal weights, or assign higher numbers to exams/finals that count more.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <StudentToolLayout
@@ -7,37 +25,74 @@ import StudentToolLayout from "../../layouts/StudentToolLayout.astro";
   description="Calculate your average grade from multiple assignments or tests. Free grade calculator."
   canonicalPath="/student/grade-average"
   currentTool="Grade Average Calculator"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Grade Average Calculator</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Grade Average Calculator
+    </h1>
     <p class="text-slate-500">Calculate your average from multiple grades.</p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div id="grades">
       <div class="grade-row flex gap-4 mb-3 items-center">
-        <input type="text" placeholder="Assignment name" class="flex-1 px-4 py-2 border border-slate-300 rounded outline-none name-input" />
-        <input type="number" max="100" min="0" placeholder="Grade %" class="w-28 px-4 py-2 border border-slate-300 rounded outline-none grade-input" />
-        <input type="number" min="0" placeholder="Weight" value="1" class="w-20 px-4 py-2 border border-slate-300 rounded outline-none weight-input" />
-        <button onclick="this.parentElement.remove(); calculateAverage()" class="text-red-500 px-2">×</button>
+        <input
+          type="text"
+          placeholder="Assignment name"
+          class="flex-1 px-4 py-2 border border-slate-300 rounded outline-none name-input"
+        />
+        <input
+          type="number"
+          max="100"
+          min="0"
+          placeholder="Grade %"
+          class="w-28 px-4 py-2 border border-slate-300 rounded outline-none grade-input"
+        />
+        <input
+          type="number"
+          min="0"
+          placeholder="Weight"
+          value="1"
+          class="w-20 px-4 py-2 border border-slate-300 rounded outline-none weight-input"
+        />
+        <button
+          onclick="this.parentElement.remove(); calculateAverage()"
+          class="text-red-500 px-2">×</button
+        >
       </div>
     </div>
 
     <div class="flex gap-3 mb-6">
-      <button onclick="addGrade()" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:border-pink-500">+ Add Grade</button>
+      <button
+        onclick="addGrade()"
+        class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:border-pink-500"
+        >+ Add Grade</button
+      >
     </div>
 
-    <button onclick="calculateAverage()" class="btn-primary px-6 py-3 font-semibold text-white rounded">Calculate Average</button>
+    <button
+      onclick="calculateAverage()"
+      class="btn-primary px-6 py-3 font-semibold text-white rounded"
+      >Calculate Average</button
+    >
 
-    <div class="result-box mt-6 p-6 bg-white rounded text-center hidden" id="resultBox">
+    <div
+      class="result-box mt-6 p-6 bg-white rounded text-center hidden"
+      id="resultBox"
+    >
       <div class="grid grid-cols-2 gap-6">
         <div>
-          <div class="text-xs text-slate-500 uppercase mb-2">Weighted Average</div>
+          <div class="text-xs text-slate-500 uppercase mb-2">
+            Weighted Average
+          </div>
           <div class="text-4xl font-bold text-pink-600" id="average">0%</div>
         </div>
         <div>
           <div class="text-xs text-slate-500 uppercase mb-2">Letter Grade</div>
-          <div class="text-4xl font-bold text-slate-900" id="letterGrade">—</div>
+          <div class="text-4xl font-bold text-slate-900" id="letterGrade">
+            —
+          </div>
         </div>
       </div>
     </div>
@@ -60,14 +115,14 @@ import StudentToolLayout from "../../layouts/StudentToolLayout.astro";
     function calculateAverage() {
       const gradeInputs = document.querySelectorAll(".grade-input");
       const weightInputs = document.querySelectorAll(".weight-input");
-      
+
       let totalWeighted = 0;
       let totalWeight = 0;
 
       gradeInputs.forEach((gradeInput, i) => {
         const grade = parseFloat(gradeInput.value);
         const weight = parseFloat(weightInputs[i].value) || 1;
-        
+
         if (!isNaN(grade)) {
           totalWeighted += grade * weight;
           totalWeight += weight;
@@ -75,18 +130,18 @@ import StudentToolLayout from "../../layouts/StudentToolLayout.astro";
       });
 
       const resultBox = document.getElementById("resultBox");
-      
+
       if (totalWeight > 0) {
         const average = totalWeighted / totalWeight;
         document.getElementById("average").innerText = average.toFixed(2) + "%";
-        
+
         let letter;
         if (average >= 90) letter = "A";
         else if (average >= 80) letter = "B";
         else if (average >= 70) letter = "C";
         else if (average >= 60) letter = "D";
         else letter = "F";
-        
+
         document.getElementById("letterGrade").innerText = letter;
         resultBox.classList.remove("hidden");
       }

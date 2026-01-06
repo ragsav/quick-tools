@@ -1,5 +1,23 @@
 ---
 import DevToolLayout from "../../layouts/DevToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What color formats are supported?",
+    answer:
+      "HEX (#RRGGBB), RGB (red, green, blue values 0-255), and HSL (hue, saturation, lightness).",
+  },
+  {
+    question: "How do I convert between formats?",
+    answer:
+      "Pick a color or enter a value in any format, and the tool instantly shows the equivalent in all formats.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <DevToolLayout
@@ -7,20 +25,38 @@ import DevToolLayout from "../../layouts/DevToolLayout.astro";
   description="Pick colors and convert between HEX, RGB, and HSL formats. Free online color tool."
   canonicalPath="/dev/color-picker"
   currentTool="Color Picker & Converter"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Color Picker & Converter</h1>
-    <p class="text-slate-500">Pick colors and convert between different formats.</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Color Picker & Converter
+    </h1>
+    <p class="text-slate-500">
+      Pick colors and convert between different formats.
+    </p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="flex flex-wrap gap-6 items-start">
       <div>
-        <label class="block font-medium text-slate-700 mb-1.5 text-sm">Pick a Color</label>
-        <input type="color" id="colorPicker" value="#1c398e" class="w-24 h-24 border-0 rounded cursor-pointer" oninput="updateFromPicker()" />
+        <label class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Pick a Color</label
+        >
+        <input
+          type="color"
+          id="colorPicker"
+          value="#1c398e"
+          class="w-24 h-24 border-0 rounded cursor-pointer"
+          oninput="updateFromPicker()"
+        />
       </div>
       <div class="flex-1 min-w-48">
-        <div class="h-24 rounded mb-4" id="preview" style="background-color: #1c398e;"></div>
+        <div
+          class="h-24 rounded mb-4"
+          id="preview"
+          style="background-color: #1c398e;"
+        >
+        </div>
       </div>
     </div>
 
@@ -28,21 +64,39 @@ import DevToolLayout from "../../layouts/DevToolLayout.astro";
       <div class="p-4 bg-white border border-slate-200 rounded">
         <label class="block text-xs text-slate-500 uppercase mb-2">HEX</label>
         <div class="flex gap-2">
-          <input type="text" id="hex" value="#1c398e" class="flex-1 px-3 py-2 border border-slate-300 rounded font-mono outline-none" oninput="updateFromHex()" />
+          <input
+            type="text"
+            id="hex"
+            value="#1c398e"
+            class="flex-1 px-3 py-2 border border-slate-300 rounded font-mono outline-none"
+            oninput="updateFromHex()"
+          />
           <button onclick="copy('hex')" class="px-2 text-orange-600">📋</button>
         </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <label class="block text-xs text-slate-500 uppercase mb-2">RGB</label>
         <div class="flex gap-2">
-          <input type="text" id="rgb" value="rgb(59, 130, 246)" class="flex-1 px-3 py-2 border border-slate-300 rounded font-mono text-sm outline-none" oninput="updateFromRgb()" />
+          <input
+            type="text"
+            id="rgb"
+            value="rgb(59, 130, 246)"
+            class="flex-1 px-3 py-2 border border-slate-300 rounded font-mono text-sm outline-none"
+            oninput="updateFromRgb()"
+          />
           <button onclick="copy('rgb')" class="px-2 text-orange-600">📋</button>
         </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
         <label class="block text-xs text-slate-500 uppercase mb-2">HSL</label>
         <div class="flex gap-2">
-          <input type="text" id="hsl" value="hsl(217, 91%, 60%)" class="flex-1 px-3 py-2 border border-slate-300 rounded font-mono text-sm outline-none" oninput="updateFromHsl()" />
+          <input
+            type="text"
+            id="hsl"
+            value="hsl(217, 91%, 60%)"
+            class="flex-1 px-3 py-2 border border-slate-300 rounded font-mono text-sm outline-none"
+            oninput="updateFromHsl()"
+          />
           <button onclick="copy('hsl')" class="px-2 text-orange-600">📋</button>
         </div>
       </div>
@@ -52,15 +106,51 @@ import DevToolLayout from "../../layouts/DevToolLayout.astro";
   <section class="mt-8 pt-6 border-t border-slate-200">
     <h2 class="text-xl font-semibold text-slate-900 mb-4">Popular Colors</h2>
     <div class="flex flex-wrap gap-2">
-      <button onclick="setColor('#ef4444')" class="w-10 h-10 rounded" style="background:#ef4444" title="Red"></button>
-      <button onclick="setColor('#f97316')" class="w-10 h-10 rounded" style="background:#f97316" title="Orange"></button>
-      <button onclick="setColor('#eab308')" class="w-10 h-10 rounded" style="background:#eab308" title="Yellow"></button>
-      <button onclick="setColor('#22c55e')" class="w-10 h-10 rounded" style="background:#22c55e" title="Green"></button>
-      <button onclick="setColor('#1c398e')" class="w-10 h-10 rounded" style="background:#1c398e" title="Blue"></button>
-      <button onclick="setColor('#8b5cf6')" class="w-10 h-10 rounded" style="background:#8b5cf6" title="Purple"></button>
-      <button onclick="setColor('#ec4899')" class="w-10 h-10 rounded" style="background:#ec4899" title="Pink"></button>
-      <button onclick="setColor('#000000')" class="w-10 h-10 rounded border" style="background:#000000" title="Black"></button>
-      <button onclick="setColor('#ffffff')" class="w-10 h-10 rounded border" style="background:#ffffff" title="White"></button>
+      <button
+        onclick="setColor('#ef4444')"
+        class="w-10 h-10 rounded"
+        style="background:#ef4444"
+        title="Red"></button>
+      <button
+        onclick="setColor('#f97316')"
+        class="w-10 h-10 rounded"
+        style="background:#f97316"
+        title="Orange"></button>
+      <button
+        onclick="setColor('#eab308')"
+        class="w-10 h-10 rounded"
+        style="background:#eab308"
+        title="Yellow"></button>
+      <button
+        onclick="setColor('#22c55e')"
+        class="w-10 h-10 rounded"
+        style="background:#22c55e"
+        title="Green"></button>
+      <button
+        onclick="setColor('#1c398e')"
+        class="w-10 h-10 rounded"
+        style="background:#1c398e"
+        title="Blue"></button>
+      <button
+        onclick="setColor('#8b5cf6')"
+        class="w-10 h-10 rounded"
+        style="background:#8b5cf6"
+        title="Purple"></button>
+      <button
+        onclick="setColor('#ec4899')"
+        class="w-10 h-10 rounded"
+        style="background:#ec4899"
+        title="Pink"></button>
+      <button
+        onclick="setColor('#000000')"
+        class="w-10 h-10 rounded border"
+        style="background:#000000"
+        title="Black"></button>
+      <button
+        onclick="setColor('#ffffff')"
+        class="w-10 h-10 rounded border"
+        style="background:#ffffff"
+        title="White"></button>
     </div>
   </section>
 
@@ -94,9 +184,14 @@ import DevToolLayout from "../../layouts/DevToolLayout.astro";
       document.getElementById("preview").style.backgroundColor = hex;
 
       // Convert to HSL
-      const rn = r / 255, gn = g / 255, bn = b / 255;
-      const max = Math.max(rn, gn, bn), min = Math.min(rn, gn, bn);
-      let h, s, l = (max + min) / 2;
+      const rn = r / 255,
+        gn = g / 255,
+        bn = b / 255;
+      const max = Math.max(rn, gn, bn),
+        min = Math.min(rn, gn, bn);
+      let h,
+        s,
+        l = (max + min) / 2;
 
       if (max === min) {
         h = s = 0;
@@ -104,13 +199,20 @@ import DevToolLayout from "../../layouts/DevToolLayout.astro";
         const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch (max) {
-          case rn: h = ((gn - bn) / d + (gn < bn ? 6 : 0)) / 6; break;
-          case gn: h = ((bn - rn) / d + 2) / 6; break;
-          case bn: h = ((rn - gn) / d + 4) / 6; break;
+          case rn:
+            h = ((gn - bn) / d + (gn < bn ? 6 : 0)) / 6;
+            break;
+          case gn:
+            h = ((bn - rn) / d + 2) / 6;
+            break;
+          case bn:
+            h = ((rn - gn) / d + 4) / 6;
+            break;
         }
       }
 
-      document.getElementById("hsl").value = `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+      document.getElementById("hsl").value =
+        `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
     }
 
     function copy(id) {

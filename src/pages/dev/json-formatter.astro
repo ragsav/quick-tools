@@ -1,5 +1,23 @@
 ---
 import DevToolLayout from "../../layouts/DevToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What can I do with this tool?",
+    answer:
+      "Format (beautify) JSON for readability, minify JSON to reduce size, and validate JSON syntax.",
+  },
+  {
+    question: "What happens if my JSON is invalid?",
+    answer:
+      "The tool will show an error message explaining what's wrong with your JSON.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <DevToolLayout
@@ -7,22 +25,44 @@ import DevToolLayout from "../../layouts/DevToolLayout.astro";
   description="Format, beautify, and validate JSON data. Minify or prettify JSON with syntax highlighting."
   canonicalPath="/dev/json-formatter"
   currentTool="JSON Formatter"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">JSON Formatter & Validator</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      JSON Formatter & Validator
+    </h1>
     <p class="text-slate-500">Format, beautify, and validate your JSON data.</p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="mb-4">
-      <label for="input" class="block font-medium text-slate-700 mb-1.5 text-sm">Input JSON</label>
-      <textarea id="input" rows="8" placeholder='{"name":"John","age":30}' class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono resize-y"></textarea>
+      <label for="input" class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Input JSON</label
+      >
+      <textarea
+        id="input"
+        rows="8"
+        placeholder='{"name":"John","age":30}'
+        class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono resize-y"
+      ></textarea>
     </div>
 
     <div class="flex gap-3 mb-4">
-      <button onclick="format()" class="btn-primary px-6 py-2 font-semibold text-white rounded">Format / Beautify</button>
-      <button onclick="minify()" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm">Minify</button>
-      <button onclick="validate()" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm">Validate Only</button>
+      <button
+        onclick="format()"
+        class="btn-primary px-6 py-2 font-semibold text-white rounded"
+        >Format / Beautify</button
+      >
+      <button
+        onclick="minify()"
+        class="px-4 py-2 bg-white border border-slate-300 rounded text-sm"
+        >Minify</button
+      >
+      <button
+        onclick="validate()"
+        class="px-4 py-2 bg-white border border-slate-300 rounded text-sm"
+        >Validate Only</button
+      >
     </div>
 
     <div class="mb-4 hidden" id="statusBox">
@@ -30,11 +70,22 @@ import DevToolLayout from "../../layouts/DevToolLayout.astro";
     </div>
 
     <div class="mb-4">
-      <label class="block font-medium text-slate-700 mb-1.5 text-sm">Output</label>
-      <textarea id="output" rows="10" readonly class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-slate-50 text-slate-800 outline-none font-mono resize-y"></textarea>
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Output</label
+      >
+      <textarea
+        id="output"
+        rows="10"
+        readonly
+        class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-slate-50 text-slate-800 outline-none font-mono resize-y"
+      ></textarea>
     </div>
 
-    <button onclick="copyResult()" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm">📋 Copy</button>
+    <button
+      onclick="copyResult()"
+      class="px-4 py-2 bg-white border border-slate-300 rounded text-sm"
+      >📋 Copy</button
+    >
   </div>
 
   <script is:inline>
@@ -50,7 +101,11 @@ import DevToolLayout from "../../layouts/DevToolLayout.astro";
       try {
         const input = document.getElementById("input").value;
         const parsed = JSON.parse(input);
-        document.getElementById("output").value = JSON.stringify(parsed, null, 2);
+        document.getElementById("output").value = JSON.stringify(
+          parsed,
+          null,
+          2,
+        );
         showStatus("✅ Valid JSON - Formatted successfully", false);
       } catch (e) {
         showStatus("❌ Invalid JSON: " + e.message, true);

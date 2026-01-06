@@ -1,36 +1,130 @@
-# Astro Starter Kit: Basics
+# Quick Tools
 
-```sh
-npm create astro@latest -- --template basics
-```
+A collection of free, fast, and easy-to-use online utility tools built with [Astro](https://astro.build/). No sign-up required, works entirely in your browser.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+🌐 **Live Website:** [https://quicktools.live](https://quicktools.live)
 
-## 🚀 Project Structure
+---
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🛠️ Available Tools
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+### 📝 Text Tools
+| Tool | Description |
+|------|-------------|
+| [Word Counter](https://quicktools.live/text/word-counter) | Count words, characters, sentences, and paragraphs |
+| [Character Counter](https://quicktools.live/text/character-counter) | Detailed character and text statistics |
+| [Case Converter](https://quicktools.live/text/case-converter) | Convert text between different cases |
+| [Find & Replace](https://quicktools.live/text/find-replace) | Find and replace text patterns |
+| [Remove Duplicates](https://quicktools.live/text/remove-duplicates) | Remove duplicate lines from text |
+| [Remove Empty Lines](https://quicktools.live/text/remove-empty-lines) | Clean up empty lines in text |
+| [Line Sorter](https://quicktools.live/text/line-sorter) | Sort lines alphabetically or numerically |
+| [Diff Checker](https://quicktools.live/text/diff-checker) | Compare two texts and find differences |
+| [Slug Generator](https://quicktools.live/text/slug-generator) | Generate URL-friendly slugs |
+| [URL Encoder/Decoder](https://quicktools.live/text/url-encoder) | Encode or decode URLs |
+| [Text to List](https://quicktools.live/text/text-to-list) | Convert text to list format |
+| [List to Text](https://quicktools.live/text/list-to-text) | Convert list to plain text |
+| [Whitespace Cleaner](https://quicktools.live/text/whitespace-cleaner) | Remove extra whitespace from text |
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+---
+
+### 🔄 Converters
+| Tool | Description |
+|------|-------------|
+| [Unit Converter](https://quicktools.live/converters/unit-converter) | Convert between various units of measurement |
+| [Currency Converter](https://quicktools.live/converters/currency-converter) | Convert between world currencies |
+| [Binary to Decimal](https://quicktools.live/converters/binary-decimal) | Convert between binary and decimal |
+| [Decimal to Fraction](https://quicktools.live/converters/decimal-fraction) | Convert decimals to fractions |
+| [Roman Numerals](https://quicktools.live/converters/roman-numerals) | Convert to/from Roman numerals |
+| [Number to Words](https://quicktools.live/converters/number-to-words) | Convert numbers to written words |
+| [Percentage Calculator](https://quicktools.live/converters/percentage) | Calculate percentages |
+| [Time Unit Converter](https://quicktools.live/converters/time-units) | Convert between time units |
+| [File Size Converter](https://quicktools.live/converters/file-size) | Convert between file size units |
+
+---
+
+### 💻 Developer Tools
+| Tool | Description |
+|------|-------------|
+| [JSON Formatter](https://quicktools.live/dev/json-formatter) | Format and validate JSON |
+| [Base64 Encoder/Decoder](https://quicktools.live/dev/base64) | Encode or decode Base64 strings |
+| [Hash Generator](https://quicktools.live/dev/hash-generator) | Generate MD5, SHA-1, SHA-256 hashes |
+| [Password Generator](https://quicktools.live/dev/password-generator) | Generate secure random passwords |
+| [Color Picker](https://quicktools.live/dev/color-picker) | Pick and convert colors (HEX, RGB, HSL) |
+| [Lorem Ipsum Generator](https://quicktools.live/dev/lorem-ipsum) | Generate placeholder text |
+
+---
+
+### 🔢 Math Tools
+| Tool | Description |
+|------|-------------|
+| [Average Calculator](https://quicktools.live/math/average-calculator) | Calculate mean, median, and mode |
+| [LCM & GCD Calculator](https://quicktools.live/math/lcm-gcd) | Find LCM and GCD of numbers |
+| [Factor Calculator](https://quicktools.live/math/factor-calculator) | Find factors of any number |
+| [Square Root Calculator](https://quicktools.live/math/square-root) | Calculate square roots |
+| [Power Calculator](https://quicktools.live/math/power-calculator) | Calculate powers and exponents |
+| [Random Number Generator](https://quicktools.live/math/random-number) | Generate random numbers |
+
+---
+
+### 💰 Salary & Finance Tools
+| Tool | Description |
+|------|-------------|
+| [Salary to Hourly](https://quicktools.live/salary/salary-to-hourly) | Convert annual salary to hourly rate |
+| [Hourly to Monthly](https://quicktools.live/salary/hourly-to-monthly) | Convert hourly rate to monthly salary |
+| [Pay Raise Calculator](https://quicktools.live/salary/pay-raise) | Calculate salary after a raise |
+| [Bonus Calculator](https://quicktools.live/salary/bonus-calculator) | Calculate bonus amounts |
+| [Commission Calculator](https://quicktools.live/salary/commission) | Calculate sales commission |
+| [Overtime Pay Calculator](https://quicktools.live/salary/overtime-pay) | Calculate overtime earnings |
+| [Freelance Rate Calculator](https://quicktools.live/salary/freelance-rate) | Calculate freelance hourly rates |
+| [Loan EMI Calculator](https://quicktools.live/salary/loan-emi) | Calculate loan EMI payments |
+| [Simple Interest Calculator](https://quicktools.live/salary/simple-interest) | Calculate simple interest |
+
+---
+
+### 🎓 Student Tools
+| Tool | Description |
+|------|-------------|
+| [CGPA Calculator](https://quicktools.live/student/cgpa-calculator) | Calculate CGPA from grades |
+| [GPA to Percentage](https://quicktools.live/student/gpa-to-percentage) | Convert GPA to percentage |
+| [Percentage to GPA](https://quicktools.live/student/percentage-to-gpa) | Convert percentage to GPA |
+| [Marks Percentage Calculator](https://quicktools.live/student/marks-percentage) | Calculate percentage from marks |
+| [Grade Average Calculator](https://quicktools.live/student/grade-average) | Calculate grade averages |
+| [Reading Time Calculator](https://quicktools.live/student/reading-time) | Estimate reading time for text |
+| [Study Hours Calculator](https://quicktools.live/student/study-hours) | Plan study hours |
+
+---
+
+### ⏰ Time & Date Tools
+| Tool | Description |
+|------|-------------|
+| [Age Calculator](https://quicktools.live/time/age-calculator) | Calculate exact age from birth date |
+| [Date Difference Calculator](https://quicktools.live/time/date-difference-calculator) | Find days between two dates |
+| [Date Add/Subtract](https://quicktools.live/time/date-add-subtract) | Add or subtract days from a date |
+| [Business Days Calculator](https://quicktools.live/time/business-days-calculator) | Count business days between dates |
+| [Working Days Calculator](https://quicktools.live/time/working-days-calculator) | Calculate working days |
+| [Countdown Calculator](https://quicktools.live/time/countdown-calculator) | Countdown to any date |
+| [Day of Week Calculator](https://quicktools.live/time/day-of-week) | Find day of week for any date |
+| [Timezone Converter](https://quicktools.live/time/timezone-converter) | Convert times between timezones |
+| [Timezone Overlap Finder](https://quicktools.live/time/timezone-overlap) | Find overlapping work hours |
+| [ISO Date Converter](https://quicktools.live/time/iso-date-converter) | Convert to/from ISO date format |
+| [Weeks Between Dates](https://quicktools.live/time/weeks-between-dates) | Calculate weeks between dates |
+| [Months Between Dates](https://quicktools.live/time/months-between-dates) | Calculate months between dates |
+| [Leap Year Checker](https://quicktools.live/time/leap-year-checker) | Check if a year is a leap year |
+
+---
+
+## 🚀 Tech Stack
+
+- **Framework:** [Astro](https://astro.build/) - Static Site Generator
+- **Styling:** Vanilla CSS with CSS Variables
+- **Hosting:** [Cloudflare Pages](https://pages.cloudflare.com/)
+- **Domain:** [quicktools.live](https://quicktools.live)
+
+---
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+All commands are run from the root of the project:
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
@@ -39,8 +133,19 @@ All commands are run from the root of the project, from a terminal:
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+---
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 📄 License
+
+MIT License - feel free to use and modify!
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+---
+
+Made with ❤️ using [Astro](https://astro.build/)

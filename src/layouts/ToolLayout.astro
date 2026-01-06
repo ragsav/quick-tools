@@ -11,6 +11,11 @@ import { Image } from "astro:assets";
 import logo from "../assets/favicon.svg";
 import "../styles/global.css";
 
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 interface Props {
   title: string;
   description: string;
@@ -22,6 +27,7 @@ interface Props {
     url: string;
   };
   relatedTools?: Array<{ name: string; url: string }>;
+  faqItems?: FAQItem[];
 }
 
 const {
@@ -30,6 +36,7 @@ const {
   canonical,
   cluster,
   relatedTools = [],
+  faqItems = [],
 } = Astro.props;
 ---
 
@@ -63,7 +70,7 @@ const {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
 
-    <!-- JSON-LD -->
+    <!-- JSON-LD: WebApplication -->
     <script
       type="application/ld+json"
       set:html={JSON.stringify({
@@ -81,6 +88,27 @@ const {
         },
       })}
     />
+
+    <!-- JSON-LD: FAQ Schema (if FAQ items provided) -->
+    {
+      faqItems.length > 0 && (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqItems.map((item) => ({
+              "@type": "Question",
+              name: item.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: item.answer,
+              },
+            })),
+          })}
+        />
+      )
+    }
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

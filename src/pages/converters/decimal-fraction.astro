@@ -1,5 +1,23 @@
 ---
 import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How does decimal to fraction conversion work?",
+    answer:
+      "The tool finds the equivalent fraction and automatically simplifies it to the lowest terms.",
+  },
+  {
+    question: "What decimals can be converted?",
+    answer:
+      "Any terminating decimal can be converted to a fraction. Repeating decimals may be approximated.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -7,9 +25,12 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
   description="Convert decimals to fractions and fractions to decimals. Simplify fractions automatically. Free online tool."
   canonicalPath="/converters/decimal-fraction"
   currentTool="Decimal ↔ Fraction"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Decimal ↔ Fraction Converter</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Decimal ↔ Fraction Converter
+    </h1>
     <p class="text-slate-500">Convert between decimals and fractions.</p>
   </div>
 
@@ -18,32 +39,68 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
       <!-- Decimal to Fraction -->
       <div class="p-4 bg-white border border-slate-200 rounded">
         <h3 class="font-medium text-slate-900 mb-4">Decimal → Fraction</h3>
-        <input type="text" id="decimal" placeholder="e.g., 0.75" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none mb-3" oninput="decToFrac()" />
-        <div class="text-2xl font-bold text-amber-600" id="fractionResult">—</div>
+        <input
+          type="text"
+          id="decimal"
+          placeholder="e.g., 0.75"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none mb-3"
+          oninput="decToFrac()"
+        />
+        <div class="text-2xl font-bold text-amber-600" id="fractionResult">
+          —
+        </div>
       </div>
 
       <!-- Fraction to Decimal -->
       <div class="p-4 bg-white border border-slate-200 rounded">
         <h3 class="font-medium text-slate-900 mb-4">Fraction → Decimal</h3>
         <div class="flex items-center gap-2 mb-3">
-          <input type="number" id="numerator" placeholder="3" class="w-20 px-3 py-3 border border-slate-300 rounded text-center outline-none" oninput="fracToDec()" />
+          <input
+            type="number"
+            id="numerator"
+            placeholder="3"
+            class="w-20 px-3 py-3 border border-slate-300 rounded text-center outline-none"
+            oninput="fracToDec()"
+          />
           <span class="text-2xl text-slate-400">/</span>
-          <input type="number" id="denominator" placeholder="4" class="w-20 px-3 py-3 border border-slate-300 rounded text-center outline-none" oninput="fracToDec()" />
+          <input
+            type="number"
+            id="denominator"
+            placeholder="4"
+            class="w-20 px-3 py-3 border border-slate-300 rounded text-center outline-none"
+            oninput="fracToDec()"
+          />
         </div>
-        <div class="text-2xl font-bold text-amber-600" id="decimalResult">—</div>
+        <div class="text-2xl font-bold text-amber-600" id="decimalResult">
+          —
+        </div>
       </div>
     </div>
   </div>
 
   <section class="mt-8 pt-6 border-t border-slate-200">
-    <h2 class="text-xl font-semibold text-slate-900 mb-4">Common Conversions</h2>
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">
+      Common Conversions
+    </h2>
     <div class="grid grid-cols-4 sm:grid-cols-6 gap-3 text-sm">
-      <div class="p-2 bg-white border border-slate-200 rounded text-center">0.5 = 1/2</div>
-      <div class="p-2 bg-white border border-slate-200 rounded text-center">0.25 = 1/4</div>
-      <div class="p-2 bg-white border border-slate-200 rounded text-center">0.75 = 3/4</div>
-      <div class="p-2 bg-white border border-slate-200 rounded text-center">0.33 ≈ 1/3</div>
-      <div class="p-2 bg-white border border-slate-200 rounded text-center">0.125 = 1/8</div>
-      <div class="p-2 bg-white border border-slate-200 rounded text-center">0.2 = 1/5</div>
+      <div class="p-2 bg-white border border-slate-200 rounded text-center">
+        0.5 = 1/2
+      </div>
+      <div class="p-2 bg-white border border-slate-200 rounded text-center">
+        0.25 = 1/4
+      </div>
+      <div class="p-2 bg-white border border-slate-200 rounded text-center">
+        0.75 = 3/4
+      </div>
+      <div class="p-2 bg-white border border-slate-200 rounded text-center">
+        0.33 ≈ 1/3
+      </div>
+      <div class="p-2 bg-white border border-slate-200 rounded text-center">
+        0.125 = 1/8
+      </div>
+      <div class="p-2 bg-white border border-slate-200 rounded text-center">
+        0.2 = 1/5
+      </div>
     </div>
   </section>
 
@@ -80,16 +137,19 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
 
       // Convert to fraction
       const decStr = decimal.toString();
-      const decimalPlaces = decStr.includes('.') ? decStr.split('.')[1].length : 0;
+      const decimalPlaces = decStr.includes(".")
+        ? decStr.split(".")[1].length
+        : 0;
       const denominator = Math.pow(10, decimalPlaces);
       const numerator = Math.round(decimal * denominator);
-      
+
       // Simplify
       const divisor = gcd(numerator, denominator);
       const simpleNum = numerator / divisor;
       const simpleDen = denominator / divisor;
 
-      document.getElementById("fractionResult").innerText = `${simpleNum}/${simpleDen}`;
+      document.getElementById("fractionResult").innerText =
+        `${simpleNum}/${simpleDen}`;
     }
 
     function fracToDec() {
@@ -102,12 +162,14 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
       }
 
       if (den === 0) {
-        document.getElementById("decimalResult").innerText = "Cannot divide by zero";
+        document.getElementById("decimalResult").innerText =
+          "Cannot divide by zero";
         return;
       }
 
       const result = num / den;
-      document.getElementById("decimalResult").innerText = result.toLocaleString(undefined, { maximumFractionDigits: 8 });
+      document.getElementById("decimalResult").innerText =
+        result.toLocaleString(undefined, { maximumFractionDigits: 8 });
     }
   </script>
 </ConverterToolLayout>

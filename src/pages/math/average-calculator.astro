@@ -1,5 +1,23 @@
 ---
 import MathToolLayout from "../../layouts/MathToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What's the difference between mean, median, and mode?",
+    answer:
+      "Mean is the average, median is the middle value when sorted, and mode is the most frequent value.",
+  },
+  {
+    question: "How do I enter multiple numbers?",
+    answer:
+      "Separate numbers with commas or spaces, like: 10, 20, 30 or 10 20 30.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <MathToolLayout
@@ -7,16 +25,30 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
   description="Calculate the average (mean), median, and mode of a set of numbers. Free online statistics calculator."
   canonicalPath="/math/average-calculator"
   currentTool="Average Calculator"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Average Calculator</h1>
-    <p class="text-slate-500">Calculate mean, median, mode, and more from a list of numbers.</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Average Calculator
+    </h1>
+    <p class="text-slate-500">
+      Calculate mean, median, mode, and more from a list of numbers.
+    </p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="mb-4">
-      <label for="numbers" class="block font-medium text-slate-700 mb-1.5 text-sm">Enter Numbers (separated by commas or spaces)</label>
-      <textarea id="numbers" rows="3" placeholder="e.g., 10, 20, 30, 40, 50" class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono" oninput="calculate()"></textarea>
+      <label
+        for="numbers"
+        class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Enter Numbers (separated by commas or spaces)</label
+      >
+      <textarea
+        id="numbers"
+        rows="3"
+        placeholder="e.g., 10, 20, 30, 40, 50"
+        class="w-full px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono"
+        oninput="calculate()"></textarea>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -58,12 +90,17 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
   <script is:inline>
     function calculate() {
       const input = document.getElementById("numbers").value;
-      const nums = input.split(/[,\s]+/).map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
-      
+      const nums = input
+        .split(/[,\s]+/)
+        .map((n) => parseFloat(n.trim()))
+        .filter((n) => !isNaN(n));
+
       if (nums.length === 0) {
-        ["mean", "median", "mode", "sum", "min", "max", "range"].forEach(id => {
-          document.getElementById(id).innerText = "—";
-        });
+        ["mean", "median", "mode", "sum", "min", "max", "range"].forEach(
+          (id) => {
+            document.getElementById(id).innerText = "—";
+          },
+        );
         document.getElementById("count").innerText = "0";
         return;
       }
@@ -71,16 +108,17 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
       const sorted = [...nums].sort((a, b) => a - b);
       const sum = nums.reduce((a, b) => a + b, 0);
       const mean = sum / nums.length;
-      
+
       // Median
       const mid = Math.floor(sorted.length / 2);
-      const median = sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-      
+      const median =
+        sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+
       // Mode
       const freq = {};
-      nums.forEach(n => freq[n] = (freq[n] || 0) + 1);
+      nums.forEach((n) => (freq[n] = (freq[n] || 0) + 1));
       const maxFreq = Math.max(...Object.values(freq));
-      const modes = Object.keys(freq).filter(n => freq[n] === maxFreq);
+      const modes = Object.keys(freq).filter((n) => freq[n] === maxFreq);
       const mode = maxFreq === 1 ? "None" : modes.join(", ");
 
       document.getElementById("mean").innerText = mean.toFixed(4);
@@ -90,7 +128,8 @@ import MathToolLayout from "../../layouts/MathToolLayout.astro";
       document.getElementById("sum").innerText = sum;
       document.getElementById("min").innerText = sorted[0];
       document.getElementById("max").innerText = sorted[sorted.length - 1];
-      document.getElementById("range").innerText = sorted[sorted.length - 1] - sorted[0];
+      document.getElementById("range").innerText =
+        sorted[sorted.length - 1] - sorted[0];
     }
   </script>
 </MathToolLayout>

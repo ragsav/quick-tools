@@ -1,5 +1,23 @@
 ---
 import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "Are these exchange rates accurate?",
+    answer:
+      "These are approximate rates for reference. Use a financial service for actual transactions.",
+  },
+  {
+    question: "How many currencies does this support?",
+    answer:
+      "This tool supports 14 major world currencies including USD, EUR, GBP, JPY, and INR.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -7,39 +25,72 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
   description="Convert between major world currencies with approximate rates. Free online currency converter."
   canonicalPath="/converters/currency-converter"
   currentTool="Currency Converter"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Currency Converter</h1>
-    <p class="text-slate-500">Convert between major world currencies (approximate rates).</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Currency Converter
+    </h1>
+    <p class="text-slate-500">
+      Convert between major world currencies (approximate rates).
+    </p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4">
       <div>
-        <label for="amount" class="block font-medium text-slate-700 mb-1.5 text-sm">Amount</label>
-        <input type="number" id="amount" value="100" class="w-full px-4 py-3 text-lg border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="convert()" />
+        <label
+          for="amount"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">Amount</label
+        >
+        <input
+          type="number"
+          id="amount"
+          value="100"
+          class="w-full px-4 py-3 text-lg border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="convert()"
+        />
       </div>
       <div>
-        <label for="fromCurrency" class="block font-medium text-slate-700 mb-1.5 text-sm">From</label>
-        <select id="fromCurrency" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" onchange="convert()"></select>
+        <label
+          for="fromCurrency"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">From</label
+        >
+        <select
+          id="fromCurrency"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          onchange="convert()"></select>
       </div>
       <div class="flex items-center justify-center">
-        <button onclick="swap()" class="p-2 rounded hover:bg-slate-200">⇄</button>
+        <button onclick="swap()" class="p-2 rounded hover:bg-slate-200"
+          >⇄</button
+        >
       </div>
       <div>
-        <label for="toCurrency" class="block font-medium text-slate-700 mb-1.5 text-sm">To</label>
-        <select id="toCurrency" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" onchange="convert()"></select>
+        <label
+          for="toCurrency"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">To</label
+        >
+        <select
+          id="toCurrency"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          onchange="convert()"></select>
       </div>
     </div>
 
     <div class="result-box p-4 bg-white rounded">
-      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Converted Amount</div>
+      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">
+        Converted Amount
+      </div>
       <div class="text-3xl font-bold text-amber-600" id="result">—</div>
       <div class="text-sm text-slate-500 mt-2" id="rate">—</div>
     </div>
 
-    <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded text-sm text-amber-800">
-      ⚠️ Rates are approximate and for reference only. Use a financial service for actual transactions.
+    <div
+      class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded text-sm text-amber-800"
+    >
+      ⚠️ Rates are approximate and for reference only. Use a financial service
+      for actual transactions.
     </div>
   </div>
 
@@ -49,7 +100,7 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
       USD: { name: "US Dollar", rate: 1, symbol: "$" },
       EUR: { name: "Euro", rate: 0.92, symbol: "€" },
       GBP: { name: "British Pound", rate: 0.79, symbol: "£" },
-      JPY: { name: "Japanese Yen", rate: 149.50, symbol: "¥" },
+      JPY: { name: "Japanese Yen", rate: 149.5, symbol: "¥" },
       INR: { name: "Indian Rupee", rate: 83.12, symbol: "₹" },
       CAD: { name: "Canadian Dollar", rate: 1.36, symbol: "C$" },
       AUD: { name: "Australian Dollar", rate: 1.53, symbol: "A$" },
@@ -95,8 +146,10 @@ import ConverterToolLayout from "../../layouts/ConverterToolLayout.astro";
       const result = inUSD * rates[to].rate;
       const exchangeRate = rates[to].rate / rates[from].rate;
 
-      document.getElementById("result").innerText = `${rates[to].symbol} ${result.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-      document.getElementById("rate").innerText = `1 ${from} = ${exchangeRate.toFixed(4)} ${to}`;
+      document.getElementById("result").innerText =
+        `${rates[to].symbol} ${result.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById("rate").innerText =
+        `1 ${from} = ${exchangeRate.toFixed(4)} ${to}`;
     }
 
     convert();

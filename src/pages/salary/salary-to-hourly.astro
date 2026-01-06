@@ -1,5 +1,23 @@
 ---
 import SalaryToolLayout from "../../layouts/SalaryToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How is hourly rate calculated from salary?",
+    answer:
+      "Hourly Rate = Annual Salary ÷ (Hours per Week × Weeks per Year). Standard is 2,080 hours/year.",
+  },
+  {
+    question: "Why convert salary to hourly?",
+    answer:
+      "To compare job offers, understand your true pay rate, or calculate overtime.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -7,25 +25,60 @@ import SalaryToolLayout from "../../layouts/SalaryToolLayout.astro";
   description="Convert your annual salary to hourly rate. See how much you earn per hour, day, week, and month."
   canonicalPath="/salary/salary-to-hourly"
   currentTool="Salary to Hourly"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Salary to Hourly Converter</h1>
-    <p class="text-slate-500">Convert annual salary to hourly rate and see all breakdowns.</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Salary to Hourly Converter
+    </h1>
+    <p class="text-slate-500">
+      Convert annual salary to hourly rate and see all breakdowns.
+    </p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="grid md:grid-cols-3 gap-4 mb-6">
       <div>
-        <label for="salary" class="block font-medium text-slate-700 mb-1.5 text-sm">Annual Salary ($)</label>
-        <input type="number" id="salary" placeholder="50000" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+        <label
+          for="salary"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Annual Salary ($)</label
+        >
+        <input
+          type="number"
+          id="salary"
+          placeholder="50000"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="calculate()"
+        />
       </div>
       <div>
-        <label for="hoursPerWeek" class="block font-medium text-slate-700 mb-1.5 text-sm">Hours per Week</label>
-        <input type="number" id="hoursPerWeek" value="40" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+        <label
+          for="hoursPerWeek"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Hours per Week</label
+        >
+        <input
+          type="number"
+          id="hoursPerWeek"
+          value="40"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="calculate()"
+        />
       </div>
       <div>
-        <label for="weeksPerYear" class="block font-medium text-slate-700 mb-1.5 text-sm">Weeks per Year</label>
-        <input type="number" id="weeksPerYear" value="52" class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" oninput="calculate()" />
+        <label
+          for="weeksPerYear"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Weeks per Year</label
+        >
+        <input
+          type="number"
+          id="weeksPerYear"
+          value="52"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+          oninput="calculate()"
+        />
       </div>
     </div>
 
@@ -52,15 +105,22 @@ import SalaryToolLayout from "../../layouts/SalaryToolLayout.astro";
   <script is:inline>
     function calculate() {
       const salary = parseFloat(document.getElementById("salary").value) || 0;
-      const hoursPerWeek = parseFloat(document.getElementById("hoursPerWeek").value) || 40;
-      const weeksPerYear = parseFloat(document.getElementById("weeksPerYear").value) || 52;
+      const hoursPerWeek =
+        parseFloat(document.getElementById("hoursPerWeek").value) || 40;
+      const weeksPerYear =
+        parseFloat(document.getElementById("weeksPerYear").value) || 52;
 
       const hourly = salary / (hoursPerWeek * weeksPerYear);
       const daily = hourly * 8;
       const weekly = salary / weeksPerYear;
       const monthly = salary / 12;
 
-      const fmt = (n) => "$" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const fmt = (n) =>
+        "$" +
+        n.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
 
       document.getElementById("hourly").innerText = fmt(hourly);
       document.getElementById("daily").innerText = fmt(daily);

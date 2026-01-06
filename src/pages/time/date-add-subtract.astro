@@ -1,5 +1,23 @@
 ---
 import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What time units can I add or subtract?",
+    answer:
+      "You can add or subtract days, weeks, months, or years from any date.",
+  },
+  {
+    question: "Does this account for month length variations?",
+    answer:
+      "Yes, the calculator handles varying month lengths and leap years automatically.",
+  },
+  {
+    question: "Is this tool free to use?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -7,33 +25,66 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
   description="Add or subtract days, weeks, months, or years from any date. Free online date calculator."
   canonicalPath="/time/date-add-subtract"
   currentTool="Date Add/Subtract"
+  faqItems={faqItems}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Date Add/Subtract Calculator</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Date Add/Subtract Calculator
+    </h1>
     <p class="text-slate-500">Add or subtract time periods from any date.</p>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
     <div class="mb-6">
-      <label for="startDate" class="block font-medium text-slate-700 mb-1.5 text-sm">Start Date</label>
-      <input type="date" id="startDate" class="w-full max-w-xs px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+      <label
+        for="startDate"
+        class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Start Date</label
+      >
+      <input
+        type="date"
+        id="startDate"
+        class="w-full max-w-xs px-4 py-3 text-base border border-slate-300 rounded bg-white text-slate-800 outline-none"
+      />
     </div>
 
     <div class="flex flex-wrap gap-4 mb-6">
       <div>
-        <label for="operation" class="block font-medium text-slate-700 mb-1.5 text-sm">Operation</label>
-        <select id="operation" class="px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none">
+        <label
+          for="operation"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Operation</label
+        >
+        <select
+          id="operation"
+          class="px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        >
           <option value="add">Add (+)</option>
           <option value="subtract">Subtract (−)</option>
         </select>
       </div>
       <div>
-        <label for="amount" class="block font-medium text-slate-700 mb-1.5 text-sm">Amount</label>
-        <input type="number" id="amount" value="1" min="1" class="w-24 px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+        <label
+          for="amount"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">Amount</label
+        >
+        <input
+          type="number"
+          id="amount"
+          value="1"
+          min="1"
+          class="w-24 px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        />
       </div>
       <div>
-        <label for="unit" class="block font-medium text-slate-700 mb-1.5 text-sm">Unit</label>
-        <select id="unit" class="px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none">
+        <label
+          for="unit"
+          class="block font-medium text-slate-700 mb-1.5 text-sm">Unit</label
+        >
+        <select
+          id="unit"
+          class="px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        >
           <option value="days">Days</option>
           <option value="weeks">Weeks</option>
           <option value="months">Months</option>
@@ -42,10 +93,15 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
       </div>
     </div>
 
-    <button class="btn-primary px-6 py-3 font-semibold text-white rounded" onclick="calculate()">Calculate</button>
+    <button
+      class="btn-primary px-6 py-3 font-semibold text-white rounded"
+      onclick="calculate()">Calculate</button
+    >
 
     <div class="result-box mt-6 p-4 bg-white rounded hidden" id="resultBox">
-      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Result Date</div>
+      <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">
+        Result Date
+      </div>
       <div class="text-3xl font-bold text-blue-600" id="result">—</div>
       <div class="text-sm text-slate-500 mt-2" id="dayName">—</div>
     </div>
@@ -54,12 +110,36 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
   <section class="mt-8 pt-6 border-t border-slate-200">
     <h2 class="text-xl font-semibold text-slate-900 mb-4">Quick Add</h2>
     <div class="flex flex-wrap gap-2">
-      <button onclick="quickCalc(7, 'days')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500">+1 Week</button>
-      <button onclick="quickCalc(14, 'days')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500">+2 Weeks</button>
-      <button onclick="quickCalc(1, 'months')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500">+1 Month</button>
-      <button onclick="quickCalc(3, 'months')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500">+3 Months</button>
-      <button onclick="quickCalc(6, 'months')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500">+6 Months</button>
-      <button onclick="quickCalc(1, 'years')" class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500">+1 Year</button>
+      <button
+        onclick="quickCalc(7, 'days')"
+        class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500"
+        >+1 Week</button
+      >
+      <button
+        onclick="quickCalc(14, 'days')"
+        class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500"
+        >+2 Weeks</button
+      >
+      <button
+        onclick="quickCalc(1, 'months')"
+        class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500"
+        >+1 Month</button
+      >
+      <button
+        onclick="quickCalc(3, 'months')"
+        class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500"
+        >+3 Months</button
+      >
+      <button
+        onclick="quickCalc(6, 'months')"
+        class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500"
+        >+6 Months</button
+      >
+      <button
+        onclick="quickCalc(1, 'years')"
+        class="px-4 py-2 bg-white border border-slate-200 rounded text-sm hover:border-blue-500"
+        >+1 Year</button
+      >
     </div>
   </section>
 
@@ -81,7 +161,8 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
       const resultBox = document.getElementById("resultBox");
 
       if (isNaN(startDate.getTime()) || isNaN(amount)) {
-        document.getElementById("result").innerText = "Please fill in all fields";
+        document.getElementById("result").innerText =
+          "Please fill in all fields";
         resultBox.classList.remove("hidden");
         return;
       }
@@ -91,24 +172,41 @@ import TimeToolLayout from "../../layouts/TimeToolLayout.astro";
 
       switch (unit) {
         case "days":
-          result.setDate(result.getDate() + (amount * multiplier));
+          result.setDate(result.getDate() + amount * multiplier);
           break;
         case "weeks":
-          result.setDate(result.getDate() + (amount * 7 * multiplier));
+          result.setDate(result.getDate() + amount * 7 * multiplier);
           break;
         case "months":
-          result.setMonth(result.getMonth() + (amount * multiplier));
+          result.setMonth(result.getMonth() + amount * multiplier);
           break;
         case "years":
-          result.setFullYear(result.getFullYear() + (amount * multiplier));
+          result.setFullYear(result.getFullYear() + amount * multiplier);
           break;
       }
 
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById("result").innerText = result.toLocaleDateString('en-US', options);
-      
-      const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      document.getElementById("dayName").innerText = `That's a ${dayNames[result.getDay()]}`;
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      document.getElementById("result").innerText = result.toLocaleDateString(
+        "en-US",
+        options,
+      );
+
+      const dayNames = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+      document.getElementById("dayName").innerText =
+        `That's a ${dayNames[result.getDay()]}`;
       resultBox.classList.remove("hidden");
     }
   </script>
