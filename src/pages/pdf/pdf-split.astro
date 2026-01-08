@@ -1,0 +1,422 @@
+---
+import PDFToolLayout from "../../layouts/PDFToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How do I select pages to extract?",
+    answer: "Click on page thumbnails to select/deselect them, or use the quick actions to select all, odd, or even pages.",
+  },
+  {
+    question: "Can I reorder pages before extracting?",
+    answer: "Yes! Drag and drop selected pages to reorder them in the final PDF.",
+  },
+  {
+    question: "Will the quality be preserved?",
+    answer: "Yes, extracting pages preserves the original quality.",
+  },
+];
+---
+
+<PDFToolLayout
+  title="PDF Split - Extract Pages from PDF Online"
+  description="Split PDF files and extract specific pages. Visual page selector with drag-drop reordering. Free online tool - works in your browser."
+  canonicalPath="/pdf/pdf-split"
+  currentTool="PDF Split"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      PDF Split
+    </h1>
+    <p class="text-slate-500">
+      Select, reorder, and extract pages from a PDF document.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <!-- Upload Area -->
+    <div
+      id="dropZone"
+      class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6"
+    >
+      <div class="text-4xl mb-2">📄</div>
+      <p class="text-slate-600 mb-2">Drag & drop a PDF file here or click to select</p>
+      <input type="file" id="fileInput" accept=".pdf,application/pdf" class="hidden" />
+    </div>
+
+    <!-- Preview Section -->
+    <div id="previewSection" class="hidden">
+      <!-- File Info -->
+      <div class="bg-white border border-slate-200 rounded p-4 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-red-100 text-red-600 rounded flex items-center justify-center text-lg">📄</div>
+          <div class="flex-1">
+            <p id="fileName" class="font-medium text-slate-700"></p>
+            <p id="fileInfo" class="text-sm text-slate-500"></p>
+          </div>
+          <button id="changeFileBtn" class="text-sm text-blue-600 hover:underline">Change</button>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button id="selectAllBtn" class="px-3 py-1.5 text-sm bg-slate-100 text-slate-700 rounded hover:bg-slate-200">Select All</button>
+        <button id="selectNoneBtn" class="px-3 py-1.5 text-sm bg-slate-100 text-slate-700 rounded hover:bg-slate-200">Select None</button>
+        <button id="selectOddBtn" class="px-3 py-1.5 text-sm bg-slate-100 text-slate-700 rounded hover:bg-slate-200">Odd Pages</button>
+        <button id="selectEvenBtn" class="px-3 py-1.5 text-sm bg-slate-100 text-slate-700 rounded hover:bg-slate-200">Even Pages</button>
+        <button id="invertBtn" class="px-3 py-1.5 text-sm bg-slate-100 text-slate-700 rounded hover:bg-slate-200">Invert</button>
+      </div>
+
+      <p class="text-sm text-slate-500 mb-4">💡 Click to select pages. Drag selected pages to reorder. <span id="selectedCount" class="font-medium text-blue-600"></span></p>
+
+      <!-- Page Grid -->
+      <div id="pageGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 mb-6"></div>
+
+      <!-- Selected Pages Preview -->
+      <div id="selectedSection" class="hidden mb-6">
+        <h3 class="font-medium text-slate-700 mb-2">Selected Pages Order (drag to reorder)</h3>
+        <div id="selectedGrid" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="extractBtn"
+          class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm disabled:opacity-50"
+          disabled
+        >
+          ✂️ Extract Selected Pages
+        </button>
+        <button
+          id="resetBtn"
+          class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+        >
+          🗑️ Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div id="progress" class="hidden mt-4">
+      <div class="w-full bg-slate-200 rounded-full h-2">
+        <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all" style="width: 0%"></div>
+      </div>
+      <p id="progressText" class="text-sm text-slate-600 mt-2">Processing...</p>
+    </div>
+  </div>
+
+  <!-- Load PDF.js legacy build -->
+  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', function() {
+      const pdfjsLib = window.pdfjsLib;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      
+      const PDFLib = window.PDFLib;
+
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      const previewSection = document.getElementById('previewSection');
+      const fileName = document.getElementById('fileName');
+      const fileInfo = document.getElementById('fileInfo');
+      const pageGrid = document.getElementById('pageGrid');
+      const selectedSection = document.getElementById('selectedSection');
+      const selectedGrid = document.getElementById('selectedGrid');
+      const selectedCount = document.getElementById('selectedCount');
+      const extractBtn = document.getElementById('extractBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const changeFileBtn = document.getElementById('changeFileBtn');
+      const progress = document.getElementById('progress');
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+
+      let pdfData = null;
+      let totalPages = 0;
+      let pages = [];
+      let selectedOrder = [];
+      let draggedSelectedItem = null;
+
+      function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+      }
+
+      function updateSelectedCount() {
+        const count = selectedOrder.length;
+        selectedCount.textContent = count > 0 ? count + ' page' + (count > 1 ? 's' : '') + ' selected' : '';
+        extractBtn.disabled = count === 0;
+        
+        if (count > 0) {
+          selectedSection.classList.remove('hidden');
+          renderSelectedGrid();
+        } else {
+          selectedSection.classList.add('hidden');
+        }
+      }
+
+      function renderSelectedGrid() {
+        selectedGrid.innerHTML = '';
+        
+        selectedOrder.forEach(function(pageIndex, orderIndex) {
+          const page = pages[pageIndex];
+          const div = document.createElement('div');
+          div.className = 'relative w-16 h-20 bg-white border-2 border-blue-500 rounded overflow-hidden cursor-move';
+          div.draggable = true;
+          div.dataset.orderIndex = orderIndex;
+          div.dataset.pageIndex = pageIndex;
+          
+          div.innerHTML = 
+            '<img src="' + page.thumbnail + '" class="w-full h-full object-contain bg-slate-50" />' +
+            '<div class="absolute top-0.5 left-0.5 bg-blue-600 text-white text-[10px] px-1 rounded">' + (pageIndex + 1) + '</div>';
+          
+          div.addEventListener('dragstart', function(e) {
+            draggedSelectedItem = div;
+            div.classList.add('opacity-50');
+            e.dataTransfer.effectAllowed = 'move';
+          });
+          
+          div.addEventListener('dragend', function() {
+            div.classList.remove('opacity-50');
+            draggedSelectedItem = null;
+          });
+          
+          div.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            div.classList.add('ring-2', 'ring-blue-300');
+          });
+          
+          div.addEventListener('dragleave', function() {
+            div.classList.remove('ring-2', 'ring-blue-300');
+          });
+          
+          div.addEventListener('drop', function(e) {
+            e.preventDefault();
+            div.classList.remove('ring-2', 'ring-blue-300');
+            
+            if (draggedSelectedItem && draggedSelectedItem !== div) {
+              const fromOrder = parseInt(draggedSelectedItem.dataset.orderIndex);
+              const toOrder = parseInt(div.dataset.orderIndex);
+              
+              const moved = selectedOrder.splice(fromOrder, 1)[0];
+              selectedOrder.splice(toOrder, 0, moved);
+              
+              renderSelectedGrid();
+            }
+          });
+          
+          selectedGrid.appendChild(div);
+        });
+      }
+
+      async function renderPageThumbnail(pdfDoc, pageNum, scale) {
+        scale = scale || 0.25;
+        const page = await pdfDoc.getPage(pageNum);
+        const viewport = page.getViewport({ scale: scale });
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+        return canvas.toDataURL('image/jpeg', 0.6);
+      }
+
+      function togglePage(pageIndex) {
+        const page = pages[pageIndex];
+        page.selected = !page.selected;
+        
+        if (page.selected) {
+          selectedOrder.push(pageIndex);
+        } else {
+          selectedOrder = selectedOrder.filter(function(i) { return i !== pageIndex; });
+        }
+        
+        renderPageGrid();
+        updateSelectedCount();
+      }
+
+      function renderPageGrid() {
+        pageGrid.innerHTML = '';
+        
+        pages.forEach(function(page, index) {
+          const div = document.createElement('div');
+          div.className = 'relative group bg-white border-2 rounded overflow-hidden cursor-pointer transition-all ' +
+            (page.selected ? 'border-blue-500 ring-2 ring-blue-200' : 'border-slate-200 hover:border-slate-300');
+          div.dataset.index = index;
+          
+          div.innerHTML = 
+            '<img src="' + page.thumbnail + '" class="w-full aspect-[3/4] object-contain bg-slate-50" alt="Page ' + (index + 1) + '" />' +
+            '<div class="absolute top-1 left-1 ' + (page.selected ? 'bg-blue-600' : 'bg-black/60') + ' text-white text-xs px-1.5 py-0.5 rounded">' + (index + 1) + '</div>' +
+            (page.selected ? '<div class="absolute top-1 right-1 bg-blue-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">✓</div>' : '');
+          
+          div.addEventListener('click', function() { togglePage(index); });
+          
+          pageGrid.appendChild(div);
+        });
+      }
+
+      async function handleFile(file) {
+        if (file.type !== 'application/pdf') {
+          alert('Please select a PDF file.');
+          return;
+        }
+
+        progress.classList.remove('hidden');
+        progressText.textContent = 'Loading PDF...';
+
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          // Store a copy as Uint8Array before PDF.js detaches the buffer
+          pdfData = new Uint8Array(arrayBuffer);
+          const pdfDoc = await pdfjsLib.getDocument({ data: pdfData.slice() }).promise;
+          totalPages = pdfDoc.numPages;
+          
+          fileName.textContent = file.name;
+          fileInfo.textContent = totalPages + ' pages • ' + formatSize(file.size);
+          
+          pages = [];
+          selectedOrder = [];
+          
+          for (let i = 1; i <= totalPages; i++) {
+            progressBar.style.width = (i / totalPages * 100) + '%';
+            progressText.textContent = 'Rendering page ' + i + ' of ' + totalPages + '...';
+            
+            const thumbnail = await renderPageThumbnail(pdfDoc, i);
+            pages.push({
+              thumbnail: thumbnail,
+              selected: false,
+              pageIndex: i - 1
+            });
+          }
+          
+          progress.classList.add('hidden');
+          progressBar.style.width = '0%';
+          
+          dropZone.classList.add('hidden');
+          previewSection.classList.remove('hidden');
+          renderPageGrid();
+          updateSelectedCount();
+        } catch (error) {
+          alert('Could not load PDF: ' + error.message);
+          progress.classList.add('hidden');
+        }
+      }
+
+      async function extractPages() {
+        if (selectedOrder.length === 0) return;
+        
+        progress.classList.remove('hidden');
+        extractBtn.disabled = true;
+        
+        try {
+          const srcDoc = await PDFLib.PDFDocument.load(pdfData);
+          const newDoc = await PDFLib.PDFDocument.create();
+          
+          for (let i = 0; i < selectedOrder.length; i++) {
+            progressBar.style.width = ((i + 1) / selectedOrder.length * 100) + '%';
+            progressText.textContent = 'Extracting page ' + (selectedOrder[i] + 1) + '...';
+            
+            const copiedPages = await newDoc.copyPages(srcDoc, [selectedOrder[i]]);
+            newDoc.addPage(copiedPages[0]);
+          }
+          
+          progressText.textContent = 'Generating PDF...';
+          const pdfBytes = await newDoc.save();
+          
+          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'extracted-pages.pdf';
+          link.click();
+        } catch (error) {
+          alert('Error extracting pages: ' + error.message);
+        }
+        
+        progress.classList.add('hidden');
+        extractBtn.disabled = false;
+        progressBar.style.width = '0%';
+      }
+
+      // Quick action handlers
+      document.getElementById('selectAllBtn').addEventListener('click', function() {
+        pages.forEach(function(p) { p.selected = true; });
+        selectedOrder = pages.map(function(_, i) { return i; });
+        renderPageGrid();
+        updateSelectedCount();
+      });
+      
+      document.getElementById('selectNoneBtn').addEventListener('click', function() {
+        pages.forEach(function(p) { p.selected = false; });
+        selectedOrder = [];
+        renderPageGrid();
+        updateSelectedCount();
+      });
+      
+      document.getElementById('selectOddBtn').addEventListener('click', function() {
+        pages.forEach(function(p, i) { p.selected = (i % 2 === 0); });
+        selectedOrder = [];
+        pages.forEach(function(p, i) { if (p.selected) selectedOrder.push(i); });
+        renderPageGrid();
+        updateSelectedCount();
+      });
+      
+      document.getElementById('selectEvenBtn').addEventListener('click', function() {
+        pages.forEach(function(p, i) { p.selected = (i % 2 === 1); });
+        selectedOrder = [];
+        pages.forEach(function(p, i) { if (p.selected) selectedOrder.push(i); });
+        renderPageGrid();
+        updateSelectedCount();
+      });
+      
+      document.getElementById('invertBtn').addEventListener('click', function() {
+        pages.forEach(function(p) { p.selected = !p.selected; });
+        selectedOrder = [];
+        pages.forEach(function(p, i) { if (p.selected) selectedOrder.push(i); });
+        renderPageGrid();
+        updateSelectedCount();
+      });
+
+      // Event listeners
+      dropZone.addEventListener('click', function() { fileInput.click(); });
+      dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropZone.classList.add('border-blue-500', 'bg-blue-50');
+      });
+      dropZone.addEventListener('dragleave', function() {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      });
+      dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        handleFile(e.dataTransfer.files[0]);
+      });
+
+      fileInput.addEventListener('change', function(e) { handleFile(e.target.files[0]); });
+      changeFileBtn.addEventListener('click', function() { fileInput.click(); });
+      extractBtn.addEventListener('click', extractPages);
+      resetBtn.addEventListener('click', function() {
+        pdfData = null;
+        totalPages = 0;
+        pages = [];
+        selectedOrder = [];
+        previewSection.classList.add('hidden');
+        dropZone.classList.remove('hidden');
+        fileInput.value = '';
+      });
+    });
+  </script>
+
+  <style is:global>
+    #pageGrid > div:hover {
+      transform: scale(1.02);
+    }
+  </style>
+</PDFToolLayout>

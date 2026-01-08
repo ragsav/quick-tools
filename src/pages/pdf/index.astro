@@ -1,0 +1,71 @@
+---
+import PDFToolLayout from "../../layouts/PDFToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What PDF tools are available?",
+    answer: "We offer PDF Merge, PDF Split, and PDF to Image conversion tools.",
+  },
+  {
+    question: "Are my PDFs uploaded to a server?",
+    answer: "No! All processing happens directly in your browser using JavaScript. Your files never leave your device.",
+  },
+];
+---
+
+<PDFToolLayout
+  title="PDF Tools - Free Online PDF Utilities"
+  description="Free browser-based PDF tools. Merge, split, and convert PDFs. No uploads - everything runs locally in your browser."
+  canonicalPath="/pdf/"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      📄 PDF Tools
+    </h1>
+    <p class="text-slate-500">
+      Merge, split, and convert PDFs directly in your browser.
+    </p>
+  </div>
+
+  <div class="grid gap-4">
+    <a
+      href="/pdf/pdf-merge"
+      class="block p-6 bg-slate-50 border border-slate-200 rounded hover:border-blue-500 hover:shadow-md transition-all group"
+    >
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-900 mb-1">PDF Merge</h2>
+          <p class="text-sm text-slate-500">Combine multiple PDF files into one document</p>
+        </div>
+        <span class="text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all text-xl">→</span>
+      </div>
+    </a>
+
+    <a
+      href="/pdf/pdf-split"
+      class="block p-6 bg-slate-50 border border-slate-200 rounded hover:border-blue-500 hover:shadow-md transition-all group"
+    >
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-900 mb-1">PDF Split</h2>
+          <p class="text-sm text-slate-500">Extract specific pages from a PDF file</p>
+        </div>
+        <span class="text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all text-xl">→</span>
+      </div>
+    </a>
+
+    <a
+      href="/pdf/pdf-to-image"
+      class="block p-6 bg-slate-50 border border-slate-200 rounded hover:border-blue-500 hover:shadow-md transition-all group"
+    >
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-900 mb-1">PDF to Image</h2>
+          <p class="text-sm text-slate-500">Convert PDF pages to PNG or JPEG images</p>
+        </div>
+        <span class="text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all text-xl">→</span>
+      </div>
+    </a>
+  </div>
+</PDFToolLayout>

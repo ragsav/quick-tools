@@ -12,6 +12,8 @@
     "@astrojs/sitemap": "^3.6.0",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.6",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.4.530",
     "tailwindcss": "^4.1.18"
   }
 }

@@ -1,0 +1,277 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How does image compression work?",
+    answer: "The tool uses your browser's Canvas API to re-encode the image at a lower quality level, reducing file size while maintaining acceptable visual quality.",
+  },
+  {
+    question: "What image formats are supported?",
+    answer: "You can compress JPEG, PNG, and WebP images. The output format can be JPEG or WebP for best compression.",
+  },
+  {
+    question: "Is there a file size limit?",
+    answer: "Since everything runs in your browser, the limit depends on your device's memory. Most modern devices can handle images up to 20-50MB.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="Image Compress & Resize - Free Online Tool"
+  description="Compress and resize images online for free. Reduce file size without losing quality. No upload required - works entirely in your browser."
+  canonicalPath="/image/image-compress"
+  currentTool="Image Compress"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Image Compress & Resize
+    </h1>
+    <p class="text-slate-500">
+      Reduce image file size and dimensions. All processing happens in your browser.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <!-- Upload Area -->
+    <div
+      id="dropZone"
+      class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6"
+    >
+      <div class="text-4xl mb-2">📁</div>
+      <p class="text-slate-600 mb-2">Drag & drop an image here or click to select</p>
+      <p class="text-sm text-slate-400">Supports JPEG, PNG, WebP</p>
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+    </div>
+
+    <!-- Preview & Controls (hidden initially) -->
+    <div id="controls" class="hidden">
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <!-- Original Preview -->
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Original</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="originalPreview" class="max-w-full max-h-full object-contain" alt="Original" />
+          </div>
+          <p id="originalInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+
+        <!-- Compressed Preview -->
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Compressed</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="compressedPreview" class="max-w-full max-h-full object-contain" alt="Compressed" />
+          </div>
+          <p id="compressedInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Quality</label>
+          <div class="flex items-center gap-2">
+            <input type="range" id="quality" min="10" max="100" value="80" class="flex-1" />
+            <span id="qualityValue" class="text-sm text-slate-600 w-10">80%</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Width (px)</label>
+          <input type="number" id="width" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm" placeholder="Auto" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Height (px)</label>
+          <input type="number" id="height" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm" placeholder="Auto" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Format</label>
+          <select id="format" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/webp">WebP</option>
+            <option value="image/png">PNG</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 mb-4">
+        <label class="flex items-center gap-2 text-sm text-slate-700">
+          <input type="checkbox" id="maintainRatio" checked class="rounded" />
+          Maintain aspect ratio
+        </label>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="compressBtn"
+          class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm"
+        >
+          🔄 Compress
+        </button>
+        <button
+          id="downloadBtn"
+          class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors hidden"
+        >
+          ⬇️ Download
+        </button>
+        <button
+          id="resetBtn"
+          class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+        >
+          🗑️ Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const controls = document.getElementById('controls');
+    const originalPreview = document.getElementById('originalPreview');
+    const compressedPreview = document.getElementById('compressedPreview');
+    const originalInfo = document.getElementById('originalInfo');
+    const compressedInfo = document.getElementById('compressedInfo');
+    const qualitySlider = document.getElementById('quality');
+    const qualityValue = document.getElementById('qualityValue');
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const formatSelect = document.getElementById('format');
+    const maintainRatio = document.getElementById('maintainRatio');
+    const compressBtn = document.getElementById('compressBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let originalImage = null;
+    let originalFile = null;
+    let compressedBlob = null;
+    let aspectRatio = 1;
+
+    // Format file size
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    // Handle file selection
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        alert('Please select a valid image file.');
+        return;
+      }
+
+      originalFile = file;
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          originalImage = img;
+          aspectRatio = img.width / img.height;
+
+          originalPreview.src = e.target.result;
+          originalInfo.textContent = `${img.width} × ${img.height} • ${formatSize(file.size)}`;
+
+          widthInput.value = img.width;
+          heightInput.value = img.height;
+
+          controls.classList.remove('hidden');
+          dropZone.classList.add('hidden');
+
+          compressImage();
+        };
+        img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    // Compress image
+    function compressImage() {
+      if (!originalImage) return;
+
+      const quality = qualitySlider.value / 100;
+      const format = formatSelect.value;
+      let width = parseInt(widthInput.value) || originalImage.width;
+      let height = parseInt(heightInput.value) || originalImage.height;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(originalImage, 0, 0, width, height);
+
+      canvas.toBlob((blob) => {
+        compressedBlob = blob;
+        compressedPreview.src = URL.createObjectURL(blob);
+
+        const savings = ((originalFile.size - blob.size) / originalFile.size * 100).toFixed(1);
+        const savingsText = savings > 0 ? ` (${savings}% smaller)` : '';
+        compressedInfo.textContent = `${width} × ${height} • ${formatSize(blob.size)}${savingsText}`;
+
+        downloadBtn.classList.remove('hidden');
+      }, format, quality);
+    }
+
+    // Event listeners
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+    qualitySlider.addEventListener('input', () => {
+      qualityValue.textContent = qualitySlider.value + '%';
+    });
+
+    widthInput.addEventListener('input', () => {
+      if (maintainRatio.checked && originalImage) {
+        heightInput.value = Math.round(widthInput.value / aspectRatio);
+      }
+    });
+
+    heightInput.addEventListener('input', () => {
+      if (maintainRatio.checked && originalImage) {
+        widthInput.value = Math.round(heightInput.value * aspectRatio);
+      }
+    });
+
+    compressBtn.addEventListener('click', compressImage);
+
+    downloadBtn.addEventListener('click', () => {
+      if (!compressedBlob) return;
+      const ext = formatSelect.value.split('/')[1];
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(compressedBlob);
+      link.download = `compressed-image.${ext}`;
+      link.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      originalImage = null;
+      originalFile = null;
+      compressedBlob = null;
+      controls.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+      fileInput.value = '';
+      downloadBtn.classList.add('hidden');
+    });
+  </script>
+</ImageToolLayout>

@@ -1,0 +1,319 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How many images can I combine into a PDF?",
+    answer: "You can combine as many images as your browser can handle - typically dozens of images work smoothly.",
+  },
+  {
+    question: "What image formats are supported?",
+    answer: "JPEG, PNG, WebP, GIF, and BMP images are all supported.",
+  },
+  {
+    question: "Can I reorder the images?",
+    answer: "Yes! Simply drag and drop images in the list to reorder them before creating the PDF.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="Image to PDF - Convert Images to PDF Online"
+  description="Convert multiple images to a single PDF document. Free online tool - no upload required. Supports JPEG, PNG, WebP and more."
+  canonicalPath="/image/image-to-pdf"
+  currentTool="Image to PDF"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Image to PDF
+    </h1>
+    <p class="text-slate-500">
+      Convert multiple images into a single PDF document.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <!-- Upload Area -->
+    <div
+      id="dropZone"
+      class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6"
+    >
+      <div class="text-4xl mb-2">📁</div>
+      <p class="text-slate-600 mb-2">Drag & drop images here or click to select</p>
+      <p class="text-sm text-slate-400">Select multiple images at once</p>
+      <input type="file" id="fileInput" accept="image/*" multiple class="hidden" />
+    </div>
+
+    <!-- Image List -->
+    <div id="imageList" class="space-y-2 mb-6 hidden"></div>
+
+    <!-- Options -->
+    <div id="options" class="grid sm:grid-cols-3 gap-4 mb-6 hidden">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Page Size</label>
+        <select id="pageSize" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+          <option value="a4">A4</option>
+          <option value="letter">Letter</option>
+          <option value="fit">Fit to Image</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Orientation</label>
+        <select id="orientation" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+          <option value="portrait">Portrait</option>
+          <option value="landscape">Landscape</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Margin</label>
+        <select id="margin" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+          <option value="0">No Margin</option>
+          <option value="20">Small</option>
+          <option value="40" selected>Medium</option>
+          <option value="60">Large</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div id="actions" class="flex flex-wrap gap-3 hidden">
+      <button
+        id="createPdfBtn"
+        class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm"
+      >
+        📄 Create PDF
+      </button>
+      <button
+        id="addMoreBtn"
+        class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+      >
+        ➕ Add More
+      </button>
+      <button
+        id="clearBtn"
+        class="px-6 py-2 font-semibold bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 transition-colors"
+      >
+        🗑️ Clear All
+      </button>
+    </div>
+
+    <!-- Progress -->
+    <div id="progress" class="hidden mt-4">
+      <div class="w-full bg-slate-200 rounded-full h-2">
+        <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all" style="width: 0%"></div>
+      </div>
+      <p id="progressText" class="text-sm text-slate-600 mt-2">Creating PDF...</p>
+    </div>
+  </div>
+
+  <script is:inline type="module">
+    import { PDFDocument } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const imageList = document.getElementById('imageList');
+    const options = document.getElementById('options');
+    const actions = document.getElementById('actions');
+    const createPdfBtn = document.getElementById('createPdfBtn');
+    const addMoreBtn = document.getElementById('addMoreBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const progress = document.getElementById('progress');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+
+    let images = [];
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function renderImageList() {
+      if (images.length === 0) {
+        imageList.classList.add('hidden');
+        options.classList.add('hidden');
+        actions.classList.add('hidden');
+        dropZone.classList.remove('hidden');
+        return;
+      }
+
+      dropZone.classList.add('hidden');
+      imageList.classList.remove('hidden');
+      options.classList.remove('hidden');
+      actions.classList.remove('hidden');
+
+      imageList.innerHTML = images.map((img, i) => `
+        <div class="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded" data-index="${i}">
+          <span class="text-slate-400 cursor-move">⋮⋮</span>
+          <img src="${img.dataUrl}" class="w-12 h-12 object-cover rounded" />
+          <div class="flex-1">
+            <p class="text-sm font-medium text-slate-700 truncate">${img.name}</p>
+            <p class="text-xs text-slate-500">${img.width} × ${img.height} • ${formatSize(img.size)}</p>
+          </div>
+          <button class="remove-btn text-red-500 hover:text-red-700 p-1" data-index="${i}">✕</button>
+        </div>
+      `).join('');
+
+      // Add remove handlers
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.target.dataset.index);
+          images.splice(index, 1);
+          renderImageList();
+        });
+      });
+    }
+
+    async function handleFiles(files) {
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) continue;
+
+        const dataUrl = await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        });
+
+        const dims = await new Promise(resolve => {
+          const img = new Image();
+          img.onload = () => resolve({ width: img.width, height: img.height });
+          img.src = dataUrl;
+        });
+
+        images.push({
+          name: file.name,
+          dataUrl,
+          size: file.size,
+          width: dims.width,
+          height: dims.height
+        });
+      }
+      renderImageList();
+    }
+
+    async function createPDF() {
+      if (images.length === 0) return;
+
+      progress.classList.remove('hidden');
+      createPdfBtn.disabled = true;
+
+      const pdfDoc = await PDFDocument.create();
+      const pageSize = document.getElementById('pageSize').value;
+      const orientation = document.getElementById('orientation').value;
+      const margin = parseInt(document.getElementById('margin').value);
+
+      for (let i = 0; i < images.length; i++) {
+        progressBar.style.width = `${((i + 1) / images.length) * 100}%`;
+        progressText.textContent = `Processing image ${i + 1} of ${images.length}...`;
+
+        const img = images[i];
+        let imgBytes;
+
+        // Convert data URL to bytes
+        const base64 = img.dataUrl.split(',')[1];
+        imgBytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+
+        let embedImg;
+        try {
+          if (img.dataUrl.includes('image/png')) {
+            embedImg = await pdfDoc.embedPng(imgBytes);
+          } else {
+            embedImg = await pdfDoc.embedJpg(imgBytes);
+          }
+        } catch {
+          // If embedding fails, try converting via canvas
+          const canvas = document.createElement('canvas');
+          const imgEl = new Image();
+          await new Promise(resolve => {
+            imgEl.onload = resolve;
+            imgEl.src = img.dataUrl;
+          });
+          canvas.width = imgEl.width;
+          canvas.height = imgEl.height;
+          canvas.getContext('2d').drawImage(imgEl, 0, 0);
+          const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          const jpgBase64 = jpgDataUrl.split(',')[1];
+          imgBytes = Uint8Array.from(atob(jpgBase64), c => c.charCodeAt(0));
+          embedImg = await pdfDoc.embedJpg(imgBytes);
+        }
+
+        let pageWidth, pageHeight;
+
+        if (pageSize === 'fit') {
+          pageWidth = embedImg.width + margin * 2;
+          pageHeight = embedImg.height + margin * 2;
+        } else {
+          const sizes = {
+            a4: [595.28, 841.89],
+            letter: [612, 792]
+          };
+          [pageWidth, pageHeight] = sizes[pageSize] || sizes.a4;
+          if (orientation === 'landscape') {
+            [pageWidth, pageHeight] = [pageHeight, pageWidth];
+          }
+        }
+
+        const page = pdfDoc.addPage([pageWidth, pageHeight]);
+
+        // Scale image to fit within margins
+        const maxWidth = pageWidth - margin * 2;
+        const maxHeight = pageHeight - margin * 2;
+        const scale = Math.min(maxWidth / embedImg.width, maxHeight / embedImg.height, 1);
+        const scaledWidth = embedImg.width * scale;
+        const scaledHeight = embedImg.height * scale;
+
+        // Center image
+        const x = (pageWidth - scaledWidth) / 2;
+        const y = (pageHeight - scaledHeight) / 2;
+
+        page.drawImage(embedImg, {
+          x,
+          y,
+          width: scaledWidth,
+          height: scaledHeight
+        });
+      }
+
+      progressText.textContent = 'Generating PDF...';
+      const pdfBytes = await pdfDoc.save();
+
+      // Download
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'images.pdf';
+      link.click();
+
+      progress.classList.add('hidden');
+      createPdfBtn.disabled = false;
+      progressBar.style.width = '0%';
+    }
+
+    // Event listeners
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', e => handleFiles(e.target.files));
+    addMoreBtn.addEventListener('click', () => fileInput.click());
+    clearBtn.addEventListener('click', () => {
+      images = [];
+      renderImageList();
+    });
+    createPdfBtn.addEventListener('click', createPDF);
+  </script>
+</ImageToolLayout>
