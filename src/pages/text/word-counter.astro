@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Word Detection",
+    content:
+      "Words are identified by splitting text on whitespace characters (spaces, tabs, newlines) using regex: /\\s+/. Empty strings are filtered out to ensure accurate counting.",
+  },
+  {
+    title: "Character Counting",
+    content:
+      "Character count includes all characters: letters, numbers, spaces, punctuation, and special characters. The string's length property gives the total count instantly.",
+  },
+  {
+    title: "Sentence Detection",
+    content:
+      "Sentences are counted by splitting on terminal punctuation: periods, exclamation points, and question marks. Empty entries are filtered to handle multiple punctuation marks.",
+  },
+  {
+    title: "Paragraph Counting",
+    content:
+      "Paragraphs are detected by splitting on double newlines (\\n\\n+). This standard paragraph separator identifies distinct blocks of text.",
+  },
+  {
+    title: "Reading Time Estimation",
+    content:
+      "Reading time uses the standard 200 words-per-minute rate. Speaking time uses 150 WPM. These averages provide reasonable estimates for most content.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Essay & Assignment Writing",
+    description:
+      "Track word count for school essays, college papers, and assignments that have specific word count requirements. Stay within minimum and maximum limits.",
+  },
+  {
+    title: "Blog & Content Writing",
+    description:
+      "Monitor article length for SEO optimization. Many SEO guidelines recommend 1500-2500 words for in-depth blog posts.",
+  },
+  {
+    title: "Social Media Content",
+    description:
+      "Prepare content for platforms with character limits while ensuring your message is complete and impactful.",
+  },
+  {
+    title: "Speech Preparation",
+    description:
+      "Estimate speech duration using the speaking time calculator. A 5-minute speech needs roughly 750 words at average pace.",
+  },
+  {
+    title: "Translation Projects",
+    description:
+      "Many translation services charge per word. Get accurate word counts before requesting quotes or billing clients.",
+  },
+  {
+    title: "Novel & Book Writing",
+    description:
+      "Track progress on long-form writing projects. Standard novel length is 70,000-100,000 words. Monitor daily writing goals.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/text/word-counter"
   currentTool="Word Counter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Weekly Calculation",
+    content:
+      "Hourly rate × hours per week = weekly pay. At $20/hour for 40 hours, weekly pay is $800.",
+  },
+  {
+    title: "Annual Projection",
+    content:
+      "Weekly pay × weeks per year = annual salary. $800/week × 52 weeks = $41,600 annually.",
+  },
+  {
+    title: "Monthly Average",
+    content:
+      "Annual salary ÷ 12 = monthly average. This smooths out months with different numbers of workdays.",
+  },
+  {
+    title: "Daily Rate",
+    content:
+      "Hourly rate × 8 hours = standard daily rate. Useful for comparing day rates or per-diem work.",
+  },
+  {
+    title: "Adjustable Parameters",
+    content:
+      "Modify hours per week and weeks per year for part-time schedules or to account for unpaid vacation.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Hourly Worker Budgeting",
+    description:
+      "Project annual income for budgeting, tax planning, and financial goals based on your hourly wage.",
+  },
+  {
+    title: "Job Comparison",
+    description:
+      "Compare hourly positions to salaried offers. Convert to annual to see the true compensation difference.",
+  },
+  {
+    title: "Loan Applications",
+    description:
+      "Banks often require annual income. Convert your hourly rate for mortgage or loan applications.",
+  },
+  {
+    title: "Benefits Calculation",
+    description:
+      "Some benefits are based on annual salary. Know your equivalent salary for 401k limits, insurance eligibility.",
+  },
+  {
+    title: "Raise Impact Assessment",
+    description:
+      "Calculate annual impact of an hourly raise. A $2/hour raise = $4,160 more annually (at 40hrs/52wks).",
+  },
+  {
+    title: "Contract Negotiations",
+    description:
+      "Convert hourly rate to salary equivalent when negotiating full-time positions or contractor agreements.",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/salary/hourly-to-monthly"
   currentTool="Hourly to Monthly"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

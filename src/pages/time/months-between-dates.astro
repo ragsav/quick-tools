@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Year-Month Difference",
+    content:
+      "First, calculate the difference in months at the year/month level: (endYear - startYear) × 12 + (endMonth - startMonth). This gives a baseline count ignoring day-of-month.",
+  },
+  {
+    title: "Day Adjustment",
+    content:
+      "If the end day is less than the start day, a full month hasn't passed yet, so we subtract one from the total. For example, Jan 31 to Feb 15 isn't a full month.",
+  },
+  {
+    title: "Year Conversion",
+    content:
+      "The total months can be expressed as years and remaining months: years = Math.floor(months / 12), remainingMonths = months % 12. This provides a more intuitive breakdown for longer periods.",
+  },
+  {
+    title: "Variable Month Handling",
+    content:
+      "The algorithm correctly handles months of different lengths. Moving from the 31st to a month with fewer days doesn't throw off the calculation due to the day-adjustment logic.",
+  },
+  {
+    title: "Absolute Value Handling",
+    content:
+      "The calculation works regardless of which date is earlier, though typically the result represents months from the earlier date to the later date.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Loan Term Calculations",
+    description:
+      "Mortgages, auto loans, and personal loans are specified in months. Calculate remaining months on a loan or convert years to monthly payments.",
+  },
+  {
+    title: "Subscription Billing",
+    description:
+      "Calculate how many months a subscription has been active for billing reconciliation, or determine months until renewal.",
+  },
+  {
+    title: "Employment Tenure",
+    description:
+      "Human resources often track employment length in months for probation periods, benefits eligibility, and years-of-service calculations.",
+  },
+  {
+    title: "Lease Duration",
+    description:
+      "Rental agreements are typically measured in months. Calculate remaining months on a lease or prorate rent for partial months.",
+  },
+  {
+    title: "Project Duration",
+    description:
+      "Long-term projects are often measured in months. Calculate project length for planning, budgeting, and timeline presentations.",
+  },
+  {
+    title: "Child Development Tracking",
+    description:
+      "Pediatricians track infant and toddler development in months. Calculate a baby's age in months for milestone tracking and medical visits.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/time/months-between-dates"
   currentTool="Months Between Dates"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

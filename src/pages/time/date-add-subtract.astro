@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Date Input & Parsing",
+    content:
+      "The calculator accepts your starting date and parses it into a JavaScript Date object. This represents the date as milliseconds since January 1, 1970 (Unix epoch), allowing for precise mathematical operations across different calendar systems and time zones.",
+  },
+  {
+    title: "Time Unit Selection",
+    content:
+      "When you select a time unit (days, weeks, months, or years), the calculator determines the appropriate mathematical operation. Days are added directly, weeks are converted to 7-day increments, while months and years require special handling due to their variable lengths.",
+  },
+  {
+    title: "Calendar-Aware Calculation",
+    content:
+      "For months and years, the calculator uses calendar-aware arithmetic rather than simple day counting. When adding 1 month to January 31, it correctly rolls to February 28 (or 29 in leap years). This follows the ISO 8601 standard for date arithmetic, ensuring accurate results even at month boundaries.",
+  },
+  {
+    title: "Leap Year Handling",
+    content:
+      "The calculator automatically accounts for leap years using the Gregorian calendar rules: a year is a leap year if divisible by 4, except for years divisible by 100 unless also divisible by 400. This ensures accurate calculations when crossing February 29 boundaries.",
+  },
+  {
+    title: "Result Formatting",
+    content:
+      "The calculated date is formatted into a human-readable string showing the full date with the day of the week. This uses locale-aware formatting to display dates in your preferred format while maintaining consistency.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Project Deadline Planning",
+    description:
+      "Calculate exact deadlines by adding specific durations to project start dates. For example, add 6 weeks to today's date to determine a sprint completion date, or add 3 months for quarterly milestone planning.",
+  },
+  {
+    title: "Contract & Subscription Renewals",
+    description:
+      "Determine when contracts, licenses, or subscriptions expire by adding the contract duration to the start date. Essential for managing software licenses, lease agreements, and service contracts.",
+  },
+  {
+    title: "Medical & Health Scheduling",
+    description:
+      "Calculate follow-up appointment dates, medication refill schedules, or vaccination due dates. Add specific intervals to last visit dates for accurate healthcare planning.",
+  },
+  {
+    title: "Financial Planning",
+    description:
+      "Determine loan maturity dates, investment term end dates, or payment due dates. Add months or years to loan origination dates for accurate financial forecasting.",
+  },
+  {
+    title: "Academic Planning",
+    description:
+      "Calculate semester end dates, assignment deadlines, or graduation timelines. Add weeks or months to term start dates for effective academic scheduling.",
+  },
+  {
+    title: "Event & Travel Planning",
+    description:
+      "Plan events by calculating dates relative to a reference point. Determine RSVP deadlines (2 weeks before event), booking windows (6 months ahead), or countdown milestones.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/time/date-add-subtract"
   currentTool="Date Add/Subtract"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

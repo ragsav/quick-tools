@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Date Object Creation",
+    content:
+      "Your selected date is parsed into a JavaScript Date object, which internally represents the date as milliseconds since January 1, 1970. This enables consistent day-of-week calculation across any date range.",
+  },
+  {
+    title: "Day Index Retrieval",
+    content:
+      "The getDay() method returns the day of the week as a number from 0 (Sunday) to 6 (Saturday). This follows a zero-indexed pattern where the week starts on Sunday, which is standard in JavaScript.",
+  },
+  {
+    title: "Day Name Mapping",
+    content:
+      "The numeric index is used to look up the full day name from an array: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']. This converts the number to human-readable text.",
+  },
+  {
+    title: "Calendar Algorithm",
+    content:
+      "Behind the scenes, JavaScript uses algorithms that account for the Gregorian calendar reform of 1582, leap years, and varying month lengths to accurately determine the weekday for any date.",
+  },
+  {
+    title: "Locale-Aware Formatting",
+    content:
+      "The full date is formatted using toLocaleDateString() with options for displaying the complete weekday and date, adapting to your browser's locale settings for proper formatting.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Historical Event Research",
+    description:
+      "Discover what day of the week historical events occurred. Find out if July 4, 1776 or November 11, 1918 was a weekend or weekday.",
+  },
+  {
+    title: "Birthday Day Discovery",
+    description:
+      "Find out what day of the week you were born, or discover the weekday of upcoming birthdays for planning celebrations.",
+  },
+  {
+    title: "Event Scheduling",
+    description:
+      "When planning future events, verify that your chosen date falls on the desired day of the week before sending invitations.",
+  },
+  {
+    title: "Work Schedule Planning",
+    description:
+      "Determine if specific dates fall on weekdays or weekends for work scheduling, deadline planning, and time-off requests.",
+  },
+  {
+    title: "Religious Observance",
+    description:
+      "Verify dates for religious holidays and observances that occur on specific days of the week, like Easter Sunday or Good Friday.",
+  },
+  {
+    title: "Superstition Checking",
+    description:
+      "Check if dates fall on traditionally 'unlucky' days like Friday the 13th, or find 'lucky' days for important events.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/time/day-of-week"
   currentTool="Day of Week Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

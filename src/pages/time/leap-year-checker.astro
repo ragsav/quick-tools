@@ -18,6 +18,67 @@ const faqItems = [
       "The tool shows upcoming leap years. Leap years occur every 4 years (2024, 2028, 2032, etc.).",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Divisibility by 4 Check",
+    content:
+      "The first rule of the Gregorian calendar is that a year must be evenly divisible by 4 to be a leap year. This is checked using the modulo operator: year % 4 === 0. Most years that pass this test are leap years.",
+  },
+  {
+    title: "Century Year Exception",
+    content:
+      "Years divisible by 100 are NOT leap years, even if divisible by 4. This exception exists because 365.25 days per year slightly overcompensates. For example, 1900 was not a leap year despite being divisible by 4.",
+  },
+  {
+    title: "400-Year Override",
+    content:
+      "Years divisible by 400 ARE leap years, overriding the century exception. This fine-tunes the calendar to match Earth's actual 365.2422-day orbit. For example, 2000 was a leap year because it's divisible by 400.",
+  },
+  {
+    title: "Combined Rule Application",
+    content:
+      "The complete formula is: (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0). This single expression implements all three rules, returning true for leap years and false otherwise.",
+  },
+  {
+    title: "Calendar Accuracy",
+    content:
+      "This system keeps the Gregorian calendar synchronized with the solar year to within one day per 3,236 years. Without leap years, seasons would gradually shift through the calendar over centuries.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Birthday on February 29",
+    description:
+      "People born on February 29 ('leaplings') need to know when their actual birthday occurs. In non-leap years, they celebrate on February 28 or March 1.",
+  },
+  {
+    title: "Financial Calendar Planning",
+    description:
+      "Accountants and financial planners need to account for the extra day in leap years when calculating daily rates, interest accrual, and annual budgets.",
+  },
+  {
+    title: "Software Development",
+    description:
+      "Developers building date-handling systems must correctly implement leap year logic. Bugs in leap year calculation have caused notable system failures.",
+  },
+  {
+    title: "Historical Date Research",
+    description:
+      "Historians and genealogists need to correctly count days in historical periods, accounting for leap years in both Gregorian and Julian calendars.",
+  },
+  {
+    title: "Educational Purposes",
+    description:
+      "Students learning about calendars and astronomy can understand why we have leap years and practice the mathematical rules behind them.",
+  },
+  {
+    title: "Event Planning",
+    description:
+      "Knowing upcoming leap years helps with long-term event planning, especially for recurring annual events that may be affected by the extra February day.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/time/leap-year-checker"
   currentTool="Leap Year Checker"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

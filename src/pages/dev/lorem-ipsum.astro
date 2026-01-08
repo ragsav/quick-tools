@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Word Pool",
+    content:
+      "Uses Latin-like words from the standard Lorem Ipsum corpus. Over 100 words for natural text variation.",
+  },
+  {
+    title: "Paragraph Generation",
+    content:
+      "Each paragraph contains 4-7 random sentences. Sentences have 8-17 words with proper capitalization.",
+  },
+  {
+    title: "Sentence Generation",
+    content:
+      "Random words joined with spaces, capitalized first letter, period at end. Natural reading flow.",
+  },
+  {
+    title: "Word Generation",
+    content:
+      "Simply outputs the requested number of words. Useful for testing exact character limits.",
+  },
+  {
+    title: "Randomization",
+    content:
+      "Each generation creates unique text. Text varies each time you click Generate.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Web Design Mockups",
+    description:
+      "Fill layouts with placeholder text before real content is ready. Visualize typography and spacing.",
+  },
+  {
+    title: "Print Layout Design",
+    description:
+      "Fill magazine, brochure, or book layouts with placeholder text. Test column widths and page flow.",
+  },
+  {
+    title: "App Development",
+    description:
+      "Populate UI components with realistic text lengths. Test how interfaces handle various content sizes.",
+  },
+  {
+    title: "Presentation Design",
+    description:
+      "Fill slide templates with placeholder text while developing presentation structure.",
+  },
+  {
+    title: "Content Management Testing",
+    description:
+      "Generate test content for CMS functionality. Test how systems handle various content lengths.",
+  },
+  {
+    title: "Typography Showcase",
+    description:
+      "Display font samples with neutral text. Focus on letterforms without content distraction.",
+  },
+];
 ---
 
 <DevToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/dev/lorem-ipsum"
   currentTool="Lorem Ipsum Generator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

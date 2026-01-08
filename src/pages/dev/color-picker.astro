@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "HEX Format",
+    content:
+      "#RRGGBB represents RGB as 2-digit hex values. #FF0000 = bright red. Range 00-FF for each component.",
+  },
+  {
+    title: "RGB Format",
+    content:
+      "RGB uses decimal values 0-255 for red, green, blue. rgb(255, 0, 0) = bright red. Direct color representation.",
+  },
+  {
+    title: "HSL Format",
+    content:
+      "HSL uses Hue (0-360°), Saturation (0-100%), Lightness (0-100%). More intuitive for color adjustments.",
+  },
+  {
+    title: "Color Conversion",
+    content:
+      "Mathematical formulas convert between formats. HEX→RGB is base conversion. RGB↔HSL involves color space transformation.",
+  },
+  {
+    title: "Live Preview",
+    content:
+      "Changes update the color preview instantly. Edit any format and see results in all formats immediately.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Web Development",
+    description:
+      "Pick colors for CSS styling. Convert between formats as needed for different CSS properties.",
+  },
+  {
+    title: "Design Consistency",
+    description:
+      "Copy exact color values from designs. Ensure brand colors are consistent across platforms.",
+  },
+  {
+    title: "Color Adjustment",
+    description:
+      "Use HSL to easily lighten, darken, or desaturate colors. More intuitive than RGB adjustments.",
+  },
+  {
+    title: "Accessibility Testing",
+    description:
+      "Extract colors to test contrast ratios. Ensure text is readable against backgrounds.",
+  },
+  {
+    title: "Print Preparation",
+    description:
+      "Convert web colors (RGB) for print specifications. Understand color values for proofing.",
+  },
+  {
+    title: "Graphic Design",
+    description:
+      "Copy color values for use in design software. Match colors across different applications.",
+  },
+];
 ---
 
 <DevToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/dev/color-picker"
   currentTool="Color Picker & Converter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

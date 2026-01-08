@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Line-by-Line Comparison",
+    content:
+      "Both texts are split into arrays of lines. Each line is compared at the same position. Lines are marked as added, removed, or unchanged based on exact matches.",
+  },
+  {
+    title: "Case Normalization",
+    content:
+      "When 'Ignore case' is enabled, both texts are converted to lowercase before comparison. This catches semantic matches that differ only in capitalization.",
+  },
+  {
+    title: "Whitespace Handling",
+    content:
+      "When 'Ignore whitespace' is enabled, multiple spaces are collapsed and text is trimmed. This focuses comparison on actual content, not formatting.",
+  },
+  {
+    title: "Visual Diff Display",
+    content:
+      "Deletions (lines in original but not modified) are shown in red with minus signs. Additions (lines in modified but not original) appear in green with plus signs.",
+  },
+  {
+    title: "Statistics Generation",
+    content:
+      "The tool counts additions, deletions, and unchanged lines, providing a summary of differences between the two versions.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Code Review",
+    description:
+      "Compare before and after versions of code to see what changed. Identify insertions, deletions, and modifications quickly.",
+  },
+  {
+    title: "Document Revision Tracking",
+    description:
+      "Track changes between document versions. See what was added or removed between drafts of contracts, articles, or reports.",
+  },
+  {
+    title: "Configuration Comparison",
+    description:
+      "Compare configuration files between environments (dev, staging, prod) to identify discrepancies that might cause issues.",
+  },
+  {
+    title: "Content Plagiarism Check",
+    description:
+      "Compare submitted content against original sources to identify copied or modified text passages.",
+  },
+  {
+    title: "API Response Debugging",
+    description:
+      "Compare expected vs. actual API responses to identify why tests are failing or behavior has changed.",
+  },
+  {
+    title: "Translation Verification",
+    description:
+      "Compare translations with originals to ensure all content is accounted for and nothing was accidentally omitted.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/text/diff-checker"
   currentTool="Text Diff Checker"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

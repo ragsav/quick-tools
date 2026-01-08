@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "EMI Formula",
+    content:
+      "EMI = [P × R × (1+R)^N] / [(1+R)^N - 1], where P = principal, R = monthly rate, N = months. Provides fixed payment amount.",
+  },
+  {
+    title: "Monthly Rate Conversion",
+    content:
+      "Monthly rate = annual rate ÷ 12 ÷ 100. A 7% annual rate becomes 0.00583 monthly rate for the formula.",
+  },
+  {
+    title: "Total Payment",
+    content:
+      "Total payment = EMI × number of months. This is the total amount you'll pay over the loan's lifetime.",
+  },
+  {
+    title: "Interest Calculate",
+    content:
+      "Total interest = total payment - principal. Shows how much extra you pay beyond the borrowed amount.",
+  },
+  {
+    title: "Term Trade-offs",
+    content:
+      "Longer terms = lower EMI but higher total interest. Shorter terms = higher EMI but less total interest paid.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Home Loan Planning",
+    description:
+      "Calculate mortgage payments before buying. Know what monthly payment you can afford and total cost over 15-30 years.",
+  },
+  {
+    title: "Car Loan Comparison",
+    description:
+      "Compare financing options for vehicles. See how different rates and terms affect your monthly payment.",
+  },
+  {
+    title: "Personal Loan Assessment",
+    description:
+      "Calculate EMI before borrowing for expenses. Understand the monthly commitment you're taking on.",
+  },
+  {
+    title: "Refinancing Decision",
+    description:
+      "Compare current loan EMI to refinanced terms. See if lower rate or different term makes sense.",
+  },
+  {
+    title: "Budget Planning",
+    description:
+      "Understand loan impact on monthly budget. Ensure EMI fits within your income and expenses.",
+  },
+  {
+    title: "Prepayment Analysis",
+    description:
+      "Calculate how extra payments reduce total interest. Compare loan completion times at different payment levels.",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/salary/loan-emi"
   currentTool="Loan EMI Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

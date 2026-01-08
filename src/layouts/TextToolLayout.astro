@@ -13,12 +13,24 @@ interface FAQItem {
   answer: string;
 }
 
+interface HowItWorksItem {
+  title?: string;
+  content: string;
+}
+
+interface UseCaseItem {
+  title: string;
+  description: string;
+}
+
 interface Props {
   title: string;
   description: string;
   canonicalPath: string;
   currentTool?: string;
   faqItems?: FAQItem[];
+  howItWorks?: HowItWorksItem[];
+  useCases?: UseCaseItem[];
 }
 
 const {
@@ -27,6 +39,8 @@ const {
   canonicalPath,
   currentTool = "",
   faqItems = [],
+  howItWorks = [],
+  useCases = [],
 } = Astro.props;
 
 const cluster = {
@@ -64,6 +78,8 @@ const relatedTools = allTools
   cluster={cluster}
   relatedTools={relatedTools}
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <slot />
 </ToolLayout>

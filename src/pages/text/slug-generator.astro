@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Lowercase Conversion",
+    content:
+      "All text is converted to lowercase since URLs are case-insensitive and lowercase is the convention. This ensures consistency across all links.",
+  },
+  {
+    title: "Diacritic Removal",
+    content:
+      "Accented characters (é, ñ, ü) are normalized using NFD (Canonical Decomposition) then stripped of combining marks. This converts 'café' to 'cafe' for ASCII compatibility.",
+  },
+  {
+    title: "Special Character Stripping",
+    content:
+      "Punctuation and special characters (!@#$%^&*) are removed as they're not URL-safe. Only letters, numbers, and spaces remain at this stage.",
+  },
+  {
+    title: "Separator Replacement",
+    content:
+      "Spaces are replaced with your chosen separator (dash, underscore, or nothing). Multiple consecutive spaces become a single separator to keep slugs clean.",
+  },
+  {
+    title: "Final Cleanup",
+    content:
+      "Leading/trailing whitespace is trimmed and any consecutive separators are collapsed to single ones. The result is a clean, URL-ready slug.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Blog Post URLs",
+    description:
+      "Convert article titles to SEO-friendly URLs. 'How to Cook Pasta!' becomes 'how-to-cook-pasta' for clean, readable links.",
+  },
+  {
+    title: "E-commerce Product Pages",
+    description:
+      "Generate product page URLs from product names. Clean slugs improve SEO and user experience for online stores.",
+  },
+  {
+    title: "CMS Content Management",
+    description:
+      "WordPress, Drupal, and other CMS platforms use slugs for page URLs. Pre-generate slugs for content imports.",
+  },
+  {
+    title: "API Endpoint Design",
+    description:
+      "Create consistent, readable API endpoints from resource names. Slugs make REST APIs more intuitive.",
+  },
+  {
+    title: "File Naming",
+    description:
+      "Generate filesystem-safe names for uploads and downloads. Avoid spaces and special characters that cause issues.",
+  },
+  {
+    title: "Social Sharing Links",
+    description:
+      "Create memorable, shareable links for campaigns. Clean URLs are easier to share and remember.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/text/slug-generator"
   currentTool="Slug Generator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
@@ -104,7 +167,8 @@ const faqItems = [
     </p>
     <p class="text-slate-600">
       Example: <code class="bg-slate-100 px-1 rounded"
-        >example.com/blog/<strong>my-awesome-blog-post</strong></code>
+        >example.com/blog/<strong>my-awesome-blog-post</strong></code
+      >
     </p>
   </section>
 

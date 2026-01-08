@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Line Splitting",
+    content:
+      "Input text is split on newlines to create an array of items. Empty lines are filtered out to ensure clean output.",
+  },
+  {
+    title: "Prefix Addition",
+    content:
+      "Each format adds appropriate prefixes: • for bullets, - for dashes, 1. 2. 3. for numbered lists. The formatting is applied consistently to all items.",
+  },
+  {
+    title: "HTML Generation",
+    content:
+      "For HTML output, items are wrapped in <li> tags and enclosed in either <ul> (unordered) or <ol> (ordered) container tags with proper indentation.",
+  },
+  {
+    title: "Markdown Format",
+    content:
+      "Markdown lists use dash prefixes (- item) which render as bullet points. This is compatible with GitHub, documentation tools, and markdown editors.",
+  },
+  {
+    title: "CSV Output",
+    content:
+      "Comma-separated output joins all items with ', ' creating a single-line format suitable for spreadsheets or data fields.",
+  },
+];
+
+const useCases = [
+  {
+    title: "HTML Content Creation",
+    description:
+      "Quickly generate HTML list markup from plain text items. Perfect for web developers and content editors.",
+  },
+  {
+    title: "Documentation Writing",
+    description:
+      "Convert notes to proper Markdown lists for README files, wikis, and technical documentation.",
+  },
+  {
+    title: "Presentation Prep",
+    description:
+      "Format talking points as bullet lists for presentations, meeting agendas, or slide content.",
+  },
+  {
+    title: "Email Formatting",
+    description:
+      "Convert plain text to formatted lists for cleaner, more scannable email content.",
+  },
+  {
+    title: "Data Field Population",
+    description:
+      "Generate comma-separated values from lists for populating database fields or form inputs.",
+  },
+  {
+    title: "Shopping & Task Lists",
+    description:
+      "Format random items into organized checkbox or bullet lists for shopping, chores, or todo items.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/text/text-to-list"
   currentTool="Text to List"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

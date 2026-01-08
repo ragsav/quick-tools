@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Gross Bonus Calculation",
+    content:
+      "Gross bonus = annual salary × (bonus percentage ÷ 100). A 10% bonus on $60,000 salary = $6,000.",
+  },
+  {
+    title: "Tax Estimation",
+    content:
+      "Estimated taxes = gross bonus × (tax rate ÷ 100). At 25% tax rate, $6,000 × 0.25 = $1,500 estimated taxes.",
+  },
+  {
+    title: "Net Bonus",
+    content:
+      "Net bonus = gross bonus - estimated taxes. $6,000 - $1,500 = $4,500 take-home bonus.",
+  },
+  {
+    title: "Bonus Tax Considerations",
+    content:
+      "Bonuses are often taxed at supplemental income rates. The 22% federal supplemental rate is common in the US.",
+  },
+  {
+    title: "Total Compensation View",
+    content:
+      "Add bonus to salary for total annual compensation. $60,000 base + $6,000 bonus = $66,000 total comp.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Bonus Season Planning",
+    description:
+      "Estimate your expected bonus and after-tax amount before it arrives. Plan spending or saving accordingly.",
+  },
+  {
+    title: "Job Offer Comparison",
+    description:
+      "Factor bonus potential into compensation comparisons. A lower salary with 20% bonus might beat a higher base.",
+  },
+  {
+    title: "Tax Planning",
+    description:
+      "Estimate tax impact of bonus. Consider making 401k contributions or charitable donations to reduce tax burden.",
+  },
+  {
+    title: "Performance Goal Setting",
+    description:
+      "Calculate potential earnings at different performance levels if bonus percentage varies with performance.",
+  },
+  {
+    title: "Budgeting",
+    description:
+      "Plan for bonus income without overcommitting. Understand the after-tax reality of your expected bonus.",
+  },
+  {
+    title: "Retention Bonus Evaluation",
+    description:
+      "Calculate net value of retention bonuses when evaluating staying vs. leaving for another opportunity.",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/salary/bonus-calculator"
   currentTool="Bonus Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

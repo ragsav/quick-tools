@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Base Unit (Seconds)",
+    content:
+      "Seconds serve as the base unit. All conversions go through seconds: input is first converted to seconds, then to target units.",
+  },
+  {
+    title: "Fixed Conversion Factors",
+    content:
+      "Standard factors: 60 sec/min, 3600 sec/hour, 86400 sec/day, 604800 sec/week. Consistent for accurate conversions.",
+  },
+  {
+    title: "Approximated Large Units",
+    content:
+      "Months use 30 days (2,592,000 seconds) and years use 365 days (31,536,000 seconds). Standard approximations for simple calculation.",
+  },
+  {
+    title: "Simultaneous Calculation",
+    content:
+      "All time representations are computed and displayed together, showing milliseconds through years for complete reference.",
+  },
+  {
+    title: "Smart Formatting",
+    content:
+      "Results use locale-aware formatting with appropriate decimal places. Both large and small values display readably.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Project Time Estimation",
+    description:
+      "Convert between hours and weeks for project planning. How many 8-hour days equal 3 weeks of work?",
+  },
+  {
+    title: "Video & Audio Duration",
+    description:
+      "Convert video lengths between seconds and hours/minutes. How many hours is a 7200-second podcast?",
+  },
+  {
+    title: "SLA & Uptime Calculations",
+    description:
+      "Convert uptime percentages to downtime. 99.9% uptime = how many minutes of downtime per year?",
+  },
+  {
+    title: "Exercise & Training",
+    description:
+      "Convert workout durations. How many seconds is a 45-minute workout? Calculate total training hours.",
+  },
+  {
+    title: "Age & Milestone Calculations",
+    description:
+      "How many days old are you? Convert years to days, hours, or even seconds for fun milestone celebrations.",
+  },
+  {
+    title: "Billing & Timesheet",
+    description:
+      "Convert time entries for billing. Convert 2.5 hours to minutes for detailed time tracking.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/converters/time-units"
   currentTool="Time Unit Converter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

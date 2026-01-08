@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool handles ISO dates with timezone offsets like +05:30 or -08:00.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "ISO 8601 Standard",
+    content:
+      "ISO 8601 is the international standard for date/time representation. The format is YYYY-MM-DDTHH:mm:ss.sssZ where T separates date and time, and Z indicates UTC timezone.",
+  },
+  {
+    title: "Date to ISO Conversion",
+    content:
+      "When converting a date to ISO format, the toISOString() method is used. This outputs the date in UTC timezone with the format: 2024-01-15T10:30:00.000Z. Milliseconds are included for precision.",
+  },
+  {
+    title: "ISO to Date Parsing",
+    content:
+      "ISO strings are parsed using new Date(isoString). JavaScript natively recognizes ISO 8601 format and correctly interprets timezone information (Z for UTC, or offsets like +05:30).",
+  },
+  {
+    title: "Timezone Handling",
+    content:
+      "The Z suffix means 'Zulu time' (UTC+0). Offset notations like +05:30 indicate hours and minutes ahead of UTC. The parser converts these to your local timezone for display.",
+  },
+  {
+    title: "Unix Timestamp Conversion",
+    content:
+      "ISO dates can also be represented as Unix timestamps (milliseconds since Jan 1, 1970 UTC). The tool shows this alternative format using getTime() for interoperability with other systems.",
+  },
+];
+
+const useCases = [
+  {
+    title: "API Development",
+    description:
+      "APIs commonly use ISO 8601 for date fields. Convert between human-readable dates and ISO format when building or consuming REST APIs.",
+  },
+  {
+    title: "Database Operations",
+    description:
+      "Many databases store dates in ISO format for consistency. Convert when inserting data or reading timestamps from database records.",
+  },
+  {
+    title: "Log Analysis",
+    description:
+      "Server logs often use ISO timestamps. Parse these to understand when events occurred in your local timezone.",
+  },
+  {
+    title: "Cross-System Integration",
+    description:
+      "ISO 8601 is the universal format for date exchange between systems. Convert dates when integrating different platforms or services.",
+  },
+  {
+    title: "Calendar Applications",
+    description:
+      "iCal files and calendar APIs use ISO dates. Generate properly formatted dates for calendar event creation.",
+  },
+  {
+    title: "Debugging & Testing",
+    description:
+      "Developers often need to create or parse ISO dates for testing. Quickly generate test data or validate date strings.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/time/iso-date-converter"
   currentTool="ISO Date Converter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

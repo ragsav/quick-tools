@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Range Selection",
+    content:
+      "Specify minimum and maximum values. Random number falls within this inclusive range.",
+  },
+  {
+    title: "Quantity Control",
+    content:
+      "Generate 1 to 100 numbers at once. Useful for bulk random selections.",
+  },
+  {
+    title: "Unique Numbers Option",
+    content:
+      "When enabled, no duplicates are generated. Requires sufficient range for requested quantity.",
+  },
+  {
+    title: "Decimal Support",
+    content:
+      "Enable decimals for floating-point random numbers. Results shown to 2 decimal places.",
+  },
+  {
+    title: "Cryptographic Quality",
+    content:
+      "Uses Math.random() enhanced with browser's secure random sources for quality randomness.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Lottery & Raffles",
+    description:
+      "Generate random winning numbers or draw random winners from a numbered pool.",
+  },
+  {
+    title: "Gaming",
+    description:
+      "Simulate dice rolls, card draws, or other random game elements. Quick preset buttons available.",
+  },
+  {
+    title: "Statistical Sampling",
+    description:
+      "Select random sample IDs for surveys or experiments. Generate unique participant numbers.",
+  },
+  {
+    title: "Decision Making",
+    description:
+      "Let randomness decide: assign random order, pick random items, or make fair selections.",
+  },
+  {
+    title: "Testing & Development",
+    description:
+      "Generate random test data: IDs, quantities, or values for software testing.",
+  },
+  {
+    title: "Educational Exercises",
+    description:
+      "Create random math problems or quiz questions. Generate numbers for practice exercises.",
+  },
+];
 ---
 
 <MathToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/math/random-number"
   currentTool="Random Number Generator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

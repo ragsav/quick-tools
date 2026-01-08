@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Line Splitting",
+    content:
+      "Text is split on newline characters (\\n) to create an array of lines. Each line becomes an element to be sorted independently.",
+  },
+  {
+    title: "Alphabetical Sort",
+    content:
+      "Uses JavaScript's localeCompare() for proper alphabetical ordering that respects language rules. Ignoring case converts both strings to lowercase before comparison.",
+  },
+  {
+    title: "Numeric Sort",
+    content:
+      "Extracts numbers from each line using regex /[\\d.]+/. Lines are sorted by these numeric values, handling decimals correctly (1, 2, 10 not 1, 10, 2).",
+  },
+  {
+    title: "Length & Reverse Sort",
+    content:
+      "Length sorting compares string.length values. Reverse simply reverses the current array order without considering content.",
+  },
+  {
+    title: "Fisher-Yates Shuffle",
+    content:
+      "Random ordering uses the Fisher-Yates algorithm for true randomization. Each element has equal probability of landing in any position.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Alphabetizing Lists",
+    description:
+      "Sort names, terms, or items alphabetically for directories, glossaries, or organized documentation.",
+  },
+  {
+    title: "Data Cleaning",
+    description:
+      "Sort CSV or data files by line to identify duplicates, find patterns, or prepare for processing.",
+  },
+  {
+    title: "Code Organization",
+    description:
+      "Sort import statements, constant definitions, or configuration entries alphabetically for cleaner code.",
+  },
+  {
+    title: "Randomizing Contestants",
+    description:
+      "Shuffle lists for random selection, prize drawings, or assigning random order for presentations.",
+  },
+  {
+    title: "Priority Sorting",
+    description:
+      "Sort numbered items (1. Task, 2. Task) to reorder by priority or sequence numbers.",
+  },
+  {
+    title: "Bibliography Formatting",
+    description:
+      "Alphabetize references and citations for academic papers and research documents.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/text/line-sorter"
   currentTool="Line Sorter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

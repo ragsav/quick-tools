@@ -16,6 +16,16 @@ interface FAQItem {
   answer: string;
 }
 
+interface HowItWorksItem {
+  title?: string;
+  content: string;
+}
+
+interface UseCaseItem {
+  title: string;
+  description: string;
+}
+
 interface Props {
   title: string;
   description: string;
@@ -28,6 +38,8 @@ interface Props {
   };
   relatedTools?: Array<{ name: string; url: string }>;
   faqItems?: FAQItem[];
+  howItWorks?: HowItWorksItem[];
+  useCases?: UseCaseItem[];
 }
 
 const {
@@ -37,6 +49,8 @@ const {
   cluster,
   relatedTools = [],
   faqItems = [],
+  howItWorks = [],
+  useCases = [],
 } = Astro.props;
 ---
 
@@ -117,6 +131,48 @@ const {
       )
     }
 
+    <!-- JSON-LD: HowTo Schema (if How It Works items provided) -->
+    {
+      howItWorks.length > 0 && (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            name: `How ${title.split(" - ")[0]} Works`,
+            description: description,
+            step: howItWorks.map((item, index) => ({
+              "@type": "HowToStep",
+              position: index + 1,
+              name: item.title || `Step ${index + 1}`,
+              text: item.content,
+            })),
+          })}
+        />
+      )
+    }
+
+    <!-- JSON-LD: ItemList Schema (if Use Cases provided) -->
+    {
+      useCases.length > 0 && (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: `Common Use Cases for ${title.split(" - ")[0]}`,
+            numberOfItems: useCases.length,
+            itemListElement: useCases.map((item, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: item.title,
+              description: item.description,
+            })),
+          })}
+        />
+      )
+    }
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -169,6 +225,57 @@ const {
       >
         <slot />
       </div>
+
+      <!-- HOW IT WORKS SECTION -->
+      {
+        howItWorks.length > 0 && (
+          <section class="bg-white rounded border border-slate-200 shadow-sm p-6 sm:p-8 mb-8">
+            <h2 class="text-xl font-semibold text-slate-900 mb-6 pb-4 border-b border-slate-200">
+              📘 How It Works
+            </h2>
+            <div class="space-y-6">
+              {howItWorks.map((item, index) => (
+                <div class="flex gap-4">
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold text-sm">
+                    {index + 1}
+                  </div>
+                  <div class="flex-1">
+                    {item.title && (
+                      <h3 class="font-semibold text-slate-800 mb-2">
+                        {item.title}
+                      </h3>
+                    )}
+                    <p class="text-slate-600 leading-relaxed">{item.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- USE CASES SECTION -->
+      {
+        useCases.length > 0 && (
+          <section class="bg-white rounded border border-slate-200 shadow-sm p-6 sm:p-8 mb-8">
+            <h2 class="text-xl font-semibold text-slate-900 mb-6 pb-4 border-b border-slate-200">
+              💡 Common Use Cases
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {useCases.map((item) => (
+                <div class="p-4 bg-slate-50 rounded border border-slate-100">
+                  <h3 class="font-semibold text-slate-800 mb-2">
+                    {item.title}
+                  </h3>
+                  <p class="text-slate-600 text-sm leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       <!-- RELATED TOOLS -->
       {

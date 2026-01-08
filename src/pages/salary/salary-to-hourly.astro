@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Annual Hours Calculation",
+    content:
+      "Total work hours = hours per week × weeks per year. Standard full-time is 40 hours × 52 weeks = 2,080 hours annually.",
+  },
+  {
+    title: "Hourly Rate Division",
+    content:
+      "Annual salary ÷ total hours = hourly rate. A $52,000 salary ÷ 2,080 hours = $25/hour.",
+  },
+  {
+    title: "Daily Rate",
+    content:
+      "Daily pay assumes an 8-hour workday: hourly rate × 8 = daily rate. Adjust if your workday differs.",
+  },
+  {
+    title: "Weekly and Monthly",
+    content:
+      "Weekly = annual ÷ weeks worked. Monthly = annual ÷ 12. These provide quick reference for budgeting.",
+  },
+  {
+    title: "Custom Parameters",
+    content:
+      "Adjust hours per week and weeks per year for part-time work, unpaid leave, or non-standard schedules.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Job Offer Comparison",
+    description:
+      "Compare a salaried position to hourly jobs. Understand true hourly value to make informed career decisions.",
+  },
+  {
+    title: "Overtime Calculation",
+    description:
+      "Salaried employees need to know hourly rate to calculate overtime when it applies to their position.",
+  },
+  {
+    title: "Freelance Rate Setting",
+    description:
+      "Convert your salary to hourly to set competitive freelance rates that match your current compensation.",
+  },
+  {
+    title: "Part-Time Transitions",
+    description:
+      "Calculate pay if transitioning from full-time to part-time while maintaining equivalent hourly compensation.",
+  },
+  {
+    title: "Time Value Assessment",
+    description:
+      "Understand what your time is worth. Is a 2-hour commute worth the cost when you know your hourly rate?",
+  },
+  {
+    title: "Consulting Rate Benchmarking",
+    description:
+      "Use your salary-to-hourly conversion as a baseline when setting consulting rates (typically 2-3× hourly).",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/salary/salary-to-hourly"
   currentTool="Salary to Hourly"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

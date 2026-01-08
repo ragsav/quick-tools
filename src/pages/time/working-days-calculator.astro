@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, there's an option to include Saturdays if your work week includes them.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Date Range Iteration",
+    content:
+      "The calculator iterates through each day from the start date to the end date (exclusive). For each day, it determines whether that day qualifies as a working day based on the day of the week.",
+  },
+  {
+    title: "Weekend Detection",
+    content:
+      "Using JavaScript's getDay() method, each date's day of week is checked. Sunday returns 0, Saturday returns 6. By default, both are excluded from the count. When 'Include Saturdays' is enabled, only Sundays are excluded.",
+  },
+  {
+    title: "Working Day Counting",
+    content:
+      "The algorithm uses a simple counter that increments only when a day passes the weekend check. This brute-force approach is accurate for any date range and handles month boundaries and year transitions correctly.",
+  },
+  {
+    title: "Percentage Calculation",
+    content:
+      "The total calendar days are also tracked, allowing the calculator to show what percentage of the period consists of working days. A typical 5-day work week yields approximately 71% working days.",
+  },
+  {
+    title: "Leap Year Handling",
+    content:
+      "Since the algorithm iterates day-by-day using actual Date objects, leap years are automatically handled. February 29 is correctly counted as a working day if it falls on a weekday.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Project Deadline Estimation",
+    description:
+      "Convert calendar deadlines to working days for realistic project planning. Know exactly how many productive days you have until a milestone or deliverable.",
+  },
+  {
+    title: "PTO & Leave Calculation",
+    description:
+      "Calculate how many working days a vacation or leave request covers. Essential for HR departments and employees planning time off.",
+  },
+  {
+    title: "Contractor Billing",
+    description:
+      "Determine billable working days in a contract period for accurate invoicing. Important for freelancers and consulting firms billing by the day.",
+  },
+  {
+    title: "Shipping & Delivery Estimates",
+    description:
+      "Calculate realistic delivery windows that account for weekends. Convert '5-7 business days' into actual calendar delivery dates.",
+  },
+  {
+    title: "Academic Calendar Planning",
+    description:
+      "Count teaching days between semester dates, excluding weekends. Useful for curriculum planning and scheduling coursework.",
+  },
+  {
+    title: "Legal Deadline Compliance",
+    description:
+      "Many legal deadlines specify business days. Calculate exact due dates for court filings, response periods, or regulatory compliance.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/time/working-days-calculator"
   currentTool="Working Days Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

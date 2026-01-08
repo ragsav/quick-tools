@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Line Parsing",
+    content:
+      "Text is split on newline characters to create an array of individual lines. Each line is processed independently for duplicate detection.",
+  },
+  {
+    title: "Whitespace Normalization",
+    content:
+      "When 'Trim whitespace' is enabled, leading and trailing spaces are removed from each line before comparison. This catches duplicates that differ only by spacing.",
+  },
+  {
+    title: "Set-Based Tracking",
+    content:
+      "A JavaScript Set tracks seen lines. Sets provide O(1) lookup time, making duplicate detection fast even for large files with thousands of lines.",
+  },
+  {
+    title: "Case Sensitivity",
+    content:
+      "When case-insensitive, lines are converted to lowercase for comparison only. The original casing is preserved in the output for the first occurrence.",
+  },
+  {
+    title: "Order Preservation",
+    content:
+      "Lines are processed sequentially. The first occurrence is always kept; subsequent duplicates are discarded. This maintains document order.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Email List Cleanup",
+    description:
+      "Remove duplicate email addresses from mailing lists. Prevent sending multiple emails to the same recipient.",
+  },
+  {
+    title: "Log Deduplication",
+    description:
+      "Clean server logs or error reports by removing repeated entries. Focus on unique events for debugging.",
+  },
+  {
+    title: "Data Import Preparation",
+    description:
+      "Clean CSV or text data before importing to databases. Avoid duplicate key errors and data redundancy.",
+  },
+  {
+    title: "Keyword Lists",
+    description:
+      "Deduplicate SEO keyword lists, product tags, or category names. Maintain clean taxonomies.",
+  },
+  {
+    title: "Code Cleanup",
+    description:
+      "Remove duplicate import statements, configuration entries, or repeated lines in scripts.",
+  },
+  {
+    title: "Survey Response Processing",
+    description:
+      "Identify unique responses from surveys by removing repeated answers for cleaner analysis.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/text/remove-duplicates"
   currentTool="Remove Duplicate Lines"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

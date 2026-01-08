@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Commission Calculation",
+    content:
+      "Commission = total sales × (commission rate ÷ 100). $100,000 in sales at 10% = $10,000 commission.",
+  },
+  {
+    title: "Base Plus Commission",
+    content:
+      "Total earnings = base salary + commission. $2,000 base + $10,000 commission = $12,000 total.",
+  },
+  {
+    title: "Rate Flexibility",
+    content:
+      "Different industries use different rates. The tool accepts any percentage for custom commission structures.",
+  },
+  {
+    title: "Sales Target Analysis",
+    content:
+      "Work backwards: if you need $5,000 commission at 10%, you need $50,000 in sales.",
+  },
+  {
+    title: "Monthly Estimation",
+    content:
+      "Project annual earnings based on monthly sales. Helps with income forecasting and goal setting.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Sales Representative Earnings",
+    description:
+      "Calculate expected income based on sales pipeline. Forecast monthly and annual commission earnings.",
+  },
+  {
+    title: "Real Estate Agent",
+    description:
+      "Calculate commission on property sales. A $500,000 home at 3% agent split = $15,000 commission.",
+  },
+  {
+    title: "Job Offer Evaluation",
+    description:
+      "Compare base + commission offers. Understand what sales level is needed to meet income goals.",
+  },
+  {
+    title: "Quota Planning",
+    description:
+      "Determine sales targets needed to achieve desired earnings. Reverse-calculate from income goals.",
+  },
+  {
+    title: "Commission Structure Analysis",
+    description:
+      "Compare different commission structures: higher base/lower commission vs. lower base/higher commission.",
+  },
+  {
+    title: "Affiliate Marketing",
+    description:
+      "Calculate affiliate earnings at various commission rates and traffic/conversion levels.",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/salary/commission"
   currentTool="Commission Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

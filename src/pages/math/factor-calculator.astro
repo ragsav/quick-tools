@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Factor Finding",
+    content:
+      "Check all numbers from 1 to √n. If n is divisible by a number, both the divisor and quotient are factors.",
+  },
+  {
+    title: "Prime Factorization",
+    content:
+      "Divide repeatedly by smallest primes (2, 3, 5...) until 1. Track how many times each prime divides the number.",
+  },
+  {
+    title: "Primality Check",
+    content:
+      "A number is prime if it has exactly 2 factors: 1 and itself. The tool identifies primes automatically.",
+  },
+  {
+    title: "Factor Sum",
+    content:
+      "Add all factors together. This is useful for identifying perfect numbers (where sum of proper factors = number).",
+  },
+  {
+    title: "Exponential Notation",
+    content:
+      "Prime factors are displayed with exponents. 2² × 3 is cleaner than 2 × 2 × 3.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Math Homework",
+    description:
+      "Find factors and prime factorization for homework problems. Verify answers and understand the process.",
+  },
+  {
+    title: "Simplifying Fractions",
+    description:
+      "Find common factors to reduce fractions. If 12 and 18 share factor 6, 12/18 = 2/3.",
+  },
+  {
+    title: "LCM and GCD Prep",
+    description:
+      "Prime factorization is the first step for finding LCM and GCD of multiple numbers.",
+  },
+  {
+    title: "Number Theory Exploration",
+    description:
+      "Explore perfect numbers, abundant numbers, and deficient numbers using factor sums.",
+  },
+  {
+    title: "Cryptography Basics",
+    description:
+      "Understand how large prime numbers are fundamental to encryption algorithms.",
+  },
+  {
+    title: "Divisibility Analysis",
+    description:
+      "Determine all possible ways to divide items evenly. Useful for fair splitting.",
+  },
+];
 ---
 
 <MathToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/math/factor-calculator"
   currentTool="Factor Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

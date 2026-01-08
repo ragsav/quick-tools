@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Percentage Formula",
+    content:
+      "Percentage = (Marks Obtained ÷ Total Marks) × 100. Simple division converts your score to a comparable percentage.",
+  },
+  {
+    title: "Input Validation",
+    content:
+      "Obtained marks shouldn't exceed total marks. Total marks must be greater than zero to avoid division errors.",
+  },
+  {
+    title: "Letter Grade Assignment",
+    content:
+      "Based on percentage: A+ (90-100), A (80-89), B (70-79), C (60-69), D (50-59), F (below 50).",
+  },
+  {
+    title: "Precision",
+    content:
+      "Results are displayed to 2 decimal places for accuracy. This helps distinguish close scores.",
+  },
+  {
+    title: "Universal Application",
+    content:
+      "Works for any marking scheme: 100 total, 500 total, or any custom total. The formula scales.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Exam Score Conversion",
+    description:
+      "Convert exam scores to percentage format. See 85/100 or 425/500 as a percentage for comparison.",
+  },
+  {
+    title: "Report Card Interpretation",
+    description:
+      "Convert marks from different subjects with different totals to percentages for fair comparison.",
+  },
+  {
+    title: "Scholarship Eligibility",
+    description:
+      "Check if your marks meet percentage cutoffs for scholarships and academic programs.",
+  },
+  {
+    title: "College Admission",
+    description:
+      "Convert entrance exam scores to percentage for admission requirements that specify percentage cutoffs.",
+  },
+  {
+    title: "Progress Tracking",
+    description:
+      "Track academic progress by converting all scores to percentages. Compare across semesters.",
+  },
+  {
+    title: "Multi-Subject Comparison",
+    description:
+      "Compare scores across subjects with different total marks by converting all to percentages.",
+  },
+];
 ---
 
 <StudentToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/student/marks-percentage"
   currentTool="Marks Percentage"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

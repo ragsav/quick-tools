@@ -26,6 +26,67 @@ const faqItems = [
         answer: "Yes, the calculator automatically handles leap years when computing the difference.",
     },
 ];
+
+const howItWorks = [
+    {
+        title: "Date Input Processing",
+        content:
+            "Both dates are converted to JavaScript Date objects, which internally represent time as milliseconds since January 1, 1970 (Unix epoch). This provides a precise numerical foundation for accurate calculations.",
+    },
+    {
+        title: "Millisecond Difference Calculation",
+        content:
+            "The calculator computes the absolute difference in milliseconds between the two dates: |Date2 - Date1|. Using absolute value ensures the result is always positive regardless of which date is earlier.",
+    },
+    {
+        title: "Days Conversion",
+        content:
+            "Milliseconds are converted to days by dividing by 86,400,000 (1000ms × 60s × 60m × 24h). The result is floored to give whole days, as partial days are not counted.",
+    },
+    {
+        title: "Weeks & Months Approximation",
+        content:
+            "Weeks are calculated by dividing days by 7. Months use an average of 30.44 days (365.25/12) for approximation. These are estimates since calendar months vary from 28-31 days.",
+    },
+    {
+        title: "Leap Year Handling",
+        content:
+            "Because the calculation uses actual date objects, leap years are automatically accounted for. February 29 is included in the count when it falls within the date range.",
+    },
+];
+
+const useCases = [
+    {
+        title: "Project Timeline Tracking",
+        description:
+            "Calculate how many days a project has been running, or determine the duration between milestone dates for accurate project reporting and timeline analysis.",
+    },
+    {
+        title: "Rental & Lease Calculations",
+        description:
+            "Compute the exact number of days for rent proration, lease durations, or billing periods. Essential for property management and tenant agreements.",
+    },
+    {
+        title: "Age & Anniversary Calculations",
+        description:
+            "Find out how many days old you are, how long you've been married, or the duration since any significant life event for milestone celebrations.",
+    },
+    {
+        title: "Travel Planning",
+        description:
+            "Calculate trip durations, time until departure, or days until return for vacation planning, booking confirmations, and countdown purposes.",
+    },
+    {
+        title: "Medical & Health Tracking",
+        description:
+            "Track recovery periods, medication courses, pregnancy duration, or time since last checkup for healthcare management and appointment scheduling.",
+    },
+    {
+        title: "Financial Calculations",
+        description:
+            "Determine interest accrual periods, days past due for collections, or investment holding periods for accurate financial calculations and reporting.",
+    },
+];
 ---
 
 <TimeToolLayout
@@ -34,6 +95,8 @@ const faqItems = [
     canonicalPath="/time/date-difference-calculator"
     currentTool="Date Difference Calculator"
     faqItems={faqItems}
+    howItWorks={howItWorks}
+    useCases={useCases}
 >
     <!-- TOOL HEADER -->
     <div class="tool-header">

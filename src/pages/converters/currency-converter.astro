@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "USD Base Currency",
+    content:
+      "All currencies are defined relative to USD. To convert between any two currencies, the tool first converts to USD, then to the target currency.",
+  },
+  {
+    title: "Cross Rate Calculation",
+    content:
+      "Cross rate = target rate ÷ source rate. This formula enables conversion between any currency pair using USD as the intermediary.",
+  },
+  {
+    title: "Approximate Rates",
+    content:
+      "Exchange rates are approximate static values for quick estimation. Real rates fluctuate constantly based on market conditions.",
+  },
+  {
+    title: "Currency Swap",
+    content:
+      "The swap button exchanges source and target currencies instantly while preserving the entered amount for quick reverse calculations.",
+  },
+  {
+    title: "Display Formatting",
+    content:
+      "Results show the target currency symbol and locale-formatted amounts with 2 decimal places, plus the exchange rate for reference.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Travel Planning",
+    description:
+      "Estimate costs when traveling abroad. Convert hotel prices, restaurant costs, and activity fees to your home currency.",
+  },
+  {
+    title: "Online Shopping",
+    description:
+      "Compare international product prices. Know if that $99 USD item is a good deal in your local currency.",
+  },
+  {
+    title: "Salary Comparison",
+    description:
+      "Compare job offers across countries. Convert annual salaries to understand real purchasing power differences.",
+  },
+  {
+    title: "Investment Research",
+    description:
+      "Quick currency conversion for international stock and fund research. Approximate foreign investment values.",
+  },
+  {
+    title: "Freelance Billing",
+    description:
+      "Estimate invoice values when working with international clients paying in different currencies.",
+  },
+  {
+    title: "Budget Planning",
+    description:
+      "Plan international moves or vacations by converting expected expenses to your home currency.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/converters/currency-converter"
   currentTool="Currency Converter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

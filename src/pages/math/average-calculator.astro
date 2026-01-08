@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Mean Calculation",
+    content:
+      "Mean = Sum of all numbers ÷ Count. Add up all values and divide by how many there are.",
+  },
+  {
+    title: "Median Finding",
+    content:
+      "Sort numbers, find the middle value. For even count, average the two middle values.",
+  },
+  {
+    title: "Mode Detection",
+    content:
+      "Find the most frequently occurring value(s). If all values appear once, there's no mode.",
+  },
+  {
+    title: "Range Calculation",
+    content:
+      "Range = Maximum value - Minimum value. Shows the spread of your data.",
+  },
+  {
+    title: "Input Parsing",
+    content:
+      "Enter numbers separated by commas or spaces. Both '1, 2, 3' and '1 2 3' work.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Grade Calculations",
+    description:
+      "Find the average of test scores. Identify the median grade and most common grade in a class.",
+  },
+  {
+    title: "Financial Analysis",
+    description:
+      "Calculate average expenses, median income, or most common transaction amounts.",
+  },
+  {
+    title: "Survey Data",
+    description:
+      "Analyze survey responses: average rating, median satisfaction score, most common answer.",
+  },
+  {
+    title: "Scientific Research",
+    description:
+      "Compute statistical measures for experimental data. Mean, median, and range for analysis.",
+  },
+  {
+    title: "Sports Statistics",
+    description:
+      "Calculate average scores, median performance, and identify outliers in athletic data.",
+  },
+  {
+    title: "Quality Control",
+    description:
+      "Analyze manufacturing measurements. Find average dimensions and acceptable range.",
+  },
+];
 ---
 
 <MathToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/math/average-calculator"
   currentTool="Average Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Total Hours Calculation",
+    content:
+      "Total hours = Number of subjects × Hours per subject. This is your total study commitment.",
+  },
+  {
+    title: "Daily Hours Needed",
+    content:
+      "Hours per day = Total hours ÷ Days remaining. Shows the daily effort required to meet your goal.",
+  },
+  {
+    title: "Feasibility Assessment",
+    content:
+      "Compares daily hours needed to your max capacity. Green if easy (<70% of max), yellow if tight, red if impossible.",
+  },
+  {
+    title: "Adjustable Parameters",
+    content:
+      "Change subjects, hours per subject, days, or daily limit to see how each affects feasibility.",
+  },
+  {
+    title: "Realistic Planning",
+    content:
+      "Accounts for your maximum daily study capacity. Helps set achievable goals instead of burnout schedules.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Exam Preparation Planning",
+    description:
+      "Calculate if you have enough time to cover all subjects before exams. Start early if needed.",
+  },
+  {
+    title: "Semester Planning",
+    description:
+      "Plan your semester study schedule by estimating hours per subject and available study days.",
+  },
+  {
+    title: "Competitive Exam Prep",
+    description:
+      "Plan long-term preparation for competitive exams. Ensure daily hours are sustainable.",
+  },
+  {
+    title: "Last-Minute Cramming",
+    description:
+      "See if cramming is even possible. Sometimes the math shows you need to prioritize topics.",
+  },
+  {
+    title: "Study Group Coordination",
+    description:
+      "Plan group study by calculating total prep hours and dividing among participants.",
+  },
+  {
+    title: "Balanced Scheduling",
+    description:
+      "Ensure study plans leave room for rest, exercise, and social activities. Avoid overcommitment.",
+  },
+];
 ---
 
 <StudentToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/student/study-hours"
   currentTool="Study Hours Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

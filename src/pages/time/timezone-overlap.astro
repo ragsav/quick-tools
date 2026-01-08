@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Working Hours Definition",
+    content:
+      "You define your preferred working hours (e.g., 9 AM to 5 PM). These hours represent when participants are available for meetings, typically standard business hours in their local time.",
+  },
+  {
+    title: "Multi-Zone Selection",
+    content:
+      "Add multiple time zones representing your team members' locations. Each zone is defined by its UTC offset (e.g., EST = UTC-5, IST = UTC+5:30).",
+  },
+  {
+    title: "Hour Grid Generation",
+    content:
+      "For each timezone, the tool generates a 24-hour grid showing which hours fall within working hours. This visual representation makes it easy to spot patterns at a glance.",
+  },
+  {
+    title: "Overlap Detection",
+    content:
+      "The algorithm compares all selected timezones hour-by-hour. An hour is marked as 'overlap' only if it falls within working hours for ALL selected zones simultaneously.",
+  },
+  {
+    title: "Best Time Identification",
+    content:
+      "The tool identifies and highlights the optimal meeting window—the consecutive hours where everyone is available. It also calculates the total overlap duration.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Global Team Standups",
+    description:
+      "Find the best time for daily standups with team members across multiple continents. Ensure no one has to join at extremely inconvenient hours.",
+  },
+  {
+    title: "Client Meeting Scheduling",
+    description:
+      "When scheduling calls with international clients, find mutually convenient times that respect both parties' business hours.",
+  },
+  {
+    title: "Remote Interview Coordination",
+    description:
+      "Coordinate interview panels across time zones. Ensure interviewers and candidates are all available during reasonable hours.",
+  },
+  {
+    title: "Webinar & Event Planning",
+    description:
+      "Plan live events and webinars to maximize attendance across target regions. Find times that work for your primary audience zones.",
+  },
+  {
+    title: "Cross-Office Collaboration",
+    description:
+      "Multinational companies can identify core collaboration hours when offices in different regions are all staffed.",
+  },
+  {
+    title: "Remote Pair Programming",
+    description:
+      "Schedule pair programming sessions with remote partners. Maximize productive overlap for real-time collaboration.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/time/timezone-overlap"
   currentTool="Time Zone Overlap Planner"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

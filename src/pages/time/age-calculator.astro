@@ -18,6 +18,67 @@ const faqItems = [
       "No, all calculations happen locally in your browser. Your data never leaves your device.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Date Parsing & Validation",
+    content:
+      "The calculator takes your birth date and target date, parsing them into precise timestamps. It validates that the birth date precedes the target date to ensure meaningful age calculation.",
+  },
+  {
+    title: "Year Calculation",
+    content:
+      "The base age in years is calculated by subtracting birth year from target year. This is then adjusted based on whether the anniversary date has passed in the target year, following the standard convention for age calculation worldwide.",
+  },
+  {
+    title: "Month & Day Breakdown",
+    content:
+      "The remaining months and days are calculated using calendar-aware arithmetic. If the current day is before the birth day, we borrow from months. If current month is before birth month, we borrow from years. This ensures accurate breakdown even across different month lengths.",
+  },
+  {
+    title: "Leap Year Handling",
+    content:
+      "For birthdays on February 29, the calculator correctly handles leap years. On non-leap years, the birthday is considered to occur on February 28 or March 1 depending on legal conventions in different jurisdictions.",
+  },
+  {
+    title: "Total Calculations",
+    content:
+      "Beyond years/months/days, we calculate totals: total days lived (using millisecond difference), total weeks, and total months. We also compute days until the next birthday by finding the next occurrence of the birth date.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Legal Age Verification",
+    description:
+      "Determine exact age for legal purposes: voting eligibility (18+), drinking age requirements, retirement eligibility, or age-restricted purchases and services.",
+  },
+  {
+    title: "Insurance & Healthcare",
+    description:
+      "Calculate precise age for insurance premium calculations, healthcare enrollment periods, Medicare eligibility (65+), or pediatric age-based treatment protocols.",
+  },
+  {
+    title: "Birthday Planning",
+    description:
+      "Find out exactly how many days until someone's next birthday for party planning, gift preparation, or milestone celebrations (turning 21, 50, 100).",
+  },
+  {
+    title: "Employment & HR",
+    description:
+      "Verify age for employment eligibility, calculate years of service for benefits, or determine retirement dates based on age requirements.",
+  },
+  {
+    title: "Educational Enrollment",
+    description:
+      "Check if a child meets age cutoffs for school enrollment, grade placement, or sports league age divisions with specific cutoff dates.",
+  },
+  {
+    title: "Historical Research",
+    description:
+      "Calculate ages of historical figures at specific events, or determine how old someone would be if alive today for genealogical research.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/time/age-calculator"
   currentTool="Age Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

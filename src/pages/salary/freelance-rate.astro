@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Total Revenue Needed",
+    content:
+      "Total needed = desired income + business expenses. You must earn enough to cover both personal income and operating costs.",
+  },
+  {
+    title: "Billable Hours Calculation",
+    content:
+      "Annual billable hours = weekly billable hours × (52 - weeks off). Not all work hours are billable—account for admin, marketing, learning.",
+  },
+  {
+    title: "Minimum Hourly Rate",
+    content:
+      "Rate = total needed ÷ billable hours. This is your minimum rate to achieve your income goal after covering expenses.",
+  },
+  {
+    title: "Buffer Considerations",
+    content:
+      "Consider adding 10-20% buffer for unexpected expenses, slow periods, or rate negotiations where you might discount.",
+  },
+  {
+    title: "Market Positioning",
+    content:
+      "Your minimum rate is a floor, not a ceiling. Market rates, expertise, and specialization can justify higher rates.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Starting a Freelance Business",
+    description:
+      "Calculate what you need to charge to replace your salary. Factor in self-employment taxes, health insurance, etc.",
+  },
+  {
+    title: "Rate Review",
+    description:
+      "Annual review of rates as expenses and income goals change. Ensure your rates keep pace with rising costs.",
+  },
+  {
+    title: "Project Pricing",
+    description:
+      "Convert hourly minimum to project rates. Estimate hours, multiply by rate, add buffer for scope creep.",
+  },
+  {
+    title: "Niche Specialization",
+    description:
+      "Calculate if specializing (fewer clients, higher rates) works financially compared to volume-based approach.",
+  },
+  {
+    title: "Part-Time Freelancing",
+    description:
+      "Calculate rates for part-time consulting alongside employment. Adjust billable hours accordingly.",
+  },
+  {
+    title: "Geographic Considerations",
+    description:
+      "Factor in cost of living for your location. Higher expenses in expensive cities require higher rates.",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/salary/freelance-rate"
   currentTool="Freelance Rate Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

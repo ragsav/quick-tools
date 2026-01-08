@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Date Difference in Milliseconds",
+    content:
+      "The calculator first computes the absolute difference between the two dates in milliseconds: |endDate - startDate|. Using absolute value ensures a positive result regardless of date order.",
+  },
+  {
+    title: "Convert to Days",
+    content:
+      "Milliseconds are converted to days by dividing by 86,400,000 (the number of milliseconds in a day: 1000 × 60 × 60 × 24). The result is floored to get complete days.",
+  },
+  {
+    title: "Calculate Complete Weeks",
+    content:
+      "Total days are divided by 7 to get complete weeks: weeks = Math.floor(days / 7). This gives the number of full 7-day periods between the dates.",
+  },
+  {
+    title: "Calculate Remaining Days",
+    content:
+      "The modulo operator extracts remaining days: remainingDays = days % 7. This shows how many extra days beyond complete weeks, ranging from 0 to 6.",
+  },
+  {
+    title: "Result Presentation",
+    content:
+      "Results are displayed as both complete weeks and the full breakdown (X weeks and Y days), plus the total day count for reference. This provides multiple perspectives on the duration.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Pregnancy Tracking",
+    description:
+      "Medical professionals and expecting parents track pregnancy progress in weeks. Calculate weeks since conception or weeks until due date.",
+  },
+  {
+    title: "Sprint & Agile Planning",
+    description:
+      "Development teams often work in 1-2 week sprints. Calculate how many sprints fit between project start and deadline dates.",
+  },
+  {
+    title: "Fitness Program Duration",
+    description:
+      "Workout and diet programs are often designed in weekly cycles. Determine how many weeks your fitness program will run.",
+  },
+  {
+    title: "Rental & Lease Calculations",
+    description:
+      "Some rentals (vacation homes, equipment) are priced weekly. Calculate total weeks for accurate billing.",
+  },
+  {
+    title: "Academic Term Planning",
+    description:
+      "Semester and term lengths are often measured in weeks. Calculate teaching weeks for curriculum planning.",
+  },
+  {
+    title: "Recovery & Treatment Duration",
+    description:
+      "Medical treatments and recovery periods are frequently measured in weeks. Track progress through rehabilitation programs.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/time/weeks-between-dates"
   currentTool="Weeks Between Dates"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

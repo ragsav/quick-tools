@@ -17,6 +17,67 @@ const faqItems = [
       "No, this tool is completely free and works directly in your browser with no account required.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Target Date Selection",
+    content:
+      "Enter your target date and optional event name. The date is parsed into a JavaScript Date object set to midnight (00:00:00) of that day, giving you a precise countdown endpoint.",
+  },
+  {
+    title: "Time Difference Calculation",
+    content:
+      "Every second, the calculator computes the difference in milliseconds between the current time and target time: difference = targetDate - now. This gives the exact remaining time in the smallest measurable unit.",
+  },
+  {
+    title: "Unit Conversion",
+    content:
+      "Milliseconds are converted to human-readable units using modular arithmetic: days = floor(diff / 86400000), hours = floor((diff % 86400000) / 3600000), minutes = floor((diff % 3600000) / 60000), seconds = floor((diff % 60000) / 1000).",
+  },
+  {
+    title: "Real-Time Updates",
+    content:
+      "A JavaScript setInterval runs every 1000ms (1 second), recalculating and updating the display. This creates the live countdown effect while remaining efficient on system resources.",
+  },
+  {
+    title: "Completion Detection",
+    content:
+      "When the difference becomes zero or negative, the countdown stops, clears the interval, and displays a celebration message. This prevents showing negative countdowns.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Event & Party Planning",
+    description:
+      "Build excitement for weddings, birthdays, graduations, or parties. Share the countdown with guests to create anticipation for your special day.",
+  },
+  {
+    title: "Holiday Countdowns",
+    description:
+      "Track days until Christmas, New Year, Halloween, or any holiday. Popular with families and for seasonal marketing campaigns.",
+  },
+  {
+    title: "Product Launch Timers",
+    description:
+      "Create urgency for product releases, website launches, or sales events. Embed countdown psychology in marketing to drive engagement.",
+  },
+  {
+    title: "Project Milestone Tracking",
+    description:
+      "Keep teams focused on approaching deadlines by visualizing time remaining. Useful for sprint endings, release dates, and quarterly goals.",
+  },
+  {
+    title: "Personal Goal Setting",
+    description:
+      "Count down to personal milestones like retirement, vacations, marathon dates, or certification exam days to stay motivated.",
+  },
+  {
+    title: "Travel & Vacation Planning",
+    description:
+      "Build anticipation for upcoming trips. Track exactly how long until you board that plane or check into your destination.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/time/countdown-calculator"
   currentTool="Countdown to Date"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

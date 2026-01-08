@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Base Unit System",
+    content:
+      "Each category has a base unit (meter, kilogram, liter, etc.). All conversions go through this base unit, enabling any-to-any conversion within a category.",
+  },
+  {
+    title: "Conversion Factors",
+    content:
+      "Units are defined by their ratio to the base unit. To convert, divide by the source factor (to base), then multiply by the target factor (from base).",
+  },
+  {
+    title: "Temperature Special Case",
+    content:
+      "Temperature uses formulas, not factors. Celsius is the base: °F = (°C × 9/5) + 32, K = °C + 273.15. Conversions go through Celsius as intermediate.",
+  },
+  {
+    title: "Dynamic Unit Lists",
+    content:
+      "Selecting a category updates the available units. Each category has its own set of common units appropriate for that measurement type.",
+  },
+  {
+    title: "Precision Handling",
+    content:
+      "Results are displayed with up to 6 decimal places, with locale-aware number formatting (thousands separators based on your region).",
+  },
+];
+
+const useCases = [
+  {
+    title: "Cooking & Recipes",
+    description:
+      "Convert between cups, tablespoons, milliliters, and grams when following international recipes.",
+  },
+  {
+    title: "Travel & Navigation",
+    description:
+      "Convert between miles and kilometers, Fahrenheit and Celsius when traveling internationally.",
+  },
+  {
+    title: "Construction & DIY",
+    description:
+      "Convert feet/inches to meters/centimeters for materials, square footage to square meters for flooring.",
+  },
+  {
+    title: "Fitness & Health",
+    description:
+      "Convert pounds to kilograms for weights, miles to kilometers for running distances.",
+  },
+  {
+    title: "Science & Engineering",
+    description:
+      "Quick conversions between metric and imperial units for calculations and specifications.",
+  },
+  {
+    title: "Shopping & Commerce",
+    description:
+      "Compare prices per unit across different measurement systems (price per ounce vs per gram).",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/converters/unit-converter"
   currentTool="Unit Converter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

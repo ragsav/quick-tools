@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Percent of a Number",
+    content:
+      "To find X% of Y: multiply Y by (X/100). For example, 15% of 80 = 80 × 0.15 = 12. This is the most common percentage calculation.",
+  },
+  {
+    title: "What Percent X is of Y",
+    content:
+      "Divide X by Y and multiply by 100: (X/Y) × 100 = percentage. For example, 24 is what % of 80? (24/80) × 100 = 30%.",
+  },
+  {
+    title: "Percentage Change",
+    content:
+      "Calculate the difference between new and old values, divide by the old value, multiply by 100: ((new-old)/|old|) × 100. Positive = increase, negative = decrease.",
+  },
+  {
+    title: "Increase by Percentage",
+    content:
+      "Add the percentage amount to the original: value + (value × percent/100). For example, 100 increased by 20% = 100 + 20 = 120.",
+  },
+  {
+    title: "Decrease by Percentage",
+    content:
+      "Subtract the percentage amount from the original: value - (value × percent/100). For example, 100 decreased by 20% = 100 - 20 = 80.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Sales & Discounts",
+    description:
+      "Calculate sale prices. If something is 30% off, find the discount amount and final price quickly.",
+  },
+  {
+    title: "Tax Calculations",
+    description:
+      "Add sales tax to prices. Calculate what percentage of your income goes to taxes or a specific expense.",
+  },
+  {
+    title: "Grade & Score Analysis",
+    description:
+      "Convert points to percentages for test scores. Calculate what score you need to achieve a target percentage.",
+  },
+  {
+    title: "Financial Analysis",
+    description:
+      "Calculate return on investment (ROI), profit margins, and year-over-year growth percentages.",
+  },
+  {
+    title: "Tip Calculations",
+    description:
+      "Calculate gratuity at restaurants. Find 15%, 18%, 20%, or custom tip amounts on your bill.",
+  },
+  {
+    title: "Data Comparison",
+    description:
+      "Express differences as percentages for easier understanding. How much faster, larger, or cheaper is option A vs B?",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/converters/percentage"
   currentTool="Percentage Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

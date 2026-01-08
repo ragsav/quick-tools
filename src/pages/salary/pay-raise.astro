@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Raise Amount Calculation",
+    content:
+      "Raise amount = current salary × (raise percentage ÷ 100). A 5% raise on $50,000 = $2,500.",
+  },
+  {
+    title: "New Salary",
+    content:
+      "New salary = current salary + raise amount. $50,000 + $2,500 = $52,500 new annual salary.",
+  },
+  {
+    title: "Monthly Breakdown",
+    content:
+      "Annual increase ÷ 12 = monthly increase. $2,500 raise = $208.33 more per month.",
+  },
+  {
+    title: "Bi-Weekly Calculation",
+    content:
+      "Annual increase ÷ 26 = per-paycheck increase. $2,500 raise = $96.15 more per bi-weekly paycheck.",
+  },
+  {
+    title: "Compounding Effect",
+    content:
+      "Future raises compound on the new higher salary. A 5% raise next year would be on $52,500, not $50,000.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Salary Negotiation Prep",
+    description:
+      "Calculate what specific percentage increase means in real dollar terms before negotiating with your employer.",
+  },
+  {
+    title: "Job Offer Evaluation",
+    description:
+      "Compare a job offer to your current salary by calculating the effective raise percentage and annual impact.",
+  },
+  {
+    title: "Budget Planning",
+    description:
+      "Understand how a raise affects your monthly and paycheck income for adjusting savings and spending plans.",
+  },
+  {
+    title: "Career Tracking",
+    description:
+      "Track salary growth over time. Calculate cumulative percentage increase over multiple raises.",
+  },
+  {
+    title: "Cost of Living Adjustment",
+    description:
+      "Determine if a raise keeps pace with inflation. A 3% raise during 5% inflation is effectively a pay cut.",
+  },
+  {
+    title: "Promotion Impact",
+    description:
+      "Calculate the real financial impact of a promotion. A 10% raise to $80,000 = $8,000 more annually.",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/salary/pay-raise"
   currentTool="Pay Raise Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Weighted Average Formula",
+    content:
+      "Average = Σ(Grade × Weight) ÷ Σ(Weights). Assignments with higher weights have more impact on the final grade.",
+  },
+  {
+    title: "Weight Assignment",
+    content:
+      "Assign weights based on syllabus: quiz = 1, homework = 1, midterm = 2, final = 3. Match your course weighting.",
+  },
+  {
+    title: "Grade Entry",
+    content:
+      "Enter percentage grades (0-100) for each assignment. Name field is optional for organization.",
+  },
+  {
+    title: "Letter Grade Conversion",
+    content:
+      "Results show letter grade: A (90+), B (80-89), C (70-79), D (60-69), F (below 60).",
+  },
+  {
+    title: "Dynamic Calculation",
+    content:
+      "Add or remove assignments as needed. The average recalculates automatically.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Course Grade Prediction",
+    description:
+      "Enter current grades to calculate your running course average and predict final grade.",
+  },
+  {
+    title: "Final Exam Planning",
+    description:
+      "Calculate what score you need on the final to achieve your target grade in the course.",
+  },
+  {
+    title: "Syllabus Weighting Verification",
+    description:
+      "Verify your professor's grade calculation by inputting your grades with course weights.",
+  },
+  {
+    title: "Multiple Assignment Types",
+    description:
+      "Combine quizzes, homework, projects, and exams with different weights into one average.",
+  },
+  {
+    title: "Progress Tracking",
+    description:
+      "Track your grade progress throughout the semester. Update as new grades come in.",
+  },
+  {
+    title: "What-If Scenarios",
+    description:
+      "Experiment with hypothetical grades to see how they would affect your average.",
+  },
+];
 ---
 
 <StudentToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/student/grade-average"
   currentTool="Grade Average Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

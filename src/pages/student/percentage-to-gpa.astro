@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "4.0 Scale Conversion",
+    content:
+      "GPA = (Percentage ÷ 100) × 4. An 85% becomes 3.4 on the 4.0 scale.",
+  },
+  {
+    title: "10.0 Scale Conversion",
+    content:
+      "GPA = Percentage ÷ 9.5. This is the reverse of the common Indian formula. 85% becomes 8.95.",
+  },
+  {
+    title: "5.0 Scale Conversion",
+    content:
+      "GPA = (Percentage ÷ 100) × 5. An 85% becomes 4.25 on the 5.0 scale.",
+  },
+  {
+    title: "Input Validation",
+    content:
+      "Percentage must be between 0-100. Values outside this range are flagged as invalid.",
+  },
+  {
+    title: "Precision",
+    content:
+      "Results are shown to 2 decimal places for accuracy in applications and comparisons.",
+  },
+];
+
+const useCases = [
+  {
+    title: "US University Applications",
+    description:
+      "Convert percentage scores to 4.0 GPA for US college and graduate school applications.",
+  },
+  {
+    title: "Resume Building",
+    description:
+      "Include GPA on resumes for US employers who expect grades in 4.0 format.",
+  },
+  {
+    title: "Scholarship Applications",
+    description:
+      "Many international scholarships require GPA. Convert your percentage for eligibility checks.",
+  },
+  {
+    title: "Study Abroad Programs",
+    description:
+      "Exchange programs often require GPA. Convert percentage marks to apply.",
+  },
+  {
+    title: "Credential Evaluation",
+    description:
+      "Services like WES require GPA equivalent. Calculate expected conversion before applying.",
+  },
+  {
+    title: "Job Applications",
+    description:
+      "Some multinational companies request GPA on applications. Convert for consistency.",
+  },
+];
 ---
 
 <StudentToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/student/percentage-to-gpa"
   currentTool="Percentage to GPA"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

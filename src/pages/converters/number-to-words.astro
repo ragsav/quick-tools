@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Chunk Processing",
+    content:
+      "Numbers are split into 3-digit chunks from right to left (units, thousands, millions, etc.). Each chunk is converted independently.",
+  },
+  {
+    title: "Hundreds Conversion",
+    content:
+      "Each chunk handles 0-999: ones (1-19), tens (20-90), and hundreds (100-900). Special rules for teens (11-19) prevent awkward constructions.",
+  },
+  {
+    title: "Scale Words",
+    content:
+      "After converting each chunk, scale words are appended: thousand, million, billion, trillion. Empty chunks are skipped.",
+  },
+  {
+    title: "Decimal Handling",
+    content:
+      "Decimals are spelled digit by digit after 'point'. So 45.67 becomes 'forty-five point six seven'.",
+  },
+  {
+    title: "Negative Numbers",
+    content:
+      "Negative numbers are prefixed with 'negative' before converting the absolute value to words.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Writing Checks",
+    description:
+      "Banks require amounts written in words on checks. Convert 1250.00 to 'one thousand two hundred fifty' instantly.",
+  },
+  {
+    title: "Legal Documents",
+    description:
+      "Contracts often require amounts spelled out to prevent forgery. Ensure accuracy in legal agreements.",
+  },
+  {
+    title: "Formal Invitations",
+    description:
+      "Wedding invitations and formal event cards may spell out dates and times for elegance.",
+  },
+  {
+    title: "Educational Materials",
+    description:
+      "Teaching aids for children learning number words. Practice and verify spelling of large numbers.",
+  },
+  {
+    title: "Accessibility",
+    description:
+      "Create text versions of numbers for screen readers and accessibility-first content.",
+  },
+  {
+    title: "Report Writing",
+    description:
+      "Style guides often require small numbers (under 10) to be spelled out in professional writing.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/converters/number-to-words"
   currentTool="Number to Words"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

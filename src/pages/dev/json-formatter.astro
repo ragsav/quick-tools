@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Parsing",
+    content:
+      "JSON.parse() attempts to parse input. If successful, the JSON is valid. Errors indicate syntax problems.",
+  },
+  {
+    title: "Beautifying",
+    content:
+      "JSON.stringify() with 2-space indentation reformats JSON with proper line breaks and indentation.",
+  },
+  {
+    title: "Minifying",
+    content:
+      "JSON.stringify() without spaces removes all whitespace. Smallest file size for production use.",
+  },
+  {
+    title: "Validation",
+    content:
+      "Parsing reveals errors: missing quotes, trailing commas, invalid characters. Error message pinpoints the issue.",
+  },
+  {
+    title: "Syntax Highlighting",
+    content:
+      "Formatted output uses monospace font for code readability. Easy to spot structure at a glance.",
+  },
+];
+
+const useCases = [
+  {
+    title: "API Debugging",
+    description:
+      "Format API responses for readability. Understand nested data structures from REST endpoints.",
+  },
+  {
+    title: "Config File Editing",
+    description:
+      "Validate package.json, tsconfig.json, or other config files. Find syntax errors before they cause issues.",
+  },
+  {
+    title: "Log Analysis",
+    description:
+      "Format JSON log entries for debugging. Expand minified log data to readable format.",
+  },
+  {
+    title: "Data Preparation",
+    description:
+      "Minify JSON before embedding in HTML or sending over network. Reduce payload size.",
+  },
+  {
+    title: "Documentation",
+    description:
+      "Format JSON examples for documentation. Ensure consistent, readable code samples.",
+  },
+  {
+    title: "Learning JSON",
+    description:
+      "Understand JSON structure by formatting examples. See how nesting and arrays work visually.",
+  },
+];
 ---
 
 <DevToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/dev/json-formatter"
   currentTool="JSON Formatter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

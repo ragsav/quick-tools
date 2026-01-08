@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Overtime Rate Calculation",
+    content:
+      "Overtime hourly rate = regular rate × multiplier. At $20/hour with 1.5× OT, overtime rate is $30/hour.",
+  },
+  {
+    title: "Regular Pay",
+    content:
+      "Regular pay = regular hourly rate × regular hours worked. Standard is 40 hours at base rate.",
+  },
+  {
+    title: "Overtime Pay",
+    content:
+      "Overtime pay = overtime rate × overtime hours. Working 10 OT hours at $30/hour = $300 overtime pay.",
+  },
+  {
+    title: "Total Compensation",
+    content:
+      "Total = regular pay + overtime pay. Regular ($800) + OT ($300) = $1,100 total weekly pay.",
+  },
+  {
+    title: "Multiplier Options",
+    content:
+      "Common rates: 1.25× (some contracts), 1.5× (federal standard), 2× (holidays/double time).",
+  },
+];
+
+const useCases = [
+  {
+    title: "Paycheck Verification",
+    description:
+      "Verify that your overtime pay is calculated correctly. Ensure you're receiving proper compensation.",
+  },
+  {
+    title: "Extra Income Planning",
+    description:
+      "Calculate potential earnings from available overtime. Decide if extra hours are worth the time investment.",
+  },
+  {
+    title: "Budgeting with Variable Income",
+    description:
+      "Project income when overtime varies. Plan for months with high or low overtime availability.",
+  },
+  {
+    title: "Holiday Work Decisions",
+    description:
+      "Calculate holiday pay at 2× rates. Is working the holiday worth it for your specific situation?",
+  },
+  {
+    title: "Labor Cost Estimation",
+    description:
+      "Managers can estimate labor costs when scheduling overtime to complete projects.",
+  },
+  {
+    title: "Wage Dispute Resolution",
+    description:
+      "Calculate expected overtime pay to identify discrepancies in paychecks or timesheets.",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/salary/overtime-pay"
   currentTool="Overtime Pay Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Time Calculation",
+    content:
+      "Reading time = Word count ÷ Words per minute. A 5000-word article at 200 wpm takes 25 minutes.",
+  },
+  {
+    title: "Speed Presets",
+    content:
+      "Slow (150 wpm), Average (200 wpm), Fast (250 wpm), Speed reader (300 wpm). Choose your typical speed.",
+  },
+  {
+    title: "Hour-Minute Formatting",
+    content:
+      "Results show hours and minutes for longer content. '2h 30m' is clearer than '150 minutes'.",
+  },
+  {
+    title: "Page Estimation",
+    content:
+      "Approximate page count uses 250 words/page standard. Helps visualize document length.",
+  },
+  {
+    title: "Adjustable Parameters",
+    content:
+      "Customize reading speed based on content type. Technical content may warrant slower speeds.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Study Session Planning",
+    description:
+      "Estimate time needed for reading assignments. Schedule study sessions appropriately.",
+  },
+  {
+    title: "Book Selection",
+    description:
+      "Before committing to a book, estimate total reading time. Plan based on your available time.",
+  },
+  {
+    title: "Content Creation",
+    description:
+      "Blog writers and content creators display 'X min read' for their articles using this calculation.",
+  },
+  {
+    title: "Meeting Preparation",
+    description:
+      "Estimate time needed to read meeting materials before the meeting starts.",
+  },
+  {
+    title: "Exam Preparation",
+    description:
+      "Calculate total reading time for course materials. Create realistic study schedules.",
+  },
+  {
+    title: "Research Paper Review",
+    description:
+      "Estimate time to read journal articles and research papers for literature reviews.",
+  },
+];
 ---
 
 <StudentToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/student/reading-time"
   currentTool="Reading Time Estimator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

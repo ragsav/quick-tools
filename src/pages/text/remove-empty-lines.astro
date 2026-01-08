@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Line Separation",
+    content:
+      "Text is split on newline characters (\\n) to create an array of lines. Each line is then evaluated for emptiness.",
+  },
+  {
+    title: "Empty Line Detection",
+    content:
+      "A line with length === 0 is truly empty. This catches lines that are just newline characters with no content between them.",
+  },
+  {
+    title: "Whitespace-Only Detection",
+    content:
+      "When enabled, line.trim().length === 0 catches lines containing only spaces, tabs, or other whitespace characters.",
+  },
+  {
+    title: "Filter Operation",
+    content:
+      "JavaScript's filter() method creates a new array containing only lines that pass the non-empty check. Original line order is preserved.",
+  },
+  {
+    title: "Statistics Tracking",
+    content:
+      "The tool counts lines before and after filtering, showing exactly how many empty lines were removed for verification.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Code Formatting",
+    description:
+      "Remove excessive blank lines from code files. Maintain consistent vertical spacing according to style guides.",
+  },
+  {
+    title: "Document Cleanup",
+    description:
+      "Clean up pasted content from PDFs or web pages that often contains extra line breaks.",
+  },
+  {
+    title: "Data Processing",
+    description:
+      "Prepare data files by removing blank lines before parsing or importing into databases.",
+  },
+  {
+    title: "Log Compression",
+    description:
+      "Remove empty lines from log files to reduce file size and improve readability.",
+  },
+  {
+    title: "Markdown Cleanup",
+    description:
+      "Clean markdown files with excessive blank lines that cause unwanted spacing in rendered output.",
+  },
+  {
+    title: "CSV/Text Preparation",
+    description:
+      "Remove blank rows from text data before converting to CSV or other structured formats.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/text/remove-empty-lines"
   currentTool="Remove Empty Lines"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

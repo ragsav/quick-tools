@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Percent Encoding Standard",
+    content:
+      "URL encoding (percent-encoding) converts characters to the format %XX where XX is the hexadecimal ASCII value. Space becomes %20, @ becomes %40, etc.",
+  },
+  {
+    title: "Safe Characters",
+    content:
+      "Letters (A-Z, a-z), digits (0-9), and some punctuation (-_.~) are 'safe' and pass through unchanged. All other characters need encoding for URL safety.",
+  },
+  {
+    title: "encodeURIComponent Function",
+    content:
+      "JavaScript's encodeURIComponent() encodes everything except A-Z a-z 0-9 - _ . ! ~ * ' ( ). This is stricter than encodeURI() and safe for query parameters.",
+  },
+  {
+    title: "UTF-8 Handling",
+    content:
+      "Non-ASCII characters (like é, 中, ñ) are first converted to UTF-8 bytes, then each byte is percent-encoded. This ensures international character support.",
+  },
+  {
+    title: "Decoding Process",
+    content:
+      "decodeURIComponent() reverses the encoding, converting %XX sequences back to original characters. Invalid sequences throw errors that this tool catches gracefully.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Query String Parameters",
+    description:
+      "Encode values containing special characters (&, =, ?) for safe inclusion in URL query strings. Essential for search queries and filters.",
+  },
+  {
+    title: "API Requests",
+    description:
+      "Encode data before sending to APIs via GET requests. Prevents malformed URLs and ensures proper parameter parsing.",
+  },
+  {
+    title: "Email Links",
+    description:
+      "Create mailto: links with pre-filled subject and body. Encode spaces and special characters for reliable email client handling.",
+  },
+  {
+    title: "OAuth & Authentication",
+    description:
+      "OAuth flows require URL-encoded redirect URLs and tokens. Proper encoding prevents authentication failures and security issues.",
+  },
+  {
+    title: "Form Data Debugging",
+    description:
+      "Decode application/x-www-form-urlencoded data from form submissions. Debug and understand what data your forms are sending.",
+  },
+  {
+    title: "Analytics Tracking",
+    description:
+      "Encode UTM parameters and campaign tracking values. Ensure spaces and special characters don't break analytics tracking.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/text/url-encoder"
   currentTool="URL Encoder/Decoder"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

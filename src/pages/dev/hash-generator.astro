@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Hash Function",
+    content:
+      "A hash function takes any input and produces a fixed-length output. Small changes create completely different hashes.",
+  },
+  {
+    title: "MD5 (128-bit)",
+    content:
+      "32 hex character output. Fast but cryptographically broken. Only use for checksums, not security.",
+  },
+  {
+    title: "SHA-1 (160-bit)",
+    content:
+      "40 hex character output. Deprecated for security. Use for legacy compatibility or checksums only.",
+  },
+  {
+    title: "SHA-256 (256-bit)",
+    content:
+      "64 hex character output. Standard for modern security. Used in Bitcoin, SSL certificates, password storage.",
+  },
+  {
+    title: "SHA-512 (512-bit)",
+    content:
+      "128 hex character output. Highest security. Faster on 64-bit systems. Used for maximum security requirements.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Password Storage",
+    description:
+      "Hash passwords before storing. Never store plain text passwords. Use SHA-256 or better with salt.",
+  },
+  {
+    title: "File Integrity Verification",
+    description:
+      "Generate hash of downloaded files. Compare to published hash to verify file wasn't corrupted or tampered.",
+  },
+  {
+    title: "Data Fingerprinting",
+    description:
+      "Create unique identifiers for data. Detect if content has changed by comparing hashes.",
+  },
+  {
+    title: "Digital Signatures",
+    description:
+      "Hash documents before signing. Ensures message integrity in cryptographic protocols.",
+  },
+  {
+    title: "Caching Keys",
+    description:
+      "Generate cache keys from URLs or data. Consistent hashing provides reliable cache lookup.",
+  },
+  {
+    title: "Blockchain",
+    description:
+      "SHA-256 powers Bitcoin and many blockchains. Hash chains ensure immutable record keeping.",
+  },
+];
 ---
 
 <DevToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/dev/hash-generator"
   currentTool="Hash Generator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

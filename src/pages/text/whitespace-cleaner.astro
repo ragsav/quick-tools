@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Tab Conversion",
+    content:
+      "Tabs (\\t) are replaced with spaces using a simple regex replacement. This standardizes indentation before further processing.",
+  },
+  {
+    title: "Line Trimming",
+    content:
+      "Each line is processed with trim() to remove leading and trailing whitespace. This cleans up inconsistent indentation and trailing spaces.",
+  },
+  {
+    title: "Multiple Space Collapse",
+    content:
+      "Regex / {2,}/g matches two or more consecutive spaces and replaces them with a single space. This normalizes word spacing.",
+  },
+  {
+    title: "Blank Line Removal",
+    content:
+      "When enabled, lines are filtered to remove those where trim().length === 0. This eliminates both empty lines and whitespace-only lines.",
+  },
+  {
+    title: "Character Statistics",
+    content:
+      "The tool compares input and output lengths, showing exactly how many characters were removed during cleaning.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Code Formatting",
+    description:
+      "Clean up inconsistent spacing in code. Standardize indentation and remove trailing whitespace that fails linting.",
+  },
+  {
+    title: "Copy-Paste Cleanup",
+    description:
+      "Clean text copied from PDFs, Word documents, or websites that often includes excessive whitespace.",
+  },
+  {
+    title: "Database Preparation",
+    description:
+      "Normalize text data before database insertion. Prevent issues with whitespace variations in search and comparison.",
+  },
+  {
+    title: "Email Content Cleaning",
+    description:
+      "Clean up email content with irregular spacing. Prepare text for professional communication.",
+  },
+  {
+    title: "OCR Post-Processing",
+    description:
+      "Clean text output from OCR that often has inconsistent spacing due to recognition errors.",
+  },
+  {
+    title: "Configuration File Cleanup",
+    description:
+      "Standardize spacing in configuration files where whitespace might cause parsing issues.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/text/whitespace-cleaner"
   currentTool="Whitespace Cleaner"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

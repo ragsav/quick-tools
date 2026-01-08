@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Total Character Count",
+    content:
+      "The string's length property returns the total character count including all letters, numbers, spaces, punctuation, and special characters. This is instant and always accurate.",
+  },
+  {
+    title: "Without Spaces Count",
+    content:
+      "Space characters are removed using regex /\\s/g which matches all whitespace (spaces, tabs, newlines). The remaining string's length gives character count without spaces.",
+  },
+  {
+    title: "Word Counting",
+    content:
+      "Words are counted by splitting on whitespace and filtering empty entries. This provides context alongside character counts for understanding text density.",
+  },
+  {
+    title: "Line Counting",
+    content:
+      "Lines are counted by splitting on newline characters (\\n). This is useful for code, poetry, or any text where line count matters.",
+  },
+  {
+    title: "Limit Visualization",
+    content:
+      "Progress bars show percentage of common limits (Twitter, SMS, meta descriptions). Colors change from green to red when limits are exceeded.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Twitter/X Post Writing",
+    description:
+      "Craft tweets that fit within the 280-character limit. The visual progress bar shows exactly how much space you have left.",
+  },
+  {
+    title: "SMS Marketing",
+    description:
+      "Standard SMS messages are 160 characters. Exceeding this splits into multiple messages, increasing costs. Stay within single-message limits.",
+  },
+  {
+    title: "Meta Description Writing",
+    description:
+      "SEO meta descriptions should be 150-160 characters for optimal display in search results. Track length to avoid truncation.",
+  },
+  {
+    title: "Form Field Validation",
+    description:
+      "When designing forms with character limits, test your sample content to ensure it fits within database field constraints.",
+  },
+  {
+    title: "Ad Copy Creation",
+    description:
+      "Digital ads have strict character limits: Google Ads headlines (30 chars), descriptions (90 chars). Craft copy that fits perfectly.",
+  },
+  {
+    title: "Bio & Profile Writing",
+    description:
+      "Social media bios often have limits (Instagram: 150, LinkedIn: 2600). Write compelling bios that maximize allowed space.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/text/character-counter"
   currentTool="Character Counter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Time Zone Offset Definition",
+    content:
+      "Each time zone is defined by its UTC offset (e.g., EST = UTC-5, IST = UTC+5:30). The offset represents hours (and sometimes half-hours) ahead of or behind Coordinated Universal Time (UTC).",
+  },
+  {
+    title: "Convert to UTC First",
+    content:
+      "The source time is first converted to UTC by subtracting the source timezone's offset: UTC_time = source_time - source_offset. This gives us a universal reference point independent of any timezone.",
+  },
+  {
+    title: "Apply Target Offset",
+    content:
+      "The UTC time is then converted to the target timezone by adding the target offset: target_time = UTC_time + target_offset. This two-step process ensures accurate conversion between any two timezones.",
+  },
+  {
+    title: "Date Boundary Handling",
+    content:
+      "When the conversion crosses midnight, the algorithm adjusts the date accordingly. Hours greater than 23 roll to the next day; negative hours roll to the previous day. This handles international date line crossings.",
+  },
+  {
+    title: "Offset Difference Display",
+    content:
+      "The calculator shows the total hour difference between zones (target_offset - source_offset). This helps you understand the time gap for scheduling recurring meetings or calls.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Remote Team Scheduling",
+    description:
+      "Coordinate meeting times across global teams. Find times that work for New York, London, and Tokyo offices without anyone joining at midnight.",
+  },
+  {
+    title: "International Client Calls",
+    description:
+      "Schedule calls with clients in different timezones. Convert your proposed time to their local time to suggest appropriate meeting hours.",
+  },
+  {
+    title: "Flight Arrival Planning",
+    description:
+      "Calculate what local time you'll arrive at your destination. Plan airport pickups and hotel check-ins based on destination local time.",
+  },
+  {
+    title: "Live Event Broadcasting",
+    description:
+      "Determine when a live sports event, concert, or conference will air in your timezone. Convert broadcast times for global viewership.",
+  },
+  {
+    title: "Stock Market Hours",
+    description:
+      "Track when international stock exchanges open and close in your local time. Essential for traders monitoring NYSE, LSE, TSE, and other markets.",
+  },
+  {
+    title: "Customer Support Coverage",
+    description:
+      "Plan support team schedules to provide coverage during customer business hours. Ensure 24/7 support across global regions.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/time/timezone-converter"
   currentTool="Time Zone Converter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

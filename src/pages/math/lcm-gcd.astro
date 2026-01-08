@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Euclidean Algorithm",
+    content:
+      "GCD uses Euclidean algorithm: repeatedly divide larger by smaller, GCD is last non-zero remainder.",
+  },
+  {
+    title: "LCM Formula",
+    content:
+      "LCM(a,b) = (a × b) ÷ GCD(a,b). This relationship makes LCM easy once GCD is known.",
+  },
+  {
+    title: "Multiple Numbers",
+    content:
+      "For 3+ numbers, calculate GCD/LCM pairwise. GCD(a,b,c) = GCD(GCD(a,b), c) and same for LCM.",
+  },
+  {
+    title: "Mathematical Relationship",
+    content:
+      "LCM × GCD = Product of the numbers. This is a useful verification check.",
+  },
+  {
+    title: "Input Handling",
+    content:
+      "Enter comma-separated positive integers. At least 2 numbers required for calculation.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Fraction Addition",
+    description:
+      "Find LCM of denominators to get common denominator. 1/4 + 1/6 = 3/12 + 2/12 (LCM of 4,6 is 12).",
+  },
+  {
+    title: "Fraction Simplification",
+    description:
+      "Divide numerator and denominator by GCD to reduce fractions. 24/36 ÷ GCD(12) = 2/3.",
+  },
+  {
+    title: "Scheduling Problems",
+    description:
+      "Find when events sync up. If buses run every 12 and 18 minutes, they sync every LCM(12,18)=36 minutes.",
+  },
+  {
+    title: "Circular Track Problems",
+    description:
+      "When do runners meet again? Use LCM of lap times to find when they return to start together.",
+  },
+  {
+    title: "Tile Pattern Calculation",
+    description:
+      "Find smallest square that can be tiled by rectangles of different sizes. Use LCM of dimensions.",
+  },
+  {
+    title: "Computer Science",
+    description:
+      "GCD and LCM are used in algorithms for cryptography, timing, and resource allocation.",
+  },
+];
 ---
 
 <MathToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/math/lcm-gcd"
   currentTool="LCM & GCD Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

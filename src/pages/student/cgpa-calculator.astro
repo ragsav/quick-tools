@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Credit-Weighted Average",
+    content:
+      "CGPA = Σ(GPA × Credits) ÷ Σ(Credits). Semesters with more credits count more heavily.",
+  },
+  {
+    title: "Semester Entry",
+    content:
+      "Enter each semester's GPA and credit hours. Add as many semesters as needed for accurate calculation.",
+  },
+  {
+    title: "Weighted Calculation",
+    content:
+      "Each semester's contribution = GPA × credits. Sum all contributions, divide by total credits.",
+  },
+  {
+    title: "Running Total",
+    content:
+      "The tool tracks total credits and weighted sum automatically. Add/remove semesters to update.",
+  },
+  {
+    title: "Validation",
+    content:
+      "GPA values are validated against typical ranges. Credits must be positive numbers.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Academic Standing Check",
+    description:
+      "Calculate cumulative GPA to check if you meet honor roll, dean's list, or graduation requirements.",
+  },
+  {
+    title: "Transfer Credit Planning",
+    description:
+      "Calculate how transfer credits will affect your overall GPA at the new institution.",
+  },
+  {
+    title: "Graduation Requirements",
+    description:
+      "Check if your CGPA meets minimum graduation requirements before your final semester.",
+  },
+  {
+    title: "Scholarship Eligibility",
+    description:
+      "Many scholarships require minimum CGPA. Calculate to verify continued eligibility.",
+  },
+  {
+    title: "Grade Recovery Planning",
+    description:
+      "Calculate what GPA you need in future semesters to raise your overall CGPA to target.",
+  },
+  {
+    title: "Graduate School Applications",
+    description:
+      "Calculate CGPA precisely for grad school applications that require cumulative average.",
+  },
+];
 ---
 
 <StudentToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/student/cgpa-calculator"
   currentTool="CGPA Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

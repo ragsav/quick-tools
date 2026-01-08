@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Exponentiation Definition",
+    content:
+      "x^n means multiply x by itself n times. 2^5 = 2 × 2 × 2 × 2 × 2 = 32.",
+  },
+  {
+    title: "Zero Exponent",
+    content:
+      "Any non-zero number raised to 0 equals 1. x^0 = 1. This is a mathematical convention.",
+  },
+  {
+    title: "Negative Exponents",
+    content:
+      "x^(-n) = 1/(x^n). Negative exponents flip the base to the denominator.",
+  },
+  {
+    title: "Fractional Exponents",
+    content:
+      "x^(1/2) = √x. Fractional exponents represent roots. x^(1/3) = cube root of x.",
+  },
+  {
+    title: "JavaScript Power Function",
+    content:
+      "Uses Math.pow() for calculation, handling large numbers and decimals accurately.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Compound Interest",
+    description:
+      "Calculate future value with A = P(1 + r)^n. Exponents power growth calculations.",
+  },
+  {
+    title: "Scientific Notation",
+    description:
+      "Work with large numbers: 10^6 = 1,000,000. Essential for science and engineering.",
+  },
+  {
+    title: "Computer Memory Sizes",
+    description:
+      "Binary powers: 2^10 = 1024 (KB), 2^20 = 1,048,576 (MB). Understand memory sizes.",
+  },
+  {
+    title: "Exponential Growth",
+    description:
+      "Model population growth, viral spread, or decay using exponential functions.",
+  },
+  {
+    title: "Physics Calculations",
+    description:
+      "Formulas involving squares (E=mc²) and cubes (volume = s³) require exponents.",
+  },
+  {
+    title: "Math Homework",
+    description:
+      "Quickly check exponent calculations for homework. Verify manual calculations.",
+  },
+];
 ---
 
 <MathToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/math/power-calculator"
   currentTool="Power Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

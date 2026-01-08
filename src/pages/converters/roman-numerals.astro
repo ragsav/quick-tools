@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Symbol-Value Mapping",
+    content:
+      "Roman numerals use 7 symbols: I(1), V(5), X(10), L(50), C(100), D(500), M(1000). Combinations extend the range to 3999.",
+  },
+  {
+    title: "Subtractive Notation",
+    content:
+      "Smaller values before larger ones indicate subtraction: IV=4 (5-1), IX=9 (10-1), XL=40 (50-10), XC=90, CD=400, CM=900.",
+  },
+  {
+    title: "Number to Roman",
+    content:
+      "Starting from 1000, repeatedly subtract the largest possible value and append its symbol. Continue until the number reaches zero.",
+  },
+  {
+    title: "Roman to Number",
+    content:
+      "Read left to right: if current symbol is less than next, subtract it; otherwise add it. Sum all values for the result.",
+  },
+  {
+    title: "Validation",
+    content:
+      "Only valid Roman numeral characters (I, V, X, L, C, D, M) are accepted. Invalid characters trigger an error message.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Year Conversion",
+    description:
+      "Convert years for formal documents, movie credits, or building cornerstones. 2024 = MMXXIV.",
+  },
+  {
+    title: "Book Chapters & Outlines",
+    description:
+      "Academic papers and legal documents often use Roman numerals for major sections (Chapter I, II, III).",
+  },
+  {
+    title: "Clock Reading",
+    description:
+      "Many clocks and watches display Roman numerals. Quickly convert to read unfamiliar numerals.",
+  },
+  {
+    title: "Royal & Papal Names",
+    description:
+      "Understand numbering for historical figures: Queen Elizabeth II, Pope John Paul II, Louis XIV.",
+  },
+  {
+    title: "Super Bowl & Events",
+    description:
+      "Major events like the Super Bowl use Roman numerals (Super Bowl LVIII = 58). Convert to verify.",
+  },
+  {
+    title: "Educational Learning",
+    description:
+      "Students learning Roman numerals can check their homework and understand the conversion rules.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/converters/roman-numerals"
   currentTool="Roman Numeral Converter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

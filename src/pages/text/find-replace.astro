@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Pattern Construction",
+    content:
+      "The search term is converted to a regular expression. Special regex characters are escaped unless 'Use regex' is enabled. The global flag ensures all matches are found.",
+  },
+  {
+    title: "Case Sensitivity",
+    content:
+      "When case-insensitive, the regex uses the 'i' flag. 'Hello' will match 'hello', 'HELLO', and any mixed case variation.",
+  },
+  {
+    title: "Whole Word Matching",
+    content:
+      "Word boundaries (\\b) are added around the pattern when 'Whole word' is checked. This prevents partial matches like 'cat' in 'category'.",
+  },
+  {
+    title: "Global Replacement",
+    content:
+      "JavaScript's replace() with global regex replaces ALL occurrences in one pass. The replacement count is shown for verification.",
+  },
+  {
+    title: "Regex Power Features",
+    content:
+      "With regex enabled, use capture groups, alternation, quantifiers, and other pattern features. Replacement text can use $1, $2 for captured groups.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Bulk Text Editing",
+    description:
+      "Replace consistent terminology throughout documents. Change company names, product names, or terminology in one operation.",
+  },
+  {
+    title: "Code Refactoring",
+    description:
+      "Rename variables, functions, or classes across code files. Use whole-word matching to avoid partial replacements.",
+  },
+  {
+    title: "Data Cleaning",
+    description:
+      "Standardize formats, fix typos, or convert date formats in bulk. Use regex for pattern-based replacements.",
+  },
+  {
+    title: "Template Processing",
+    description:
+      "Replace placeholder variables like {{name}} with actual values when generating personalized content.",
+  },
+  {
+    title: "Format Conversion",
+    description:
+      "Convert between formats: mm/dd/yyyy to yyyy-mm-dd, straight quotes to curly quotes, or tabs to spaces.",
+  },
+  {
+    title: "Privacy Redaction",
+    description:
+      "Replace sensitive information (emails, phone numbers) with redacted versions using regex patterns.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/text/find-replace"
   currentTool="Find & Replace"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

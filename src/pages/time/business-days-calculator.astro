@@ -19,6 +19,67 @@ const faqItems = [
       "No, all calculations happen locally in your browser. Your data never leaves your device.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Date Range Processing",
+    content:
+      "The calculator takes your start and end dates and prepares to iterate through each day in the range. The start date is included in the count, while the end date is typically excluded (like counting days until a deadline).",
+  },
+  {
+    title: "Holiday Parsing",
+    content:
+      "Holiday dates entered as comma-separated values (YYYY-MM-DD format) are parsed and stored in a lookup set. Each date string is normalized to ensure consistent comparison with dates in the range.",
+  },
+  {
+    title: "Day-by-Day Analysis",
+    content:
+      "For each day in the range, three checks occur: (1) Is it Saturday or Sunday? (2) Is it in the holidays list? (3) If neither, it's counted as a business day. This ensures accurate exclusion of both weekends and custom holidays.",
+  },
+  {
+    title: "Categorized Counting",
+    content:
+      "The algorithm maintains separate counters: business days, weekend days, and holidays excluded. This breakdown helps you understand exactly how the total was calculated and verify accuracy.",
+  },
+  {
+    title: "Edge Case Handling",
+    content:
+      "The calculator handles various edge cases: holidays falling on weekends (counted only once), partial weeks, leap years, and year boundaries. All dates are processed using native Date objects for accuracy.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Contract SLA Calculations",
+    description:
+      "Calculate business days for service level agreements that specify response times in business days. Exclude company-specific holidays for accurate SLA compliance.",
+  },
+  {
+    title: "Payroll Processing",
+    description:
+      "Determine pay periods accounting for weekends and holidays. Essential for calculating daily rates, overtime periods, or prorated salaries.",
+  },
+  {
+    title: "Legal Filing Deadlines",
+    description:
+      "Many court systems and government agencies specify deadlines in business days. Calculate exact due dates accounting for court holidays and weekends.",
+  },
+  {
+    title: "International Business Coordination",
+    description:
+      "When working across countries, account for different national holidays. Calculate realistic timelines that respect each region's non-working days.",
+  },
+  {
+    title: "Manufacturing Lead Times",
+    description:
+      "Calculate production schedules accounting for factory closures, maintenance days, and holidays. Essential for accurate delivery date promises.",
+  },
+  {
+    title: "Bank Processing Times",
+    description:
+      "Determine when ACH transfers, wire transfers, or check clearances will complete. Banking follows business days with additional holidays like Columbus Day.",
+  },
+];
 ---
 
 <TimeToolLayout
@@ -27,6 +88,8 @@ const faqItems = [
   canonicalPath="/time/business-days-calculator"
   currentTool="Business Days Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

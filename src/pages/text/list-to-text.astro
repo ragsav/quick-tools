@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "HTML Tag Stripping",
+    content:
+      "HTML list markup (<ul>, <ol>, <li>) is removed first using regex. This handles content copied from web pages or HTML editors.",
+  },
+  {
+    title: "Bullet Removal",
+    content:
+      "Common bullet characters (•, ●, ○, ▪, ▸, -, *, –, —) at line starts are stripped. This covers most bullet list formats from various sources.",
+  },
+  {
+    title: "Number Prefix Removal",
+    content:
+      "Numbered list patterns (1., 2), [1], (1)) are identified and removed using regex. The actual number values don't matter—any sequence is handled.",
+  },
+  {
+    title: "Whitespace Cleanup",
+    content:
+      "Leading spaces, trailing spaces, and extra whitespace around list markers are trimmed. Empty lines are filtered from the final output.",
+  },
+  {
+    title: "Plain Text Output",
+    content:
+      "The result is clean, one-item-per-line text without any formatting characters. Ready for further processing or reformatting.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Data Extraction",
+    description:
+      "Extract plain text from formatted documents for data processing, analysis, or database import.",
+  },
+  {
+    title: "Copy-Paste Cleanup",
+    description:
+      "Clean up lists copied from web pages, PDFs, or Word documents that retain unwanted formatting.",
+  },
+  {
+    title: "Content Migration",
+    description:
+      "Convert formatted content from one system to plain text before reformatting for a different platform.",
+  },
+  {
+    title: "API Data Preparation",
+    description:
+      "Strip formatting from list content before sending to APIs that expect plain text arrays.",
+  },
+  {
+    title: "Spreadsheet Import",
+    description:
+      "Prepare list data for spreadsheet import by removing bullets and numbers that would become cell content.",
+  },
+  {
+    title: "Text Processing Pipeline",
+    description:
+      "First step in text processing: convert to plain format before applying transformations or analysis.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/text/list-to-text"
   currentTool="List to Text"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

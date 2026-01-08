@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Base Selection",
+    content:
+      "Choose your input's number system: decimal (base 10), binary (base 2), hexadecimal (base 16), or octal (base 8). The tool interprets your input according to the selected base.",
+  },
+  {
+    title: "Parsing Input",
+    content:
+      "JavaScript's parseInt(value, radix) converts the input string to a decimal integer. The radix parameter specifies the input's base (2, 8, 10, or 16).",
+  },
+  {
+    title: "Conversion Algorithm",
+    content:
+      "The decimal value serves as an intermediate. From decimal, toString(base) converts to any target base. This two-step process handles all base combinations.",
+  },
+  {
+    title: "Simultaneous Output",
+    content:
+      "All four representations are computed and displayed at once: decimal, binary, hexadecimal (uppercase), and octal. This enables easy comparison.",
+  },
+  {
+    title: "Validation",
+    content:
+      "Invalid characters for the selected base trigger error handling. For example, '2' is invalid in binary (only 0-1 allowed), 'G' is invalid in hex (0-9, A-F only).",
+  },
+];
+
+const useCases = [
+  {
+    title: "Programming & Debugging",
+    description:
+      "Developers work with hex for memory addresses, binary for bitwise operations, and need to convert between representations for debugging.",
+  },
+  {
+    title: "Computer Science Education",
+    description:
+      "Students learning number systems can verify manual conversion calculations and understand base relationships.",
+  },
+  {
+    title: "Color Code Conversion",
+    description:
+      "Web developers convert between RGB decimal values (255, 128, 0) and hexadecimal color codes (#FF8000).",
+  },
+  {
+    title: "File Permission Analysis",
+    description:
+      "Unix file permissions use octal (755, 644). Convert to binary to understand read/write/execute bits.",
+  },
+  {
+    title: "Network Configuration",
+    description:
+      "IP addresses and subnet masks are often expressed in binary for network calculations and decimal for configuration.",
+  },
+  {
+    title: "Digital Electronics",
+    description:
+      "Hardware engineers work with binary for logic gates and need conversions for datasheets specifying values in hex or decimal.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/converters/binary-decimal"
   currentTool="Binary ↔ Decimal"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

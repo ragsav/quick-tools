@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Binary (1024) Base",
+    content:
+      "File sizes use powers of 1024: 1 KB = 1024 bytes, 1 MB = 1024 KB, etc. This matches how operating systems and storage actually work.",
+  },
+  {
+    title: "Base Conversion",
+    content:
+      "Input is first converted to bytes by multiplying by 1024^n where n is the unit's position (0 for bytes, 1 for KB, etc.).",
+  },
+  {
+    title: "Target Unit Division",
+    content:
+      "Bytes are divided by 1024^n for the target unit. For example, bytes ÷ 1024² = MB, bytes ÷ 1024³ = GB.",
+  },
+  {
+    title: "Simultaneous Output",
+    content:
+      "All unit representations are calculated and displayed at once, enabling quick comparison across the entire size spectrum.",
+  },
+  {
+    title: "Smart Formatting",
+    content:
+      "Large values show locale-formatted numbers with thousands separators. Small values use scientific notation for readability.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Storage Planning",
+    description:
+      "Compare file and drive sizes. How many 4.7 GB DVDs fit on a 1 TB drive? Convert to compare effectively.",
+  },
+  {
+    title: "Download Estimates",
+    description:
+      "Convert download speeds (Mbps) to understandable file times. How long to download a 2 GB file at 10 Mbps?",
+  },
+  {
+    title: "Cloud Storage Management",
+    description:
+      "Convert between units when managing cloud quotas. Compare what 15 GB free storage means in MB for documents.",
+  },
+  {
+    title: "Photo & Video Estimation",
+    description:
+      "Estimate storage needs: if each photo is 5 MB, how many GB do you need for 1000 photos?",
+  },
+  {
+    title: "Server Configuration",
+    description:
+      "Convert memory and storage specifications. Configure buffer sizes from KB to appropriate byte values.",
+  },
+  {
+    title: "Bandwidth Calculations",
+    description:
+      "Convert monthly data caps between GB and TB. Understand what 1 TB monthly limit means for daily usage.",
+  },
+];
 ---
 
 <ConverterToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/converters/file-size"
   currentTool="File Size Converter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

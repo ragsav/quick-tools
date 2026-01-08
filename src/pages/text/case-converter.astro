@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "UPPERCASE Conversion",
+    content:
+      "Uses JavaScript's toUpperCase() method to convert every character to its uppercase equivalent. Works with Unicode characters from any language.",
+  },
+  {
+    title: "Title Case Algorithm",
+    content:
+      "First converts to lowercase, then uses regex /\\b\\w/g to match word boundaries and capitalize the first letter of each word. Handles punctuation and spacing correctly.",
+  },
+  {
+    title: "Sentence Case Logic",
+    content:
+      "Converts to lowercase, then capitalizes after sentence-ending punctuation (.!?) using regex. Also capitalizes the first character of the text.",
+  },
+  {
+    title: "Programming Case Formats",
+    content:
+      "camelCase and PascalCase remove spaces and capitalize word boundaries. snake_case replaces spaces with underscores. kebab-case uses hyphens. All remove special characters.",
+  },
+  {
+    title: "Toggle Case Transformation",
+    content:
+      "Each character is individually checked: if uppercase, convert to lowercase and vice versa. Creates the alternating case effect.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Variable Naming in Code",
+    description:
+      "Convert descriptive text to camelCase, PascalCase, snake_case, or kebab-case for programming. Follow your language's naming conventions automatically.",
+  },
+  {
+    title: "Headline Formatting",
+    description:
+      "Convert all-caps headlines from documents or PDFs to proper Title Case for professional presentations and reports.",
+  },
+  {
+    title: "CSS Class Names",
+    description:
+      "Generate kebab-case class names from descriptive text. Standard convention for CSS classes and HTML attributes.",
+  },
+  {
+    title: "Database Column Names",
+    description:
+      "Convert descriptions to snake_case for SQL database column names. Widely used convention in PostgreSQL, MySQL, and other databases.",
+  },
+  {
+    title: "Email Subject Cleanup",
+    description:
+      "Fix improperly capitalized email subjects. Convert ALL CAPS to Sentence case for professional communication.",
+  },
+  {
+    title: "File Naming Standards",
+    description:
+      "Convert titles to consistent file naming formats. Use kebab-case or snake_case for URL-friendly, cross-platform compatible filenames.",
+  },
+];
 ---
 
 <TextToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/text/case-converter"
   currentTool="Case Converter"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

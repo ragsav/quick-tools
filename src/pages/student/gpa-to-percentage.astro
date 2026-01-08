@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "4.0 Scale Conversion",
+    content:
+      "US standard: Percentage = (GPA ÷ 4) × 100. A 3.5 GPA = 87.5%. This is a linear conversion.",
+  },
+  {
+    title: "10.0 Scale Conversion",
+    content:
+      "Indian standard: Percentage = GPA × 9.5. An 8.5 CGPA = 80.75%. This is the common Indian university formula.",
+  },
+  {
+    title: "5.0 Scale Conversion",
+    content:
+      "For 5-point scales: Percentage = (GPA ÷ 5) × 100. A 4.0 on 5.0 scale = 80%.",
+  },
+  {
+    title: "Scale Selection",
+    content:
+      "Choose the scale your institution uses. The tool validates that your GPA doesn't exceed the maximum for that scale.",
+  },
+  {
+    title: "Approximate Conversions",
+    content:
+      "These are approximate equivalents. Exact conversion depends on your specific institution's grading policy.",
+  },
+];
+
+const useCases = [
+  {
+    title: "International Applications",
+    description:
+      "Convert your GPA for college or job applications that require percentage format from a different country.",
+  },
+  {
+    title: "Graduate School Applications",
+    description:
+      "Many grad schools request percentage alongside GPA. Convert for application requirements.",
+  },
+  {
+    title: "Scholarship Applications",
+    description:
+      "Some scholarships have percentage cutoffs. Convert GPA to check eligibility requirements.",
+  },
+  {
+    title: "Job Applications",
+    description:
+      "Some employers request academic performance as percentage. Convert for resume or applications.",
+  },
+  {
+    title: "Study Abroad Programs",
+    description:
+      "Different countries use different scales. Convert when applying to international exchange programs.",
+  },
+  {
+    title: "Credential Evaluation",
+    description:
+      "When getting foreign credentials evaluated, understanding percent equivalents helps verify accuracy.",
+  },
+];
 ---
 
 <StudentToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/student/gpa-to-percentage"
   currentTool="GPA to Percentage"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

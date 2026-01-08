@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Binary to Text Conversion",
+    content:
+      "Base64 represents 6 bits with 1 character. 3 bytes (24 bits) become 4 Base64 characters. Padding (=) fills incomplete groups.",
+  },
+  {
+    title: "Encoding Process",
+    content:
+      "Text → UTF-8 bytes → 6-bit groups → Base64 character lookup. Uses A-Z, a-z, 0-9, +, / (64 characters).",
+  },
+  {
+    title: "Decoding Process",
+    content:
+      "Reverse the encoding: Base64 characters → 6-bit values → bytes → original data.",
+  },
+  {
+    title: "Unicode Handling",
+    content:
+      "UTF-8 encoding preserves non-ASCII characters. International text encodes/decodes correctly.",
+  },
+  {
+    title: "Browser Implementation",
+    content:
+      "Uses JavaScript's btoa()/atob() with UTF-8 wrapper for full Unicode support.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Data URIs",
+    description:
+      "Embed images directly in HTML/CSS: data:image/png;base64,... Reduces HTTP requests.",
+  },
+  {
+    title: "API Authentication",
+    description:
+      "HTTP Basic Auth uses Base64 for credentials. Format: Authorization: Basic <base64>.",
+  },
+  {
+    title: "Email Attachments",
+    description:
+      "MIME encoding uses Base64 for binary attachments. Ensures safe transmission through text-based email systems.",
+  },
+  {
+    title: "JSON Storage",
+    description:
+      "Store binary data in JSON by Base64 encoding. Common for images, files, or encrypted data.",
+  },
+  {
+    title: "URL-Safe Data",
+    description:
+      "Encode complex data for URL parameters. Use URL-safe Base64 variant if needed.",
+  },
+  {
+    title: "Configuration Files",
+    description:
+      "Encode secrets or binary configuration in text-based config files. Often combined with encryption.",
+  },
+];
 ---
 
 <DevToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/dev/base64"
   currentTool="Base64 Encoder/Decoder"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

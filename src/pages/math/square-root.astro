@@ -18,6 +18,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Square Root Definition",
+    content:
+      "√x is the number that, when multiplied by itself, equals x. √16 = 4 because 4 × 4 = 16.",
+  },
+  {
+    title: "Perfect Square Detection",
+    content:
+      "If √x is a whole number, x is a perfect square. The tool identifies perfect squares automatically.",
+  },
+  {
+    title: "Irrational Numbers",
+    content:
+      "Most square roots are irrational (non-terminating decimals). Results shown to 8 decimal places.",
+  },
+  {
+    title: "Negative Number Handling",
+    content:
+      "Square roots of negative numbers are undefined in real numbers. The tool handles this case.",
+  },
+  {
+    title: "JavaScript Math.sqrt",
+    content:
+      "Uses the built-in Math.sqrt() function for accurate floating-point calculation.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Pythagorean Theorem",
+    description:
+      "Calculate hypotenuse or side length: c = √(a² + b²). Essential for geometry.",
+  },
+  {
+    title: "Distance Formula",
+    description:
+      "Find distance between points: d = √((x₂-x₁)² + (y₂-y₁)²). Used in mapping and physics.",
+  },
+  {
+    title: "Standard Deviation",
+    description:
+      "Statistics calculations involve √(variance). Square roots are fundamental to statistics.",
+  },
+  {
+    title: "Area to Side Length",
+    description:
+      "Given square area, find side length. A 144 sq.ft room is 12 ft × 12 ft (√144 = 12).",
+  },
+  {
+    title: "Simplifying Radicals",
+    description:
+      "Identify perfect square factors to simplify. √72 = √(36 × 2) = 6√2.",
+  },
+  {
+    title: "Engineering Calculations",
+    description:
+      "Many engineering formulas involve square roots: stress, vibration, signal analysis.",
+  },
+];
 ---
 
 <MathToolLayout
@@ -26,6 +87,8 @@ const faqItems = [
   canonicalPath="/math/square-root"
   currentTool="Square Root Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">

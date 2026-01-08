@@ -17,6 +17,67 @@ const faqItems = [
       "Yes, this tool is completely free and works directly in your browser.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Simple Interest Formula",
+    content:
+      "Interest (I) = Principal (P) × Rate (R) × Time (T). Rate is expressed as a decimal (5% = 0.05), time in years.",
+  },
+  {
+    title: "Rate Conversion",
+    content:
+      "Annual percentage rate is divided by 100 to get the decimal form. 5% becomes 0.05 for the calculation.",
+  },
+  {
+    title: "Total Amount",
+    content:
+      "Total = Principal + Interest. This is what you'll have at the end of the period (or owe, for loans).",
+  },
+  {
+    title: "Time Flexibility",
+    content:
+      "Fractional years work: 0.5 = 6 months, 0.25 = 3 months. Adjust time input to match your actual period.",
+  },
+  {
+    title: "Simple vs. Compound",
+    content:
+      "Simple interest only calculates on principal. Compound interest calculates on principal + accumulated interest.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Short-Term Loans",
+    description:
+      "Calculate interest on payday loans or short-term borrowing where simple interest is commonly used.",
+  },
+  {
+    title: "Car Loans",
+    description:
+      "Some auto loans use simple interest. Calculate expected interest costs before committing.",
+  },
+  {
+    title: "Savings Bonds",
+    description:
+      "Government bonds often pay simple interest. Calculate expected returns on bond investments.",
+  },
+  {
+    title: "Educational Loans",
+    description:
+      "Student loans often accrue simple interest during school. Understand interest accumulation before graduation.",
+  },
+  {
+    title: "Personal Lending",
+    description:
+      "Calculate fair interest when lending to or borrowing from friends/family. Keep things transparent.",
+  },
+  {
+    title: "Math & Finance Education",
+    description:
+      "Learn the fundamental concept of interest before moving to compound interest calculations.",
+  },
+];
 ---
 
 <SalaryToolLayout
@@ -25,6 +86,8 @@ const faqItems = [
   canonicalPath="/salary/simple-interest"
   currentTool="Simple Interest Calculator"
   faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
 >
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
