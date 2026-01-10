@@ -1,0 +1,162 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What YAML features are generated?", answer: "Standard YAML with proper indentation for nested objects and arrays." },
+  { question: "Is the output human-readable?", answer: "Yes, the YAML output is formatted with proper indentation for readability." },
+  { question: "Are special characters handled?", answer: "Yes, strings with special characters are properly quoted." },
+];
+
+const howItWorks = [
+  { title: "Paste JSON", content: "Enter or paste your JSON data in the input editor." },
+  { title: "Configure", content: "Optionally adjust indentation settings." },
+  { title: "Convert", content: "Click Convert to transform JSON to YAML." },
+  { title: "Copy", content: "Copy the YAML output for use in your config files." },
+];
+
+const useCases = [
+  { title: "Config Files", description: "Convert JSON configs to YAML format." },
+  { title: "Docker/K8s", description: "Generate Docker Compose or Kubernetes manifests." },
+  { title: "CI/CD", description: "Create GitHub Actions or GitLab CI workflows." },
+  { title: "OpenAPI", description: "Convert JSON API specs to YAML format." },
+];
+---
+
+<JSONToolLayout
+  title="JSON to YAML Converter - Convert JSON Online"
+  description="Convert JSON data to YAML format online. Generate human-readable YAML from JSON."
+  canonicalPath="/json/json-to-yaml"
+  currentTool="JSON to YAML"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">JSON to YAML Converter</h1>
+    <p class="text-slate-500">Convert JSON data to YAML format</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Input</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 220px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to YAML</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">YAML Output</label>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 280px;"></div>
+    </div>
+
+    <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy Output</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor, outputEditor;
+
+    loadMonaco().then((monaco) => {
+      const editorOptions = {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+      };
+
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'json',
+      });
+
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'yaml',
+        readOnly: true,
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      if (!input) {
+        showStatus('❌ Please enter JSON data', true);
+        return;
+      }
+
+      try {
+        const data = JSON.parse(input);
+        const yaml = jsyaml.dump(data, { indent: 2, lineWidth: -1 });
+        outputEditor.setValue(yaml);
+        showStatus('✅ Converted successfully', false);
+      } catch (e) {
+        showStatus('❌ Error: ' + e.message, true);
+        outputEditor.setValue('');
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`{
+  "name": "My Application",
+  "version": "1.0.0",
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "mydb"
+  },
+  "features": ["authentication", "logging", "caching"],
+  "settings": {
+    "debug": true,
+    "maxConnections": 100
+  }
+}`);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+  </script>
+</JSONToolLayout>

@@ -1,0 +1,250 @@
+---
+import NetworkingToolLayout from "../../layouts/NetworkingToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What is a subnet calculator?",
+    answer: "A subnet calculator helps you calculate network addresses, broadcast addresses, and host ranges from an IP address and CIDR notation or subnet mask.",
+  },
+  {
+    question: "What is CIDR notation?",
+    answer: "CIDR (Classless Inter-Domain Routing) notation represents an IP address and its network prefix, like 192.168.1.0/24 where /24 indicates the first 24 bits are the network portion.",
+  },
+  {
+    question: "What is a subnet mask?",
+    answer: "A subnet mask defines which portion of an IP address is the network and which is the host. For example, 255.255.255.0 means the first 3 octets are network bits.",
+  },
+];
+
+const howItWorks = [
+  {
+    title: "IP Address Input",
+    content: "Enter any valid IPv4 address in dotted decimal format (e.g., 192.168.1.100).",
+  },
+  {
+    title: "CIDR/Subnet Selection",
+    content: "Choose a CIDR prefix length (/0 to /32) or enter a subnet mask. The calculator converts between them.",
+  },
+  {
+    title: "Network Calculation",
+    content: "Network address is calculated by ANDing the IP with the subnet mask. Broadcast address has all host bits set to 1.",
+  },
+  {
+    title: "Host Range",
+    content: "First usable host is network address + 1, last usable is broadcast - 1. Total hosts = 2^(32-CIDR) - 2.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Network Planning",
+    description: "Design network segments and allocate IP address ranges for different departments or VLANs.",
+  },
+  {
+    title: "Troubleshooting",
+    description: "Verify if two IP addresses are on the same network segment for connectivity issues.",
+  },
+  {
+    title: "Firewall Rules",
+    description: "Calculate correct CIDR blocks for firewall ACLs and security group configurations.",
+  },
+  {
+    title: "Cloud Infrastructure",
+    description: "Plan VPC subnets and peering configurations in AWS, Azure, or GCP.",
+  },
+];
+---
+
+<NetworkingToolLayout
+  title="Subnet Calculator - Calculate Network Address, Host Range"
+  description="Free online subnet calculator. Calculate network address, broadcast, host range, and usable IPs from CIDR notation."
+  canonicalPath="/networking/subnet-calculator"
+  currentTool="Subnet Calculator"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Subnet Calculator
+    </h1>
+    <p class="text-slate-500">Calculate network details from IP address and CIDR/subnet mask.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label for="ipAddress" class="block font-medium text-slate-700 mb-1.5 text-sm">IP Address</label>
+        <input
+          type="text"
+          id="ipAddress"
+          placeholder="192.168.1.100"
+          class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono"
+        />
+      </div>
+      <div>
+        <label for="cidr" class="block font-medium text-slate-700 mb-1.5 text-sm">CIDR / Prefix Length</label>
+        <select
+          id="cidr"
+          class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none"
+        >
+          <option value="8">/8 (255.0.0.0) - 16,777,214 hosts</option>
+          <option value="16">/16 (255.255.0.0) - 65,534 hosts</option>
+          <option value="20">/20 (255.255.240.0) - 4,094 hosts</option>
+          <option value="21">/21 (255.255.248.0) - 2,046 hosts</option>
+          <option value="22">/22 (255.255.252.0) - 1,022 hosts</option>
+          <option value="23">/23 (255.255.254.0) - 510 hosts</option>
+          <option value="24" selected>/24 (255.255.255.0) - 254 hosts</option>
+          <option value="25">/25 (255.255.255.128) - 126 hosts</option>
+          <option value="26">/26 (255.255.255.192) - 62 hosts</option>
+          <option value="27">/27 (255.255.255.224) - 30 hosts</option>
+          <option value="28">/28 (255.255.255.240) - 14 hosts</option>
+          <option value="29">/29 (255.255.255.248) - 6 hosts</option>
+          <option value="30">/30 (255.255.255.252) - 2 hosts</option>
+          <option value="31">/31 (255.255.255.254) - 2 hosts (point-to-point)</option>
+          <option value="32">/32 (255.255.255.255) - 1 host</option>
+        </select>
+      </div>
+    </div>
+
+    <button
+      onclick="calculate()"
+      class="btn-primary px-6 py-2 font-semibold text-white rounded mb-6"
+    >Calculate</button>
+
+    <div id="result" class="hidden">
+      <h3 class="font-semibold text-slate-900 mb-3">Results</h3>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Network Address</div>
+          <div id="networkAddress" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Broadcast Address</div>
+          <div id="broadcastAddress" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">First Usable Host</div>
+          <div id="firstHost" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Last Usable Host</div>
+          <div id="lastHost" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Subnet Mask</div>
+          <div id="subnetMask" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Wildcard Mask</div>
+          <div id="wildcardMask" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Total Hosts</div>
+          <div id="totalHosts" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Usable Hosts</div>
+          <div id="usableHosts" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded p-3 sm:col-span-2">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">CIDR Notation</div>
+          <div id="cidrNotation" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="error" class="hidden text-red-600 mt-4"></div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">About Subnet Calculator</h2>
+    <p class="text-slate-600">
+      A subnet calculator divides a network into smaller subnetworks (subnets). 
+      This helps in efficient IP address allocation, improved network security, 
+      and reduced broadcast traffic. Enter any IP address and select a CIDR prefix 
+      to calculate network details instantly.
+    </p>
+  </section>
+
+  <script is:inline>
+    function ipToInt(ip) {
+      const parts = ip.split('.').map(Number);
+      return ((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0;
+    }
+
+    function intToIp(int) {
+      return [
+        (int >>> 24) & 255,
+        (int >>> 16) & 255,
+        (int >>> 8) & 255,
+        int & 255
+      ].join('.');
+    }
+
+    function isValidIp(ip) {
+      const parts = ip.split('.');
+      if (parts.length !== 4) return false;
+      return parts.every(p => {
+        const num = parseInt(p, 10);
+        return !isNaN(num) && num >= 0 && num <= 255 && p === num.toString();
+      });
+    }
+
+    function calculate() {
+      const ipInput = document.getElementById('ipAddress').value.trim();
+      const cidr = parseInt(document.getElementById('cidr').value, 10);
+      const resultDiv = document.getElementById('result');
+      const errorDiv = document.getElementById('error');
+
+      errorDiv.classList.add('hidden');
+      resultDiv.classList.add('hidden');
+
+      if (!isValidIp(ipInput)) {
+        errorDiv.textContent = 'Please enter a valid IPv4 address (e.g., 192.168.1.100)';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const ipInt = ipToInt(ipInput);
+      const maskInt = cidr === 0 ? 0 : (0xFFFFFFFF << (32 - cidr)) >>> 0;
+      const wildcardInt = ~maskInt >>> 0;
+      const networkInt = (ipInt & maskInt) >>> 0;
+      const broadcastInt = (networkInt | wildcardInt) >>> 0;
+
+      const totalHosts = Math.pow(2, 32 - cidr);
+      let usableHosts, firstHost, lastHost;
+
+      if (cidr === 32) {
+        usableHosts = 1;
+        firstHost = intToIp(networkInt);
+        lastHost = intToIp(networkInt);
+      } else if (cidr === 31) {
+        usableHosts = 2;
+        firstHost = intToIp(networkInt);
+        lastHost = intToIp(broadcastInt);
+      } else {
+        usableHosts = totalHosts - 2;
+        firstHost = intToIp(networkInt + 1);
+        lastHost = intToIp(broadcastInt - 1);
+      }
+
+      document.getElementById('networkAddress').textContent = intToIp(networkInt);
+      document.getElementById('broadcastAddress').textContent = intToIp(broadcastInt);
+      document.getElementById('firstHost').textContent = firstHost;
+      document.getElementById('lastHost').textContent = lastHost;
+      document.getElementById('subnetMask').textContent = intToIp(maskInt);
+      document.getElementById('wildcardMask').textContent = intToIp(wildcardInt);
+      document.getElementById('totalHosts').textContent = totalHosts.toLocaleString();
+      document.getElementById('usableHosts').textContent = usableHosts.toLocaleString();
+      document.getElementById('cidrNotation').textContent = `${intToIp(networkInt)}/${cidr}`;
+
+      resultDiv.classList.remove('hidden');
+    }
+
+    // Calculate on Enter key
+    document.getElementById('ipAddress').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') calculate();
+    });
+  </script>
+</NetworkingToolLayout>

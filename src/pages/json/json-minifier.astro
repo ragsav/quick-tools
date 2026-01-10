@@ -1,0 +1,150 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What does minifying do?", answer: "Removes all whitespace, line breaks, and indentation to create the smallest possible JSON string." },
+  { question: "Why minify JSON?", answer: "Smaller file size for faster network transfers and reduced storage requirements." },
+  { question: "Is the data structure changed?", answer: "No, only formatting is removed. The data structure and values remain identical." },
+];
+
+const howItWorks = [
+  { title: "Paste JSON", content: "Enter or paste your formatted/beautified JSON." },
+  { title: "Validate", content: "The tool validates your JSON before minifying." },
+  { title: "Minify", content: "Click Minify to remove all unnecessary whitespace." },
+  { title: "Copy", content: "Copy the minified JSON for production use." },
+];
+
+const useCases = [
+  { title: "API Payloads", description: "Reduce payload size for REST API requests and responses." },
+  { title: "Embedded JSON", description: "Minimize JSON embedded in HTML or JavaScript files." },
+  { title: "Database Storage", description: "Store JSON in databases with minimal space usage." },
+  { title: "CDN Delivery", description: "Optimize JSON configuration files for CDN delivery." },
+];
+---
+
+<JSONToolLayout
+  title="JSON Minifier - Compress JSON Online"
+  description="Minify and compress JSON by removing whitespace. Free online JSON minifier tool."
+  canonicalPath="/json/json-minifier"
+  currentTool="JSON Minifier"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">JSON Minifier</h1>
+    <p class="text-slate-500">Minify JSON by removing all whitespace</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">Input JSON</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 250px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="minifyBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Minify</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <div class="flex justify-between items-center mb-1.5">
+        <label class="block font-medium text-slate-700 text-sm">Output</label>
+        <span id="sizeInfo" class="text-xs text-slate-500"></span>
+      </div>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 150px;"></div>
+    </div>
+
+    <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy Output</button>
+  </div>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor, outputEditor;
+
+    loadMonaco().then((monaco) => {
+      const editorOptions = {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+      };
+
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        ...editorOptions,
+        value: '{\n  "name": "John",\n  "age": 30,\n  "city": "New York"\n}',
+        language: 'json',
+      });
+
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'json',
+        readOnly: true,
+        wordWrap: 'on',
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    document.getElementById('minifyBtn').addEventListener('click', () => {
+      try {
+        const input = inputEditor.getValue();
+        const parsed = JSON.parse(input);
+        const minified = JSON.stringify(parsed);
+        outputEditor.setValue(minified);
+        
+        const originalSize = new Blob([input]).size;
+        const minifiedSize = new Blob([minified]).size;
+        const savings = ((1 - minifiedSize / originalSize) * 100).toFixed(1);
+        
+        document.getElementById('sizeInfo').textContent = `${originalSize} → ${minifiedSize} bytes (${savings}% smaller)`;
+        showStatus('✅ Minified successfully', false);
+      } catch (e) {
+        showStatus('❌ Invalid JSON: ' + e.message, true);
+        outputEditor.setValue('');
+        document.getElementById('sizeInfo').textContent = '';
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+      document.getElementById('sizeInfo').textContent = '';
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+  </script>
+</JSONToolLayout>

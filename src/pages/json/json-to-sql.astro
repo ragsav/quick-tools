@@ -1,0 +1,205 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What SQL is generated?", answer: "INSERT statements with proper quoting and escaping for your selected database." },
+  { question: "Which databases are supported?", answer: "MySQL, PostgreSQL, and SQLite syntax options are available." },
+  { question: "Are special characters escaped?", answer: "Yes, strings are properly escaped to prevent SQL injection." },
+];
+
+const howItWorks = [
+  { title: "Paste JSON", content: "Enter a JSON array of objects." },
+  { title: "Configure", content: "Set table name and select database type." },
+  { title: "Convert", content: "Click Convert to generate INSERT statements." },
+  { title: "Copy", content: "Copy the SQL for use in your database." },
+];
+
+const useCases = [
+  { title: "Data Seeding", description: "Generate INSERT statements for database seeding." },
+  { title: "Migration", description: "Convert JSON exports to SQL for import." },
+  { title: "Testing", description: "Create test data INSERT statements." },
+  { title: "Backup", description: "Generate SQL from JSON data backups." },
+];
+---
+
+<JSONToolLayout
+  title="JSON to SQL Converter - Generate INSERT Statements"
+  description="Convert JSON array to SQL INSERT statements online. Supports MySQL, PostgreSQL, and SQLite."
+  canonicalPath="/json/json-to-sql"
+  currentTool="JSON to SQL"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">JSON to SQL Converter</h1>
+    <p class="text-slate-500">Generate SQL INSERT statements from JSON</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Input (array of objects)</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 200px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-4 mb-4 items-end">
+      <div>
+        <label class="block text-sm text-slate-600 mb-1">Table Name</label>
+        <input type="text" id="tableName" value="my_table" class="px-3 py-2 border border-slate-300 rounded bg-white text-sm w-48" />
+      </div>
+      <div>
+        <label class="block text-sm text-slate-600 mb-1">Database</label>
+        <select id="dbType" class="px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+          <option value="mysql">MySQL</option>
+          <option value="postgres">PostgreSQL</option>
+          <option value="sqlite">SQLite</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to SQL</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">SQL Output</label>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 250px;"></div>
+    </div>
+
+    <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy Output</button>
+  </div>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor, outputEditor;
+
+    loadMonaco().then((monaco) => {
+      const editorOptions = {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+      };
+
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'json',
+      });
+
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'sql',
+        readOnly: true,
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    function escapeSQL(val, dbType) {
+      if (val === null || val === undefined) return 'NULL';
+      if (typeof val === 'boolean') return val ? 'TRUE' : 'FALSE';
+      if (typeof val === 'number') return String(val);
+      if (typeof val === 'object') val = JSON.stringify(val);
+      
+      const escaped = String(val).replace(/'/g, "''");
+      return `'${escaped}'`;
+    }
+
+    function quoteIdentifier(name, dbType) {
+      if (dbType === 'mysql') return '`' + name + '`';
+      if (dbType === 'postgres') return '"' + name + '"';
+      return name; // SQLite accepts unquoted
+    }
+
+    function jsonToSQL(data, tableName, dbType) {
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error('Input must be a non-empty array of objects');
+      }
+
+      const statements = [];
+      const keys = [...new Set(data.flatMap(obj => Object.keys(obj)))];
+      const quotedTable = quoteIdentifier(tableName, dbType);
+      const quotedKeys = keys.map(k => quoteIdentifier(k, dbType)).join(', ');
+
+      for (const obj of data) {
+        const values = keys.map(k => escapeSQL(obj[k], dbType)).join(', ');
+        statements.push(`INSERT INTO ${quotedTable} (${quotedKeys}) VALUES (${values});`);
+      }
+
+      return statements.join('\n');
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      if (!input) {
+        showStatus('❌ Please enter JSON data', true);
+        return;
+      }
+
+      try {
+        const data = JSON.parse(input);
+        const tableName = document.getElementById('tableName').value.trim() || 'my_table';
+        const dbType = document.getElementById('dbType').value;
+        
+        const sql = jsonToSQL(data, tableName, dbType);
+        outputEditor.setValue(sql);
+        showStatus(`✅ Generated ${data.length} INSERT statement(s)`, false);
+      } catch (e) {
+        showStatus('❌ Error: ' + e.message, true);
+        outputEditor.setValue('');
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`[
+  {"name": "John Doe", "age": 30, "email": "john@example.com", "active": true},
+  {"name": "Jane Smith", "age": 25, "email": "jane@example.com", "active": true},
+  {"name": "Bob Johnson", "age": 35, "email": "bob@example.com", "active": false}
+]`);
+      document.getElementById('tableName').value = 'users';
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+  </script>
+</JSONToolLayout>

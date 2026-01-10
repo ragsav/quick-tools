@@ -1,0 +1,206 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What Markdown tables are supported?", answer: "Standard GitHub-flavored Markdown tables with pipe separators." },
+  { question: "Are headers required?", answer: "Yes, the first row is used as object keys in the JSON output." },
+  { question: "Can I convert multiple tables?", answer: "Yes, each table in the input becomes a separate array in the output." },
+];
+
+const howItWorks = [
+  { title: "Paste Markdown", content: "Enter or paste Markdown containing table(s)." },
+  { title: "Parse", content: "The tool finds and parses Markdown table syntax." },
+  { title: "Convert", content: "Tables are converted to JSON arrays of objects." },
+  { title: "Copy", content: "Copy the JSON output for use in your application." },
+];
+
+const useCases = [
+  { title: "Documentation", description: "Convert Markdown docs to JSON for processing." },
+  { title: "Data Extraction", description: "Extract tabular data from README files." },
+  { title: "Migration", description: "Move data from Markdown docs to databases." },
+  { title: "API Testing", description: "Convert Markdown examples to JSON test data." },
+];
+---
+
+<JSONToolLayout
+  title="Markdown to JSON Converter - Parse Markdown Tables"
+  description="Convert Markdown tables to JSON format online. Parse GitHub-flavored Markdown tables."
+  canonicalPath="/json/markdown-to-json"
+  currentTool="Markdown to JSON"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Markdown to JSON Converter</h1>
+    <p class="text-slate-500">Convert Markdown tables to JSON format</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">Markdown Input</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 220px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to JSON</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Output</label>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 250px;"></div>
+    </div>
+
+    <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy Output</button>
+  </div>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor, outputEditor;
+
+    loadMonaco().then((monaco) => {
+      const editorOptions = {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+      };
+
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'markdown',
+      });
+
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'json',
+        readOnly: true,
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    function parseMarkdownTable(md) {
+      const lines = md.trim().split('\n');
+      const tables = [];
+      let currentTable = [];
+      let headers = [];
+      let inTable = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        
+        // Check if line is a table row
+        if (line.startsWith('|') && line.endsWith('|')) {
+          const cells = line.slice(1, -1).split('|').map(c => c.trim());
+          
+          // Skip separator row (contains only dashes and colons)
+          if (cells.every(c => /^[-:]+$/.test(c))) continue;
+          
+          if (!inTable) {
+            // First row is header
+            headers = cells;
+            inTable = true;
+          } else {
+            // Data row
+            const obj = {};
+            headers.forEach((h, idx) => {
+              let val = cells[idx] || '';
+              if (!isNaN(val) && val !== '') val = Number(val);
+              obj[h] = val;
+            });
+            currentTable.push(obj);
+          }
+        } else if (inTable) {
+          // End of table
+          if (currentTable.length > 0) {
+            tables.push(currentTable);
+          }
+          currentTable = [];
+          headers = [];
+          inTable = false;
+        }
+      }
+
+      // Don't forget last table
+      if (currentTable.length > 0) {
+        tables.push(currentTable);
+      }
+
+      if (tables.length === 0) {
+        throw new Error('No Markdown tables found');
+      }
+
+      return tables.length === 1 ? tables[0] : tables;
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      if (!input) {
+        showStatus('❌ Please enter Markdown data', true);
+        return;
+      }
+
+      try {
+        const result = parseMarkdownTable(input);
+        outputEditor.setValue(JSON.stringify(result, null, 2));
+        const count = Array.isArray(result[0]) ? result.length + ' tables' : result.length + ' rows';
+        showStatus(`✅ Converted ${count}`, false);
+      } catch (e) {
+        showStatus('❌ Error: ' + e.message, true);
+        outputEditor.setValue('');
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`| Name | Age | City |
+|------|-----|------|
+| John Doe | 30 | New York |
+| Jane Smith | 25 | Los Angeles |
+| Bob Johnson | 35 | Chicago |`);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+  </script>
+</JSONToolLayout>

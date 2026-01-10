@@ -1,0 +1,193 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What Excel formats are supported?", answer: "Both .xlsx and .xls files are supported." },
+  { question: "How are multiple sheets handled?", answer: "You can select which sheet to convert from a dropdown after uploading." },
+  { question: "Is my file uploaded to a server?", answer: "No, all processing happens in your browser. Your file never leaves your device." },
+];
+
+const howItWorks = [
+  { title: "Upload File", content: "Select an Excel file (.xlsx or .xls) from your computer." },
+  { title: "Select Sheet", content: "Choose which sheet to convert if the file has multiple sheets." },
+  { title: "Convert", content: "Click Convert to transform the spreadsheet to JSON." },
+  { title: "Copy/Download", content: "Copy the JSON or download as a file." },
+];
+
+const useCases = [
+  { title: "Data Import", description: "Convert Excel reports to JSON for database import." },
+  { title: "API Integration", description: "Transform spreadsheets into JSON for web applications." },
+  { title: "Automation", description: "Convert Excel data for use in automated workflows." },
+  { title: "Analysis", description: "Prepare spreadsheet data for JavaScript processing." },
+];
+---
+
+<JSONToolLayout
+  title="Excel to JSON Converter - Convert XLSX Online"
+  description="Convert Excel spreadsheets to JSON format online. Supports .xlsx and .xls files with multiple sheet support."
+  canonicalPath="/json/excel-to-json"
+  currentTool="Excel to JSON"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Excel to JSON Converter</h1>
+    <p class="text-slate-500">Convert Excel spreadsheets (.xlsx, .xls) to JSON</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">Upload Excel File</label>
+      <input type="file" id="fileInput" accept=".xlsx,.xls" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+    </div>
+
+    <div id="sheetSelector" class="mb-4 hidden">
+      <label class="block text-sm text-slate-600 mb-1">Select Sheet</label>
+      <select id="sheetSelect" class="px-3 py-2 border border-slate-300 rounded bg-white text-sm"></select>
+    </div>
+
+    <div class="flex items-center gap-2 mb-4">
+      <input type="checkbox" id="hasHeader" checked class="w-4 h-4" />
+      <label for="hasHeader" class="text-sm text-slate-600">First row is header</label>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded" disabled>Convert to JSON</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Output</label>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 300px;"></div>
+    </div>
+
+    <div class="flex gap-3">
+      <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy</button>
+      <button id="downloadBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">⬇️ Download JSON</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let outputEditor, workbook;
+
+    loadMonaco().then((monaco) => {
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+        value: '',
+        language: 'json',
+        readOnly: true,
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        try {
+          workbook = XLSX.read(evt.target.result, { type: 'binary' });
+          const sheetSelect = document.getElementById('sheetSelect');
+          sheetSelect.innerHTML = workbook.SheetNames.map(name => 
+            `<option value="${name}">${name}</option>`
+          ).join('');
+          
+          if (workbook.SheetNames.length > 1) {
+            document.getElementById('sheetSelector').classList.remove('hidden');
+          } else {
+            document.getElementById('sheetSelector').classList.add('hidden');
+          }
+          
+          document.getElementById('convertBtn').disabled = false;
+          showStatus(`✅ Loaded: ${file.name} (${workbook.SheetNames.length} sheet${workbook.SheetNames.length > 1 ? 's' : ''})`, false);
+        } catch (err) {
+          showStatus('❌ Error reading file: ' + err.message, true);
+        }
+      };
+      reader.readAsBinaryString(file);
+    });
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      if (!workbook) {
+        showStatus('❌ Please upload a file first', true);
+        return;
+      }
+
+      try {
+        const sheetName = document.getElementById('sheetSelect').value || workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const hasHeader = document.getElementById('hasHeader').checked;
+        
+        const json = XLSX.utils.sheet_to_json(sheet, { header: hasHeader ? undefined : 1 });
+        
+        outputEditor.setValue(JSON.stringify(json, null, 2));
+        showStatus(`✅ Converted ${json.length} rows from "${sheetName}"`, false);
+      } catch (err) {
+        showStatus('❌ Error: ' + err.message, true);
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      document.getElementById('fileInput').value = '';
+      document.getElementById('sheetSelector').classList.add('hidden');
+      document.getElementById('convertBtn').disabled = true;
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+      workbook = null;
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        const blob = new Blob([output], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'data.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    });
+  </script>
+</JSONToolLayout>

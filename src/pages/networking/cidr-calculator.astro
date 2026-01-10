@@ -1,0 +1,331 @@
+---
+import NetworkingToolLayout from "../../layouts/NetworkingToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What is CIDR notation?",
+    answer: "CIDR (Classless Inter-Domain Routing) notation represents IP ranges using a prefix, like 192.168.0.0/24, where /24 indicates the network has 256 addresses.",
+  },
+  {
+    question: "How do I calculate CIDR from IP range?",
+    answer: "Enter the first and last IP of your range to find the CIDR block(s) that cover it. The tool calculates the optimal prefix length.",
+  },
+  {
+    question: "What is IP range aggregation?",
+    answer: "Aggregation (supernetting) combines multiple smaller networks into a larger one to reduce routing table entries.",
+  },
+];
+
+const howItWorks = [
+  {
+    title: "Range to CIDR",
+    content: "Calculates the CIDR blocks needed to exactly cover an IP range from start to end.",
+  },
+  {
+    title: "CIDR Expansion",
+    content: "Lists all IP addresses within a CIDR block (limited to /24 or smaller for display).",
+  },
+  {
+    title: "Range Calculation",
+    content: "Uses binary math to find the largest power-of-2 aligned blocks that fit within the range.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Firewall Rules",
+    description: "Convert IP ranges to CIDR blocks for security group and ACL configurations.",
+  },
+  {
+    title: "Route Summarization",
+    description: "Aggregate multiple routes into fewer CIDR blocks to reduce routing table size.",
+  },
+  {
+    title: "IP Allocation",
+    description: "Plan and document IP address assignments using CIDR notation.",
+  },
+  {
+    title: "Cloud Networking",
+    description: "Define VPC subnets, peering ranges, and security policies in AWS/Azure/GCP.",
+  },
+];
+---
+
+<NetworkingToolLayout
+  title="CIDR Calculator - IP Range to CIDR Converter"
+  description="Free CIDR calculator. Convert IP ranges to CIDR notation, expand CIDR blocks, and calculate network details."
+  canonicalPath="/networking/cidr-calculator"
+  currentTool="CIDR Calculator"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      CIDR Calculator
+    </h1>
+    <p class="text-slate-500">Convert IP ranges to CIDR and expand CIDR blocks.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <!-- Tab Navigation -->
+    <div class="flex gap-2 mb-6 border-b border-slate-200 pb-3">
+      <button id="tabRangeToCidr" onclick="switchTab('rangeToCidr')" class="px-4 py-2 text-sm font-medium rounded-t bg-cyan-600 text-white">
+        Range → CIDR
+      </button>
+      <button id="tabCidrExpand" onclick="switchTab('cidrExpand')" class="px-4 py-2 text-sm font-medium rounded-t bg-slate-200 text-slate-700">
+        Expand CIDR
+      </button>
+    </div>
+
+    <!-- Range to CIDR Panel -->
+    <div id="panelRangeToCidr">
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="startIp" class="block font-medium text-slate-700 mb-1.5 text-sm">Start IP</label>
+          <input
+            type="text"
+            id="startIp"
+            placeholder="192.168.1.0"
+            class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono"
+          />
+        </div>
+        <div>
+          <label for="endIp" class="block font-medium text-slate-700 mb-1.5 text-sm">End IP</label>
+          <input
+            type="text"
+            id="endIp"
+            placeholder="192.168.1.255"
+            class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono"
+          />
+        </div>
+      </div>
+      <button onclick="rangeToCidr()" class="btn-primary px-6 py-2 font-semibold text-white rounded mb-4">
+        Calculate CIDR
+      </button>
+      <div id="rangeToCidrResult" class="hidden">
+        <h3 class="font-semibold text-slate-900 mb-3">CIDR Blocks</h3>
+        <div id="cidrBlocks" class="space-y-2"></div>
+      </div>
+    </div>
+
+    <!-- Expand CIDR Panel -->
+    <div id="panelCidrExpand" class="hidden">
+      <div class="mb-4">
+        <label for="cidrInput" class="block font-medium text-slate-700 mb-1.5 text-sm">CIDR Block</label>
+        <input
+          type="text"
+          id="cidrInput"
+          placeholder="192.168.1.0/24"
+          class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono"
+        />
+      </div>
+      <button onclick="expandCidr()" class="btn-primary px-6 py-2 font-semibold text-white rounded mb-4">
+        Expand CIDR
+      </button>
+      <div id="expandResult" class="hidden">
+        <h3 class="font-semibold text-slate-900 mb-3">CIDR Details</h3>
+        <div class="grid sm:grid-cols-2 gap-3 mb-4">
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Network Address</div>
+            <div id="expandNetwork" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Broadcast Address</div>
+            <div id="expandBroadcast" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">IP Range</div>
+            <div id="expandRange" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Total IPs</div>
+            <div id="expandTotal" class="font-mono text-slate-900">-</div>
+          </div>
+        </div>
+        <div id="ipListContainer" class="hidden">
+          <h4 class="font-medium text-slate-700 mb-2 text-sm">IP Addresses</h4>
+          <div id="ipList" class="bg-white border border-slate-200 rounded p-3 font-mono text-sm max-h-48 overflow-y-auto"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="error" class="hidden text-red-600 mt-4"></div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">CIDR Reference</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-slate-100">
+            <th class="border border-slate-200 px-3 py-2 text-left">CIDR</th>
+            <th class="border border-slate-200 px-3 py-2 text-left">Subnet Mask</th>
+            <th class="border border-slate-200 px-3 py-2 text-left">Total IPs</th>
+            <th class="border border-slate-200 px-3 py-2 text-left">Usable</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="border border-slate-200 px-3 py-2">/32</td><td class="border border-slate-200 px-3 py-2">255.255.255.255</td><td class="border border-slate-200 px-3 py-2">1</td><td class="border border-slate-200 px-3 py-2">1</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">/30</td><td class="border border-slate-200 px-3 py-2">255.255.255.252</td><td class="border border-slate-200 px-3 py-2">4</td><td class="border border-slate-200 px-3 py-2">2</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">/28</td><td class="border border-slate-200 px-3 py-2">255.255.255.240</td><td class="border border-slate-200 px-3 py-2">16</td><td class="border border-slate-200 px-3 py-2">14</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">/24</td><td class="border border-slate-200 px-3 py-2">255.255.255.0</td><td class="border border-slate-200 px-3 py-2">256</td><td class="border border-slate-200 px-3 py-2">254</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">/16</td><td class="border border-slate-200 px-3 py-2">255.255.0.0</td><td class="border border-slate-200 px-3 py-2">65,536</td><td class="border border-slate-200 px-3 py-2">65,534</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">/8</td><td class="border border-slate-200 px-3 py-2">255.0.0.0</td><td class="border border-slate-200 px-3 py-2">16,777,216</td><td class="border border-slate-200 px-3 py-2">16,777,214</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script is:inline>
+    function ipToInt(ip) {
+      const parts = ip.split('.').map(Number);
+      return ((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0;
+    }
+
+    function intToIp(int) {
+      return [
+        (int >>> 24) & 255,
+        (int >>> 16) & 255,
+        (int >>> 8) & 255,
+        int & 255
+      ].join('.');
+    }
+
+    function isValidIp(ip) {
+      const parts = ip.split('.');
+      if (parts.length !== 4) return false;
+      return parts.every(p => {
+        const num = parseInt(p, 10);
+        return !isNaN(num) && num >= 0 && num <= 255 && p === num.toString();
+      });
+    }
+
+    function switchTab(tab) {
+      const tabs = ['rangeToCidr', 'cidrExpand'];
+      tabs.forEach(t => {
+        document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.remove('bg-cyan-600', 'text-white');
+        document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('bg-slate-200', 'text-slate-700');
+        document.getElementById('panel' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
+      });
+      document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('bg-slate-200', 'text-slate-700');
+      document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('bg-cyan-600', 'text-white');
+      document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+      document.getElementById('error').classList.add('hidden');
+    }
+
+    function rangeToCidr() {
+      const startIp = document.getElementById('startIp').value.trim();
+      const endIp = document.getElementById('endIp').value.trim();
+      const resultDiv = document.getElementById('rangeToCidrResult');
+      const errorDiv = document.getElementById('error');
+
+      errorDiv.classList.add('hidden');
+      resultDiv.classList.add('hidden');
+
+      if (!isValidIp(startIp) || !isValidIp(endIp)) {
+        errorDiv.textContent = 'Please enter valid IPv4 addresses.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const startInt = ipToInt(startIp);
+      const endInt = ipToInt(endIp);
+
+      if (startInt > endInt) {
+        errorDiv.textContent = 'Start IP must be less than or equal to End IP.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const cidrBlocks = [];
+      let current = startInt;
+
+      while (current <= endInt) {
+        let maxSize = 32;
+        while (maxSize > 0) {
+          const mask = (0xFFFFFFFF << (32 - maxSize + 1)) >>> 0;
+          const networkAddr = (current & mask) >>> 0;
+          if (networkAddr === current) {
+            const broadcast = (current | (~mask >>> 0)) >>> 0;
+            if (broadcast <= endInt) {
+              maxSize--;
+            } else {
+              break;
+            }
+          } else {
+            break;
+          }
+        }
+
+        const mask = (0xFFFFFFFF << (32 - maxSize)) >>> 0;
+        const broadcast = (current | (~mask >>> 0)) >>> 0;
+        cidrBlocks.push(`${intToIp(current)}/${maxSize}`);
+        current = broadcast + 1;
+        if (current === 0) break; // Overflow protection
+      }
+
+      const blocksContainer = document.getElementById('cidrBlocks');
+      blocksContainer.innerHTML = cidrBlocks.map(cidr => `
+        <div class="bg-white border border-slate-200 rounded p-3 flex justify-between items-center">
+          <span class="font-mono text-slate-900">${cidr}</span>
+          <button onclick="navigator.clipboard.writeText('${cidr}')" class="text-slate-400 hover:text-slate-600 text-sm">📋</button>
+        </div>
+      `).join('');
+
+      resultDiv.classList.remove('hidden');
+    }
+
+    function expandCidr() {
+      const cidrInput = document.getElementById('cidrInput').value.trim();
+      const resultDiv = document.getElementById('expandResult');
+      const errorDiv = document.getElementById('error');
+
+      errorDiv.classList.add('hidden');
+      resultDiv.classList.add('hidden');
+
+      const match = cidrInput.match(/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\/(\d{1,2})$/);
+      if (!match) {
+        errorDiv.textContent = 'Please enter a valid CIDR block (e.g., 192.168.1.0/24).';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const ip = match[1];
+      const cidr = parseInt(match[2], 10);
+
+      if (!isValidIp(ip) || cidr < 0 || cidr > 32) {
+        errorDiv.textContent = 'Invalid IP address or CIDR prefix (0-32).';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const ipInt = ipToInt(ip);
+      const maskInt = cidr === 0 ? 0 : (0xFFFFFFFF << (32 - cidr)) >>> 0;
+      const networkInt = (ipInt & maskInt) >>> 0;
+      const broadcastInt = (networkInt | (~maskInt >>> 0)) >>> 0;
+      const totalIps = Math.pow(2, 32 - cidr);
+
+      document.getElementById('expandNetwork').textContent = intToIp(networkInt);
+      document.getElementById('expandBroadcast').textContent = intToIp(broadcastInt);
+      document.getElementById('expandRange').textContent = `${intToIp(networkInt)} - ${intToIp(broadcastInt)}`;
+      document.getElementById('expandTotal').textContent = totalIps.toLocaleString();
+
+      const ipListContainer = document.getElementById('ipListContainer');
+      const ipList = document.getElementById('ipList');
+
+      if (cidr >= 24) {
+        const ips = [];
+        for (let i = networkInt; i <= broadcastInt; i++) {
+          ips.push(intToIp(i));
+        }
+        ipList.innerHTML = ips.join('<br>');
+        ipListContainer.classList.remove('hidden');
+      } else {
+        ipListContainer.classList.add('hidden');
+      }
+
+      resultDiv.classList.remove('hidden');
+    }
+  </script>
+</NetworkingToolLayout>

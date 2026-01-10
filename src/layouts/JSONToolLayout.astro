@@ -1,0 +1,94 @@
+---
+/**
+ * JSON Tools Layout
+ * Extends ToolLayout with JSON cluster-specific configuration.
+ */
+
+import ToolLayout from "./ToolLayout.astro";
+import { CONSTANT } from "../constants";
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface HowItWorksItem {
+  title?: string;
+  content: string;
+}
+
+interface UseCaseItem {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  currentTool?: string;
+  faqItems?: FAQItem[];
+  howItWorks?: HowItWorksItem[];
+  useCases?: UseCaseItem[];
+}
+
+const {
+  title,
+  description,
+  canonicalPath,
+  currentTool = "",
+  faqItems = [],
+  howItWorks = [],
+  useCases = [],
+} = Astro.props;
+
+const cluster = {
+  name: "JSON Tools",
+  icon: "📋",
+  color: "#10b981",
+  url: "/json/",
+};
+
+const allTools = [
+  { name: "JSON Formatter", url: "/json/json-formatter" },
+  { name: "JSON Minifier", url: "/json/json-minifier" },
+  { name: "JSON Validator", url: "/json/json-validator" },
+  { name: "CSV to JSON", url: "/json/csv-to-json" },
+  { name: "Excel to JSON", url: "/json/excel-to-json" },
+  { name: "HTML to JSON", url: "/json/html-to-json" },
+  { name: "SQL to JSON", url: "/json/sql-to-json" },
+  { name: "XML to JSON", url: "/json/xml-to-json" },
+  { name: "YAML to JSON", url: "/json/yaml-to-json" },
+  { name: "Markdown to JSON", url: "/json/markdown-to-json" },
+  { name: "JSON to CSV", url: "/json/json-to-csv" },
+  { name: "JSON to Excel", url: "/json/json-to-excel" },
+  { name: "JSON to XML", url: "/json/json-to-xml" },
+  { name: "JSON to YAML", url: "/json/json-to-yaml" },
+  { name: "JSON to SQL", url: "/json/json-to-sql" },
+  { name: "JSON to HTML Table", url: "/json/json-to-html" },
+  { name: "JSON to Markdown", url: "/json/json-to-markdown" },
+  { name: "JSON to TypeScript", url: "/json/json-to-typescript" },
+  { name: "JSON to PHP Array", url: "/json/json-to-php" },
+  { name: "JSON to JSONLines", url: "/json/json-to-jsonlines" },
+  { name: "JSONLines to JSON", url: "/json/jsonlines-to-json" },
+  { name: "JSON to Table", url: "/json/json-to-table" },
+  { name: "Table to JSON", url: "/json/table-to-json" },
+];
+
+const relatedTools = allTools
+  .filter((tool) => tool.name !== currentTool)
+  .slice(0, 4);
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
+  cluster={cluster}
+  relatedTools={relatedTools}
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <slot />
+</ToolLayout>

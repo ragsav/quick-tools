@@ -1,0 +1,258 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What is JSON to Table?", answer: "It converts JSON data into an interactive, editable visual table that you can manipulate." },
+  { question: "Can I edit the table?", answer: "Yes, you can sort columns, resize them, and view the data in a spreadsheet-like format." },
+  { question: "What JSON format is supported?", answer: "JSON array of objects works best, where each object becomes a row." },
+];
+
+const howItWorks = [
+  { title: "Paste JSON", content: "Enter or paste your JSON array of objects." },
+  { title: "Convert", content: "Click Convert to generate the interactive table." },
+  { title: "Interact", content: "Sort columns by clicking headers, resize columns." },
+  { title: "Export", content: "Copy the table or export back to JSON." },
+];
+
+const useCases = [
+  { title: "Data Visualization", description: "View JSON data in a readable spreadsheet format." },
+  { title: "Data Review", description: "Quickly review API responses or data exports." },
+  { title: "Debugging", description: "Inspect JSON data structure visually." },
+  { title: "Presentations", description: "Display JSON data in a user-friendly table." },
+];
+---
+
+<JSONToolLayout
+  title="JSON to Table Viewer - Interactive Table"
+  description="Convert JSON to an interactive visual table. View, sort, and explore JSON data in spreadsheet format."
+  canonicalPath="/json/json-to-table"
+  currentTool="JSON to Table"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">JSON to Table Viewer</h1>
+    <p class="text-slate-500">Convert JSON to an interactive visual table</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Input (array of objects)</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 180px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to Table</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div id="tableContainer" class="hidden">
+      <div class="flex justify-between items-center mb-2">
+        <label class="block font-medium text-slate-700 text-sm">Interactive Table</label>
+        <span id="rowCount" class="text-xs text-slate-500"></span>
+      </div>
+      <div class="overflow-x-auto border border-slate-300 rounded bg-white">
+        <table id="dataTable" class="min-w-full text-sm">
+          <thead id="tableHead" class="bg-slate-100"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="mt-3 flex gap-2">
+        <button id="exportJsonBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Export as JSON</button>
+        <button id="copyTableBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy Table (TSV)</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    #dataTable th {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+    #dataTable th:hover {
+      background-color: #e2e8f0;
+    }
+    #dataTable th .sort-icon {
+      margin-left: 4px;
+      opacity: 0.5;
+    }
+    #dataTable th.sorted-asc .sort-icon::after { content: '▲'; }
+    #dataTable th.sorted-desc .sort-icon::after { content: '▼'; }
+    #dataTable td, #dataTable th {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+      white-space: nowrap;
+    }
+    #dataTable tr:hover {
+      background-color: #f8fafc;
+    }
+    #dataTable tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+  </style>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor;
+    let tableData = [];
+    let sortColumn = null;
+    let sortDirection = 'asc';
+
+    loadMonaco().then((monaco) => {
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+        value: '',
+        language: 'json',
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    function renderTable(data, keys) {
+      const thead = document.getElementById('tableHead');
+      const tbody = document.getElementById('tableBody');
+      
+      // Header
+      let headerHtml = '<tr>';
+      keys.forEach(key => {
+        const sortClass = sortColumn === key ? (sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc') : '';
+        headerHtml += `<th class="${sortClass}" data-key="${key}">${key}<span class="sort-icon"></span></th>`;
+      });
+      headerHtml += '</tr>';
+      thead.innerHTML = headerHtml;
+      
+      // Body
+      let bodyHtml = '';
+      data.forEach(row => {
+        bodyHtml += '<tr>';
+        keys.forEach(key => {
+          const val = row[key] !== undefined ? (typeof row[key] === 'object' ? JSON.stringify(row[key]) : row[key]) : '';
+          bodyHtml += `<td>${val}</td>`;
+        });
+        bodyHtml += '</tr>';
+      });
+      tbody.innerHTML = bodyHtml;
+      
+      // Add click handlers for sorting
+      thead.querySelectorAll('th').forEach(th => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.key;
+          if (sortColumn === key) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+          } else {
+            sortColumn = key;
+            sortDirection = 'asc';
+          }
+          const sorted = [...tableData].sort((a, b) => {
+            const aVal = a[key] ?? '';
+            const bVal = b[key] ?? '';
+            if (typeof aVal === 'number' && typeof bVal === 'number') {
+              return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+            }
+            return sortDirection === 'asc' 
+              ? String(aVal).localeCompare(String(bVal))
+              : String(bVal).localeCompare(String(aVal));
+          });
+          renderTable(sorted, keys);
+        });
+      });
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      if (!input) {
+        showStatus('❌ Please enter JSON data', true);
+        return;
+      }
+
+      try {
+        const data = JSON.parse(input);
+        if (!Array.isArray(data) || data.length === 0) {
+          throw new Error('Input must be a non-empty array of objects');
+        }
+        
+        tableData = data;
+        sortColumn = null;
+        sortDirection = 'asc';
+        
+        const keys = [...new Set(data.flatMap(obj => Object.keys(obj)))];
+        renderTable(data, keys);
+        
+        document.getElementById('tableContainer').classList.remove('hidden');
+        document.getElementById('rowCount').textContent = `${data.length} rows, ${keys.length} columns`;
+        showStatus(`✅ Converted ${data.length} records to table`, false);
+      } catch (e) {
+        showStatus('❌ Error: ' + e.message, true);
+        document.getElementById('tableContainer').classList.add('hidden');
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      document.getElementById('tableContainer').classList.add('hidden');
+      document.getElementById('statusBox').classList.add('hidden');
+      tableData = [];
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`[
+  {"id": 1, "name": "John Doe", "age": 30, "city": "New York", "salary": 75000},
+  {"id": 2, "name": "Jane Smith", "age": 25, "city": "Los Angeles", "salary": 65000},
+  {"id": 3, "name": "Bob Johnson", "age": 35, "city": "Chicago", "salary": 85000},
+  {"id": 4, "name": "Alice Brown", "age": 28, "city": "Houston", "salary": 70000},
+  {"id": 5, "name": "Charlie Wilson", "age": 42, "city": "Phoenix", "salary": 95000}
+]`);
+    });
+
+    document.getElementById('exportJsonBtn').addEventListener('click', () => {
+      if (tableData.length > 0) {
+        navigator.clipboard.writeText(JSON.stringify(tableData, null, 2));
+        showStatus('✅ JSON copied to clipboard!', false);
+      }
+    });
+
+    document.getElementById('copyTableBtn').addEventListener('click', () => {
+      if (tableData.length === 0) return;
+      
+      const keys = [...new Set(tableData.flatMap(obj => Object.keys(obj)))];
+      let tsv = keys.join('\t') + '\n';
+      tableData.forEach(row => {
+        tsv += keys.map(k => row[k] !== undefined ? (typeof row[k] === 'object' ? JSON.stringify(row[k]) : row[k]) : '').join('\t') + '\n';
+      });
+      navigator.clipboard.writeText(tsv);
+      showStatus('✅ Table copied as TSV!', false);
+    });
+  </script>
+</JSONToolLayout>

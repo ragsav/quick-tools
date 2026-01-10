@@ -1,0 +1,148 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What does this tool validate?", answer: "Checks JSON syntax including proper quotes, brackets, commas, and data types." },
+  { question: "What errors can it detect?", answer: "Missing quotes, trailing commas, unbalanced brackets, invalid escape sequences, and more." },
+  { question: "Is my data sent to a server?", answer: "No, validation happens entirely in your browser. Your data never leaves your device." },
+];
+
+const howItWorks = [
+  { title: "Paste JSON", content: "Enter or paste your JSON data in the editor." },
+  { title: "Real-time Validation", content: "Monaco Editor validates as you type with inline error markers." },
+  { title: "Validate", content: "Click Validate for a detailed validity report." },
+  { title: "Fix Errors", content: "Error messages include line numbers to help locate issues." },
+];
+
+const useCases = [
+  { title: "API Testing", description: "Validate JSON payloads before sending API requests." },
+  { title: "Config Validation", description: "Check package.json, tsconfig.json before committing." },
+  { title: "Data Import", description: "Validate JSON files before importing into databases." },
+  { title: "Debugging", description: "Find syntax errors in JSON log files or responses." },
+];
+---
+
+<JSONToolLayout
+  title="JSON Validator - Validate JSON Syntax Online"
+  description="Validate JSON syntax with detailed error messages. Free online JSON validator with real-time error detection."
+  canonicalPath="/json/json-validator"
+  currentTool="JSON Validator"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">JSON Validator</h1>
+    <p class="text-slate-500">Validate JSON syntax with detailed error messages</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Input</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 350px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="validateBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Validate</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="resultBox" class="p-4 rounded border hidden">
+      <div id="resultIcon" class="text-3xl mb-2"></div>
+      <div id="resultTitle" class="font-semibold text-lg mb-1"></div>
+      <div id="resultDetails" class="text-sm"></div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor;
+
+    loadMonaco().then((monaco) => {
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+        value: '',
+        language: 'json',
+      });
+    });
+
+    function showResult(isValid, title, details) {
+      const box = document.getElementById('resultBox');
+      const icon = document.getElementById('resultIcon');
+      const titleEl = document.getElementById('resultTitle');
+      const detailsEl = document.getElementById('resultDetails');
+      
+      box.className = `p-4 rounded border ${isValid ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
+      icon.textContent = isValid ? '✅' : '❌';
+      titleEl.textContent = title;
+      titleEl.className = `font-semibold text-lg mb-1 ${isValid ? 'text-green-800' : 'text-red-800'}`;
+      detailsEl.textContent = details;
+      detailsEl.className = `text-sm ${isValid ? 'text-green-700' : 'text-red-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    document.getElementById('validateBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      
+      if (!input) {
+        showResult(false, 'Empty Input', 'Please enter JSON to validate.');
+        return;
+      }
+      
+      try {
+        const parsed = JSON.parse(input);
+        const type = Array.isArray(parsed) ? 'Array' : typeof parsed === 'object' ? 'Object' : typeof parsed;
+        const size = new Blob([input]).size;
+        showResult(true, 'Valid JSON', `Type: ${type} | Size: ${size} bytes`);
+      } catch (e) {
+        const match = e.message.match(/position (\d+)/);
+        let details = e.message;
+        if (match) {
+          const pos = parseInt(match[1]);
+          const lines = input.substring(0, pos).split('\n');
+          const line = lines.length;
+          const col = lines[lines.length - 1].length + 1;
+          details = `${e.message} (Line ${line}, Column ${col})`;
+        }
+        showResult(false, 'Invalid JSON', details);
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      document.getElementById('resultBox').classList.add('hidden');
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`{
+  "name": "John Doe",
+  "age": 30,
+  "email": "john@example.com",
+  "address": {
+    "street": "123 Main St",
+    "city": "New York"
+  },
+  "hobbies": ["reading", "coding", "gaming"]
+}`);
+    });
+  </script>
+</JSONToolLayout>

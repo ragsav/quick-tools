@@ -1,0 +1,42 @@
+---
+import NetworkingToolLayout from "../../layouts/NetworkingToolLayout.astro";
+---
+
+<NetworkingToolLayout
+  title="Networking Tools - Free IP & Subnet Calculators"
+  description="Free networking tools. Subnet calculator, IP converter, MAC formatter, CIDR calculator, and bandwidth calculator."
+  canonicalPath="/networking"
+  currentTool=""
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">🌐 Networking Tools</h1>
+    <p class="text-slate-500">IP, subnet, and network calculation utilities.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+    <a href="/networking/subnet-calculator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-cyan-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Subnet Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate network address, broadcast, and host range</p>
+    </a>
+
+    <a href="/networking/ip-converter" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-cyan-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">IP Converter</h3>
+      <p class="text-sm text-slate-500">Convert IP between decimal, binary, hex formats</p>
+    </a>
+
+    <a href="/networking/mac-formatter" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-cyan-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">MAC Formatter</h3>
+      <p class="text-sm text-slate-500">Format MAC addresses with different separators</p>
+    </a>
+
+    <a href="/networking/cidr-calculator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-cyan-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">CIDR Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate CIDR ranges and merge IP ranges</p>
+    </a>
+
+    <a href="/networking/bandwidth-calculator" class="tool-card block p-5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white hover:border-cyan-400 hover:shadow-md transition-all">
+      <h3 class="font-semibold text-slate-900 mb-1">Bandwidth Calculator</h3>
+      <p class="text-sm text-slate-500">Calculate file transfer time and bandwidth</p>
+    </a>
+  </div>
+</NetworkingToolLayout>

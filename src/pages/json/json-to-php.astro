@@ -1,0 +1,207 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What PHP syntax is generated?", answer: "PHP array syntax using short array notation [] or traditional array()." },
+  { question: "Are nested objects supported?", answer: "Yes, nested JSON objects become nested PHP arrays." },
+  { question: "How are special values handled?", answer: "null, true, false are converted to PHP equivalents." },
+];
+
+const howItWorks = [
+  { title: "Paste JSON", content: "Enter your JSON data in the input editor." },
+  { title: "Configure", content: "Choose short or traditional array syntax." },
+  { title: "Convert", content: "Click Convert to generate PHP array." },
+  { title: "Copy", content: "Copy the PHP code for your project." },
+];
+
+const useCases = [
+  { title: "Config Arrays", description: "Convert JSON configs to PHP arrays." },
+  { title: "Data Seeding", description: "Create PHP arrays for database seeding." },
+  { title: "API Testing", description: "Generate PHP test data from JSON." },
+  { title: "Migration", description: "Convert JSON data to PHP format." },
+];
+---
+
+<JSONToolLayout
+  title="JSON to PHP Array Converter - Generate PHP"
+  description="Convert JSON to PHP array syntax online. Generate PHP arrays from JSON data."
+  canonicalPath="/json/json-to-php"
+  currentTool="JSON to PHP Array"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">JSON to PHP Array Converter</h1>
+    <p class="text-slate-500">Convert JSON to PHP array syntax</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Input</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 220px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-4 mb-4 items-center">
+      <div>
+        <label class="block text-sm text-slate-600 mb-1">Array Syntax</label>
+        <select id="syntax" class="px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+          <option value="short">Short [ ]</option>
+          <option value="traditional">Traditional array()</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="includeVar" checked class="w-4 h-4" />
+        <label for="includeVar" class="text-sm text-slate-600">Include variable assignment</label>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to PHP</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">PHP Output</label>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 280px;"></div>
+    </div>
+
+    <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy Output</button>
+  </div>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor, outputEditor;
+
+    loadMonaco().then((monaco) => {
+      const editorOptions = {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+      };
+
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'json',
+      });
+
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'php',
+        readOnly: true,
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    function jsonToPhp(value, useShort, indent = '') {
+      const nextIndent = indent + '  ';
+      const open = useShort ? '[' : 'array(';
+      const close = useShort ? ']' : ')';
+      
+      if (value === null) return 'null';
+      if (typeof value === 'boolean') return value ? 'true' : 'false';
+      if (typeof value === 'number') return String(value);
+      if (typeof value === 'string') return "'" + value.replace(/'/g, "\\'") + "'";
+      
+      if (Array.isArray(value)) {
+        if (value.length === 0) return open + close;
+        const items = value.map(v => nextIndent + jsonToPhp(v, useShort, nextIndent));
+        return open + '\n' + items.join(',\n') + '\n' + indent + close;
+      }
+      
+      if (typeof value === 'object') {
+        const entries = Object.entries(value);
+        if (entries.length === 0) return open + close;
+        const items = entries.map(([k, v]) => {
+          const key = "'" + k.replace(/'/g, "\\'") + "'";
+          return nextIndent + key + ' => ' + jsonToPhp(v, useShort, nextIndent);
+        });
+        return open + '\n' + items.join(',\n') + '\n' + indent + close;
+      }
+      
+      return String(value);
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      if (!input) {
+        showStatus('❌ Please enter JSON data', true);
+        return;
+      }
+
+      try {
+        const data = JSON.parse(input);
+        const useShort = document.getElementById('syntax').value === 'short';
+        const includeVar = document.getElementById('includeVar').checked;
+        
+        let php = jsonToPhp(data, useShort);
+        if (includeVar) {
+          php = '$data = ' + php + ';';
+        }
+        
+        outputEditor.setValue(php);
+        showStatus('✅ Converted to PHP array', false);
+      } catch (e) {
+        showStatus('❌ Error: ' + e.message, true);
+        outputEditor.setValue('');
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`{
+  "name": "John Doe",
+  "age": 30,
+  "active": true,
+  "address": {
+    "city": "New York",
+    "zip": "10001"
+  },
+  "roles": ["admin", "user"]
+}`);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+  </script>
+</JSONToolLayout>

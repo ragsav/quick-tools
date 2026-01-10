@@ -1,0 +1,197 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What Markdown table format is generated?", answer: "GitHub-flavored Markdown tables with pipe separators and proper alignment." },
+  { question: "Are nested objects supported?", answer: "Nested objects are displayed as inline JSON strings in the cells." },
+  { question: "Can I customize alignment?", answer: "Yes, you can choose left, center, or right alignment for columns." },
+];
+
+const howItWorks = [
+  { title: "Paste JSON", content: "Enter a JSON array of objects." },
+  { title: "Configure", content: "Choose column alignment options." },
+  { title: "Convert", content: "Click Convert to generate Markdown table." },
+  { title: "Copy", content: "Copy the Markdown for use in README or docs." },
+];
+
+const useCases = [
+  { title: "Documentation", description: "Create data tables for README files." },
+  { title: "GitHub", description: "Generate tables for GitHub issues or wikis." },
+  { title: "Static Sites", description: "Create Markdown tables for Jekyll, Hugo, etc." },
+  { title: "Notes", description: "Format data as tables in Markdown notes." },
+];
+---
+
+<JSONToolLayout
+  title="JSON to Markdown Table Converter - Generate Markdown"
+  description="Convert JSON array to Markdown table online. Generate GitHub-flavored Markdown tables."
+  canonicalPath="/json/json-to-markdown"
+  currentTool="JSON to Markdown"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">JSON to Markdown Table Converter</h1>
+    <p class="text-slate-500">Generate Markdown tables from JSON data</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Input (array of objects)</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 200px;"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm text-slate-600 mb-1">Column Alignment</label>
+      <select id="alignment" class="px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+        <option value="left">Left</option>
+        <option value="center">Center</option>
+        <option value="right">Right</option>
+      </select>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to Markdown</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">Markdown Output</label>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 250px;"></div>
+    </div>
+
+    <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy Output</button>
+  </div>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor, outputEditor;
+
+    loadMonaco().then((monaco) => {
+      const editorOptions = {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+      };
+
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'json',
+      });
+
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'markdown',
+        readOnly: true,
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    function escapeMarkdown(str) {
+      return String(str).replace(/\|/g, '\\|').replace(/\n/g, ' ');
+    }
+
+    function jsonToMarkdown(data, alignment) {
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error('Input must be a non-empty array of objects');
+      }
+
+      const keys = [...new Set(data.flatMap(obj => Object.keys(obj)))];
+      const rows = [];
+
+      // Header row
+      rows.push('| ' + keys.join(' | ') + ' |');
+
+      // Separator row with alignment
+      const sep = {
+        left: '---',
+        center: ':---:',
+        right: '---:'
+      };
+      rows.push('| ' + keys.map(() => sep[alignment] || '---').join(' | ') + ' |');
+
+      // Data rows
+      data.forEach(row => {
+        const cells = keys.map(k => {
+          const val = row[k] !== undefined ? (typeof row[k] === 'object' ? JSON.stringify(row[k]) : row[k]) : '';
+          return escapeMarkdown(val);
+        });
+        rows.push('| ' + cells.join(' | ') + ' |');
+      });
+
+      return rows.join('\n');
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      if (!input) {
+        showStatus('❌ Please enter JSON data', true);
+        return;
+      }
+
+      try {
+        const data = JSON.parse(input);
+        const alignment = document.getElementById('alignment').value;
+        const markdown = jsonToMarkdown(data, alignment);
+        outputEditor.setValue(markdown);
+        showStatus(`✅ Generated table with ${data.length} rows`, false);
+      } catch (e) {
+        showStatus('❌ Error: ' + e.message, true);
+        outputEditor.setValue('');
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`[
+  {"name": "John Doe", "age": 30, "city": "New York"},
+  {"name": "Jane Smith", "age": 25, "city": "Los Angeles"},
+  {"name": "Bob Johnson", "age": 35, "city": "Chicago"}
+]`);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+  </script>
+</JSONToolLayout>

@@ -1,0 +1,391 @@
+---
+import NetworkingToolLayout from "../../layouts/NetworkingToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How is file transfer time calculated?",
+    answer: "Transfer time = File size / Bandwidth. For example, a 1GB file at 100 Mbps takes about 80 seconds (accounting for bits vs bytes: 1GB = 8Gb).",
+  },
+  {
+    question: "What's the difference between Mbps and MB/s?",
+    answer: "Mbps (megabits per second) is used for network speeds. MB/s (megabytes per second) is used for file sizes. 1 MB/s = 8 Mbps.",
+  },
+  {
+    question: "Why is my actual transfer slower?",
+    answer: "Real-world transfers include protocol overhead (TCP/IP headers), latency, packet loss, and shared bandwidth. Actual speeds are typically 70-90% of theoretical.",
+  },
+];
+
+const howItWorks = [
+  {
+    title: "Unit Conversion",
+    content: "Converts between bits and bytes (8 bits = 1 byte) and between metric prefixes (K, M, G, T).",
+  },
+  {
+    title: "Transfer Time",
+    content: "Calculates time by dividing file size by bandwidth: (size in bytes × 8) / (bandwidth in bits per second).",
+  },
+  {
+    title: "Required Bandwidth",
+    content: "Calculates needed speed by dividing file size by target time: (size in bytes × 8) / (time in seconds).",
+  },
+];
+
+const useCases = [
+  {
+    title: "Download Planning",
+    description: "Estimate how long a large download will take on your connection.",
+  },
+  {
+    title: "Upload Scheduling",
+    description: "Plan backup windows and file sync schedules based on available bandwidth.",
+  },
+  {
+    title: "Infrastructure Sizing",
+    description: "Determine required network capacity for data transfer requirements.",
+  },
+  {
+    title: "SLA Verification",
+    description: "Verify if your ISP provides the advertised bandwidth speeds.",
+  },
+];
+---
+
+<NetworkingToolLayout
+  title="Bandwidth Calculator - File Transfer Time Calculator"
+  description="Free bandwidth calculator. Calculate file transfer times, convert bandwidth units, and estimate required speeds."
+  canonicalPath="/networking/bandwidth-calculator"
+  currentTool="Bandwidth Calculator"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Bandwidth Calculator
+    </h1>
+    <p class="text-slate-500">Calculate file transfer times and convert bandwidth units.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <!-- Tab Navigation -->
+    <div class="flex gap-2 mb-6 border-b border-slate-200 pb-3">
+      <button id="tabTransferTime" onclick="switchTab('transferTime')" class="px-4 py-2 text-sm font-medium rounded-t bg-cyan-600 text-white">
+        Transfer Time
+      </button>
+      <button id="tabBandwidthConvert" onclick="switchTab('bandwidthConvert')" class="px-4 py-2 text-sm font-medium rounded-t bg-slate-200 text-slate-700">
+        Unit Converter
+      </button>
+      <button id="tabRequiredBandwidth" onclick="switchTab('requiredBandwidth')" class="px-4 py-2 text-sm font-medium rounded-t bg-slate-200 text-slate-700">
+        Required Speed
+      </button>
+    </div>
+
+    <!-- Transfer Time Panel -->
+    <div id="panelTransferTime">
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="fileSize" class="block font-medium text-slate-700 mb-1.5 text-sm">File Size</label>
+          <div class="flex gap-2">
+            <input type="number" id="fileSize" placeholder="100" min="0" step="any"
+              class="flex-1 px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+            <select id="fileSizeUnit" class="px-3 py-3 text-sm border border-slate-300 rounded bg-white">
+              <option value="B">B</option>
+              <option value="KB">KB</option>
+              <option value="MB" selected>MB</option>
+              <option value="GB">GB</option>
+              <option value="TB">TB</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="bandwidth" class="block font-medium text-slate-700 mb-1.5 text-sm">Bandwidth</label>
+          <div class="flex gap-2">
+            <input type="number" id="bandwidth" placeholder="100" min="0" step="any"
+              class="flex-1 px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+            <select id="bandwidthUnit" class="px-3 py-3 text-sm border border-slate-300 rounded bg-white">
+              <option value="bps">bps</option>
+              <option value="Kbps">Kbps</option>
+              <option value="Mbps" selected>Mbps</option>
+              <option value="Gbps">Gbps</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button onclick="calcTransferTime()" class="btn-primary px-6 py-2 font-semibold text-white rounded mb-4">
+        Calculate Time
+      </button>
+      <div id="timeResult" class="hidden">
+        <div class="bg-white border border-slate-200 rounded p-4">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Estimated Transfer Time</div>
+          <div id="transferTime" class="font-mono text-2xl text-slate-900">-</div>
+          <div id="transferTimeAlt" class="font-mono text-sm text-slate-500 mt-1">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bandwidth Converter Panel -->
+    <div id="panelBandwidthConvert" class="hidden">
+      <div class="mb-4">
+        <label for="convertValue" class="block font-medium text-slate-700 mb-1.5 text-sm">Bandwidth Value</label>
+        <div class="flex gap-2">
+          <input type="number" id="convertValue" placeholder="100" min="0" step="any"
+            class="flex-1 px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+          <select id="convertUnit" class="px-3 py-3 text-sm border border-slate-300 rounded bg-white">
+            <option value="bps">bps</option>
+            <option value="Kbps">Kbps</option>
+            <option value="Mbps" selected>Mbps</option>
+            <option value="Gbps">Gbps</option>
+            <option value="Bps">B/s</option>
+            <option value="KBps">KB/s</option>
+            <option value="MBps">MB/s</option>
+            <option value="GBps">GB/s</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="convertBandwidth()" class="btn-primary px-6 py-2 font-semibold text-white rounded mb-4">
+        Convert
+      </button>
+      <div id="convertResult" class="hidden">
+        <h3 class="font-semibold text-slate-900 mb-3">Conversions</h3>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Bits per second</div>
+            <div id="resBps" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Kilobits per second</div>
+            <div id="resKbps" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Megabits per second</div>
+            <div id="resMbps" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Gigabits per second</div>
+            <div id="resGbps" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Bytes per second</div>
+            <div id="resBpsBytes" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Kilobytes per second</div>
+            <div id="resKBps" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Megabytes per second</div>
+            <div id="resMBps" class="font-mono text-slate-900">-</div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded p-3">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Gigabytes per second</div>
+            <div id="resGBps" class="font-mono text-slate-900">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Required Bandwidth Panel -->
+    <div id="panelRequiredBandwidth" class="hidden">
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="reqFileSize" class="block font-medium text-slate-700 mb-1.5 text-sm">File Size</label>
+          <div class="flex gap-2">
+            <input type="number" id="reqFileSize" placeholder="100" min="0" step="any"
+              class="flex-1 px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+            <select id="reqFileSizeUnit" class="px-3 py-3 text-sm border border-slate-300 rounded bg-white">
+              <option value="B">B</option>
+              <option value="KB">KB</option>
+              <option value="MB" selected>MB</option>
+              <option value="GB">GB</option>
+              <option value="TB">TB</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="targetTime" class="block font-medium text-slate-700 mb-1.5 text-sm">Target Time</label>
+          <div class="flex gap-2">
+            <input type="number" id="targetTime" placeholder="60" min="0" step="any"
+              class="flex-1 px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none" />
+            <select id="targetTimeUnit" class="px-3 py-3 text-sm border border-slate-300 rounded bg-white">
+              <option value="s">seconds</option>
+              <option value="m" selected>minutes</option>
+              <option value="h">hours</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button onclick="calcRequiredBandwidth()" class="btn-primary px-6 py-2 font-semibold text-white rounded mb-4">
+        Calculate Speed
+      </button>
+      <div id="reqResult" class="hidden">
+        <div class="bg-white border border-slate-200 rounded p-4">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Required Bandwidth</div>
+          <div id="requiredBandwidth" class="font-mono text-2xl text-slate-900">-</div>
+          <div id="requiredBandwidthAlt" class="font-mono text-sm text-slate-500 mt-1">-</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="error" class="hidden text-red-600 mt-4"></div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">Common Bandwidth Speeds</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-slate-100">
+            <th class="border border-slate-200 px-3 py-2 text-left">Connection Type</th>
+            <th class="border border-slate-200 px-3 py-2 text-left">Typical Speed</th>
+            <th class="border border-slate-200 px-3 py-2 text-left">1 GB Transfer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="border border-slate-200 px-3 py-2">Dial-up</td><td class="border border-slate-200 px-3 py-2">56 Kbps</td><td class="border border-slate-200 px-3 py-2">~40 hours</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">DSL</td><td class="border border-slate-200 px-3 py-2">10 Mbps</td><td class="border border-slate-200 px-3 py-2">~13 min</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">Cable</td><td class="border border-slate-200 px-3 py-2">100 Mbps</td><td class="border border-slate-200 px-3 py-2">~80 sec</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">Fiber</td><td class="border border-slate-200 px-3 py-2">1 Gbps</td><td class="border border-slate-200 px-3 py-2">~8 sec</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">10G Ethernet</td><td class="border border-slate-200 px-3 py-2">10 Gbps</td><td class="border border-slate-200 px-3 py-2">~0.8 sec</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script is:inline>
+    const sizeMultipliers = { B: 1, KB: 1024, MB: 1024**2, GB: 1024**3, TB: 1024**4 };
+    const bitsMultipliers = { bps: 1, Kbps: 1000, Mbps: 1000**2, Gbps: 1000**3, Bps: 8, KBps: 8*1024, MBps: 8*1024**2, GBps: 8*1024**3 };
+
+    function switchTab(tab) {
+      const tabs = ['transferTime', 'bandwidthConvert', 'requiredBandwidth'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        const panel = document.getElementById('panel' + t.charAt(0).toUpperCase() + t.slice(1));
+        btn.classList.remove('bg-cyan-600', 'text-white');
+        btn.classList.add('bg-slate-200', 'text-slate-700');
+        panel.classList.add('hidden');
+      });
+      const activeBtn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      const activePanel = document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
+      activeBtn.classList.add('bg-cyan-600', 'text-white');
+      activePanel.classList.remove('hidden');
+      document.getElementById('error').classList.add('hidden');
+    }
+
+    function formatTime(seconds) {
+      if (seconds < 1) return `${(seconds * 1000).toFixed(0)} ms`;
+      if (seconds < 60) return `${seconds.toFixed(1)} seconds`;
+      if (seconds < 3600) return `${(seconds / 60).toFixed(1)} minutes`;
+      if (seconds < 86400) return `${(seconds / 3600).toFixed(1)} hours`;
+      return `${(seconds / 86400).toFixed(1)} days`;
+    }
+
+    function formatNumber(num) {
+      if (num >= 1e12) return `${(num / 1e12).toFixed(2)} T`;
+      if (num >= 1e9) return `${(num / 1e9).toFixed(2)} G`;
+      if (num >= 1e6) return `${(num / 1e6).toFixed(2)} M`;
+      if (num >= 1e3) return `${(num / 1e3).toFixed(2)} K`;
+      return num.toFixed(2);
+    }
+
+    function calcTransferTime() {
+      const fileSize = parseFloat(document.getElementById('fileSize').value);
+      const fileSizeUnit = document.getElementById('fileSizeUnit').value;
+      const bandwidth = parseFloat(document.getElementById('bandwidth').value);
+      const bandwidthUnit = document.getElementById('bandwidthUnit').value;
+      const errorDiv = document.getElementById('error');
+      const resultDiv = document.getElementById('timeResult');
+
+      errorDiv.classList.add('hidden');
+      resultDiv.classList.add('hidden');
+
+      if (isNaN(fileSize) || isNaN(bandwidth) || fileSize <= 0 || bandwidth <= 0) {
+        errorDiv.textContent = 'Please enter valid positive numbers.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const bytes = fileSize * sizeMultipliers[fileSizeUnit];
+      const bits = bytes * 8;
+      const bps = bandwidth * bitsMultipliers[bandwidthUnit];
+      const seconds = bits / bps;
+
+      document.getElementById('transferTime').textContent = formatTime(seconds);
+      document.getElementById('transferTimeAlt').textContent = `${seconds.toFixed(2)} seconds total`;
+      resultDiv.classList.remove('hidden');
+    }
+
+    function convertBandwidth() {
+      const value = parseFloat(document.getElementById('convertValue').value);
+      const unit = document.getElementById('convertUnit').value;
+      const errorDiv = document.getElementById('error');
+      const resultDiv = document.getElementById('convertResult');
+
+      errorDiv.classList.add('hidden');
+      resultDiv.classList.add('hidden');
+
+      if (isNaN(value) || value <= 0) {
+        errorDiv.textContent = 'Please enter a valid positive number.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const bps = value * bitsMultipliers[unit];
+      const bytesPerSec = bps / 8;
+
+      document.getElementById('resBps').textContent = formatNumber(bps) + 'bps';
+      document.getElementById('resKbps').textContent = formatNumber(bps / 1000) + 'bps';
+      document.getElementById('resMbps').textContent = formatNumber(bps / 1000**2) + 'bps';
+      document.getElementById('resGbps').textContent = formatNumber(bps / 1000**3) + 'bps';
+      document.getElementById('resBpsBytes').textContent = formatNumber(bytesPerSec) + ' B/s';
+      document.getElementById('resKBps').textContent = formatNumber(bytesPerSec / 1024) + ' B/s';
+      document.getElementById('resMBps').textContent = formatNumber(bytesPerSec / 1024**2) + ' B/s';
+      document.getElementById('resGBps').textContent = formatNumber(bytesPerSec / 1024**3) + ' B/s';
+
+      resultDiv.classList.remove('hidden');
+    }
+
+    function calcRequiredBandwidth() {
+      const fileSize = parseFloat(document.getElementById('reqFileSize').value);
+      const fileSizeUnit = document.getElementById('reqFileSizeUnit').value;
+      const targetTime = parseFloat(document.getElementById('targetTime').value);
+      const targetTimeUnit = document.getElementById('targetTimeUnit').value;
+      const errorDiv = document.getElementById('error');
+      const resultDiv = document.getElementById('reqResult');
+
+      errorDiv.classList.add('hidden');
+      resultDiv.classList.add('hidden');
+
+      if (isNaN(fileSize) || isNaN(targetTime) || fileSize <= 0 || targetTime <= 0) {
+        errorDiv.textContent = 'Please enter valid positive numbers.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const bytes = fileSize * sizeMultipliers[fileSizeUnit];
+      const bits = bytes * 8;
+      const seconds = targetTime * (targetTimeUnit === 's' ? 1 : targetTimeUnit === 'm' ? 60 : 3600);
+      const bps = bits / seconds;
+
+      let display, alt;
+      if (bps >= 1e9) {
+        display = `${(bps / 1e9).toFixed(2)} Gbps`;
+        alt = `${(bps / 8 / 1024**3).toFixed(2)} GB/s`;
+      } else if (bps >= 1e6) {
+        display = `${(bps / 1e6).toFixed(2)} Mbps`;
+        alt = `${(bps / 8 / 1024**2).toFixed(2)} MB/s`;
+      } else if (bps >= 1e3) {
+        display = `${(bps / 1e3).toFixed(2)} Kbps`;
+        alt = `${(bps / 8 / 1024).toFixed(2)} KB/s`;
+      } else {
+        display = `${bps.toFixed(2)} bps`;
+        alt = `${(bps / 8).toFixed(2)} B/s`;
+      }
+
+      document.getElementById('requiredBandwidth').textContent = display;
+      document.getElementById('requiredBandwidthAlt').textContent = alt;
+      resultDiv.classList.remove('hidden');
+    }
+  </script>
+</NetworkingToolLayout>

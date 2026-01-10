@@ -54,7 +54,36 @@ A collection of free, fast, and easy-to-use online utility tools built with [Ast
 
 ---
 
-### 🔢 Math Tools
+### � JSON Tools
+| Tool | Description |
+|------|-------------|
+| [JSON Formatter](https://quicktools.live/json/json-formatter) | Format and beautify JSON with indentation |
+| [JSON Minifier](https://quicktools.live/json/json-minifier) | Minify JSON by removing whitespace |
+| [JSON Validator](https://quicktools.live/json/json-validator) | Validate JSON syntax with error messages |
+| [CSV to JSON](https://quicktools.live/json/csv-to-json) | Convert CSV data to JSON array |
+| [Excel to JSON](https://quicktools.live/json/excel-to-json) | Convert Excel spreadsheets to JSON |
+| [HTML to JSON](https://quicktools.live/json/html-to-json) | Convert HTML tables to JSON |
+| [SQL to JSON](https://quicktools.live/json/sql-to-json) | Convert SQL INSERT statements to JSON |
+| [XML to JSON](https://quicktools.live/json/xml-to-json) | Convert XML data to JSON |
+| [YAML to JSON](https://quicktools.live/json/yaml-to-json) | Convert YAML to JSON |
+| [Markdown to JSON](https://quicktools.live/json/markdown-to-json) | Convert Markdown tables to JSON |
+| [JSON to CSV](https://quicktools.live/json/json-to-csv) | Convert JSON array to CSV |
+| [JSON to Excel](https://quicktools.live/json/json-to-excel) | Convert JSON to Excel spreadsheet |
+| [JSON to XML](https://quicktools.live/json/json-to-xml) | Convert JSON data to XML |
+| [JSON to YAML](https://quicktools.live/json/json-to-yaml) | Convert JSON to YAML |
+| [JSON to SQL](https://quicktools.live/json/json-to-sql) | Generate SQL INSERT from JSON |
+| [JSON to HTML Table](https://quicktools.live/json/json-to-html) | Convert JSON to HTML table |
+| [JSON to Markdown](https://quicktools.live/json/json-to-markdown) | Convert JSON to Markdown table |
+| [JSON to TypeScript](https://quicktools.live/json/json-to-typescript) | Generate TypeScript interfaces |
+| [JSON to PHP Array](https://quicktools.live/json/json-to-php) | Convert JSON to PHP array syntax |
+| [JSON to JSONLines](https://quicktools.live/json/json-to-jsonlines) | Convert JSON array to JSONLines |
+| [JSONLines to JSON](https://quicktools.live/json/jsonlines-to-json) | Convert JSONLines to JSON array |
+| [JSON to Table](https://quicktools.live/json/json-to-table) | View JSON as interactive table |
+| [Table to JSON](https://quicktools.live/json/table-to-json) | Create JSON from editable table |
+
+---
+
+### �🔢 Math Tools
 | Tool | Description |
 |------|-------------|
 | [Average Calculator](https://quicktools.live/math/average-calculator) | Calculate mean, median, and mode |
@@ -110,6 +139,17 @@ A collection of free, fast, and easy-to-use online utility tools built with [Ast
 | [Weeks Between Dates](https://quicktools.live/time/weeks-between-dates) | Calculate weeks between dates |
 | [Months Between Dates](https://quicktools.live/time/months-between-dates) | Calculate months between dates |
 | [Leap Year Checker](https://quicktools.live/time/leap-year-checker) | Check if a year is a leap year |
+
+---
+
+### 🌐 Networking Tools
+| Tool | Description |
+|------|-------------|
+| [Subnet Calculator](https://quicktools.live/networking/subnet-calculator) | Calculate network address, broadcast, and host range |
+| [IP Converter](https://quicktools.live/networking/ip-converter) | Convert IP between decimal, binary, and hex |
+| [MAC Formatter](https://quicktools.live/networking/mac-formatter) | Format MAC addresses with different separators |
+| [CIDR Calculator](https://quicktools.live/networking/cidr-calculator) | Convert IP ranges to CIDR and expand CIDR blocks |
+| [Bandwidth Calculator](https://quicktools.live/networking/bandwidth-calculator) | Calculate file transfer time and bandwidth |
 
 ---
 

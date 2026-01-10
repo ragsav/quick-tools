@@ -1,0 +1,211 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What SQL is supported?", answer: "INSERT statements are parsed. Each INSERT becomes a JSON object." },
+  { question: "Are multiple INSERT statements supported?", answer: "Yes, each INSERT statement creates a separate object in the output array." },
+  { question: "Is my data sent to a server?", answer: "No, all parsing happens in your browser. Your SQL never leaves your device." },
+];
+
+const howItWorks = [
+  { title: "Paste SQL", content: "Enter SQL INSERT statements in the input editor." },
+  { title: "Parse", content: "The tool extracts column names and values from INSERT syntax." },
+  { title: "Convert", content: "Values are mapped to column names as JSON objects." },
+  { title: "Copy", content: "Copy the JSON output for use in your application." },
+];
+
+const useCases = [
+  { title: "Data Migration", description: "Convert SQL dumps to JSON for NoSQL databases." },
+  { title: "API Testing", description: "Transform INSERT statements to JSON for API testing." },
+  { title: "Data Analysis", description: "Parse SQL dumps for JavaScript/Python processing." },
+  { title: "Documentation", description: "Convert SQL examples to JSON for documentation." },
+];
+---
+
+<JSONToolLayout
+  title="SQL to JSON Converter - Parse INSERT Statements"
+  description="Convert SQL INSERT statements to JSON format online. Parse SQL data into JSON objects."
+  canonicalPath="/json/sql-to-json"
+  currentTool="SQL to JSON"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">SQL to JSON Converter</h1>
+    <p class="text-slate-500">Convert SQL INSERT statements to JSON</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">SQL Input (INSERT statements)</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 220px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to JSON</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Output</label>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 250px;"></div>
+    </div>
+
+    <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy Output</button>
+  </div>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor, outputEditor;
+
+    loadMonaco().then((monaco) => {
+      const editorOptions = {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+      };
+
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'sql',
+      });
+
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'json',
+        readOnly: true,
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    function parseSQL(sql) {
+      const results = [];
+      // Match INSERT statements
+      const insertRegex = /INSERT\s+INTO\s+[\w`"]+\s*\(([^)]+)\)\s*VALUES\s*\(([^)]+)\)/gi;
+      
+      let match;
+      while ((match = insertRegex.exec(sql)) !== null) {
+        const columns = match[1].split(',').map(c => c.trim().replace(/[`"]/g, ''));
+        const valuesStr = match[2];
+        
+        // Parse values (handling quoted strings)
+        const values = [];
+        let current = '';
+        let inString = false;
+        let stringChar = '';
+        
+        for (let i = 0; i < valuesStr.length; i++) {
+          const char = valuesStr[i];
+          if ((char === "'" || char === '"') && (i === 0 || valuesStr[i-1] !== '\\')) {
+            if (!inString) {
+              inString = true;
+              stringChar = char;
+            } else if (char === stringChar) {
+              inString = false;
+            } else {
+              current += char;
+            }
+          } else if (char === ',' && !inString) {
+            values.push(current.trim());
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        values.push(current.trim());
+        
+        // Create object
+        const obj = {};
+        columns.forEach((col, idx) => {
+          let val = values[idx] || '';
+          // Parse value type
+          if (val.toUpperCase() === 'NULL') {
+            obj[col] = null;
+          } else if (val.toUpperCase() === 'TRUE') {
+            obj[col] = true;
+          } else if (val.toUpperCase() === 'FALSE') {
+            obj[col] = false;
+          } else if (!isNaN(val) && val !== '') {
+            obj[col] = Number(val);
+          } else {
+            obj[col] = val;
+          }
+        });
+        results.push(obj);
+      }
+      
+      return results;
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      if (!input) {
+        showStatus('❌ Please enter SQL data', true);
+        return;
+      }
+
+      try {
+        const result = parseSQL(input);
+        if (result.length === 0) {
+          throw new Error('No valid INSERT statements found');
+        }
+        outputEditor.setValue(JSON.stringify(result, null, 2));
+        showStatus(`✅ Converted ${result.length} record(s)`, false);
+      } catch (e) {
+        showStatus('❌ Error: ' + e.message, true);
+        outputEditor.setValue('');
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`INSERT INTO users (name, age, city, active) VALUES ('John Doe', 30, 'New York', TRUE);
+INSERT INTO users (name, age, city, active) VALUES ('Jane Smith', 25, 'Los Angeles', TRUE);
+INSERT INTO users (name, age, city, active) VALUES ('Bob Johnson', 35, 'Chicago', FALSE);`);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+  </script>
+</JSONToolLayout>

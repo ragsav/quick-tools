@@ -1,0 +1,75 @@
+---
+/**
+ * Networking Tools Layout
+ */
+
+import ToolLayout from "./ToolLayout.astro";
+import { CONSTANT } from "../constants";
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface HowItWorksItem {
+  title?: string;
+  content: string;
+}
+
+interface UseCaseItem {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  currentTool?: string;
+  faqItems?: FAQItem[];
+  howItWorks?: HowItWorksItem[];
+  useCases?: UseCaseItem[];
+}
+
+const {
+  title,
+  description,
+  canonicalPath,
+  currentTool = "",
+  faqItems = [],
+  howItWorks = [],
+  useCases = [],
+} = Astro.props;
+
+const cluster = {
+  name: "Networking Tools",
+  icon: "🌐",
+  color: "#0ea5e9",
+  url: "/networking/",
+};
+
+const allTools = [
+  { name: "Subnet Calculator", url: "/networking/subnet-calculator" },
+  { name: "IP Converter", url: "/networking/ip-converter" },
+  { name: "MAC Formatter", url: "/networking/mac-formatter" },
+  { name: "CIDR Calculator", url: "/networking/cidr-calculator" },
+  { name: "Bandwidth Calculator", url: "/networking/bandwidth-calculator" },
+];
+
+const relatedTools = allTools
+  .filter((tool) => tool.name !== currentTool)
+  .slice(0, 4);
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  canonical={`${CONSTANT.CANONICAL_URL}${canonicalPath}`}
+  cluster={cluster}
+  relatedTools={relatedTools}
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <slot />
+</ToolLayout>

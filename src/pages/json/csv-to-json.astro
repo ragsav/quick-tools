@@ -1,0 +1,221 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What CSV formats are supported?", answer: "Comma, semicolon, or tab-separated values with optional header row." },
+  { question: "How are headers handled?", answer: "If 'First row is header' is checked, the first row becomes object keys." },
+  { question: "What output format is generated?", answer: "JSON array of objects (with headers) or 2D array (without headers)." },
+];
+
+const howItWorks = [
+  { title: "Paste CSV", content: "Enter or paste your CSV data in the input editor." },
+  { title: "Configure", content: "Select delimiter and whether first row contains headers." },
+  { title: "Convert", content: "Click Convert to transform CSV to JSON." },
+  { title: "Copy Output", content: "Copy the JSON for use in your application." },
+];
+
+const useCases = [
+  { title: "Data Migration", description: "Convert spreadsheet exports to JSON for database import." },
+  { title: "API Integration", description: "Transform CSV data into JSON for REST API requests." },
+  { title: "Configuration", description: "Convert tabular config data to JSON format." },
+  { title: "Data Analysis", description: "Prepare CSV data for JavaScript/Python processing." },
+];
+---
+
+<JSONToolLayout
+  title="CSV to JSON Converter - Convert CSV Online"
+  description="Convert CSV data to JSON format online. Supports comma, semicolon, and tab delimiters with header detection."
+  canonicalPath="/json/csv-to-json"
+  currentTool="CSV to JSON"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">CSV to JSON Converter</h1>
+    <p class="text-slate-500">Convert CSV data to JSON array</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">CSV Input</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 200px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-4 mb-4 items-center">
+      <div>
+        <label class="block text-sm text-slate-600 mb-1">Delimiter</label>
+        <select id="delimiter" class="px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+          <option value=",">Comma (,)</option>
+          <option value=";">Semicolon (;)</option>
+          <option value="\t">Tab</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="hasHeader" checked class="w-4 h-4" />
+        <label for="hasHeader" class="text-sm text-slate-600">First row is header</label>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to JSON</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Output</label>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 250px;"></div>
+    </div>
+
+    <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy Output</button>
+  </div>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor, outputEditor;
+
+    loadMonaco().then((monaco) => {
+      const editorOptions = {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+      };
+
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'plaintext',
+      });
+
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'json',
+        readOnly: true,
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    function parseCSV(text, delimiter) {
+      const lines = text.trim().split('\n');
+      const result = [];
+      
+      for (const line of lines) {
+        const row = [];
+        let cell = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+              cell += '"';
+              i++;
+            } else {
+              inQuotes = !inQuotes;
+            }
+          } else if (char === delimiter && !inQuotes) {
+            row.push(cell.trim());
+            cell = '';
+          } else {
+            cell += char;
+          }
+        }
+        row.push(cell.trim());
+        result.push(row);
+      }
+      return result;
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      if (!input) {
+        showStatus('❌ Please enter CSV data', true);
+        return;
+      }
+
+      try {
+        let delimiter = document.getElementById('delimiter').value;
+        if (delimiter === '\\t') delimiter = '\t';
+        const hasHeader = document.getElementById('hasHeader').checked;
+        
+        const rows = parseCSV(input, delimiter);
+        if (rows.length === 0) {
+          showStatus('❌ No data found', true);
+          return;
+        }
+
+        let result;
+        if (hasHeader && rows.length > 1) {
+          const headers = rows[0];
+          result = rows.slice(1).map(row => {
+            const obj = {};
+            headers.forEach((h, i) => {
+              let val = row[i] || '';
+              // Try to parse numbers
+              if (!isNaN(val) && val !== '') val = Number(val);
+              obj[h] = val;
+            });
+            return obj;
+          });
+        } else {
+          result = rows;
+        }
+
+        outputEditor.setValue(JSON.stringify(result, null, 2));
+        showStatus(`✅ Converted ${result.length} ${hasHeader ? 'records' : 'rows'}`, false);
+      } catch (e) {
+        showStatus('❌ Error: ' + e.message, true);
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`name,age,city,email
+John Doe,30,New York,john@example.com
+Jane Smith,25,Los Angeles,jane@example.com
+Bob Johnson,35,Chicago,bob@example.com`);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+  </script>
+</JSONToolLayout>

@@ -1,0 +1,303 @@
+---
+import NetworkingToolLayout from "../../layouts/NetworkingToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What formats can I convert IP addresses to?",
+    answer: "This tool converts IPv4 addresses between decimal (192.168.1.1), binary, hexadecimal, and integer formats.",
+  },
+  {
+    question: "What is an IP address class?",
+    answer: "IPv4 addresses are divided into classes A-E based on the first octet. Classes A, B, and C are for general use, D for multicast, and E is reserved.",
+  },
+  {
+    question: "How do I validate an IP address?",
+    answer: "A valid IPv4 address has 4 octets separated by dots, each ranging from 0 to 255.",
+  },
+];
+
+const howItWorks = [
+  {
+    title: "Decimal Format",
+    content: "Standard dotted decimal notation (192.168.1.1). Each octet is a number 0-255.",
+  },
+  {
+    title: "Binary Format",
+    content: "Each octet converted to 8-bit binary (11000000.10101000.00000001.00000001).",
+  },
+  {
+    title: "Hexadecimal Format",
+    content: "Each octet as 2-digit hex (C0.A8.01.01). Useful in low-level networking.",
+  },
+  {
+    title: "Integer Format",
+    content: "32-bit unsigned integer (3232235777). Used in databases and APIs.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Database Storage",
+    description: "Store IP addresses as integers for efficient indexing and range queries.",
+  },
+  {
+    title: "Network Debugging",
+    description: "Analyze binary representation to understand subnet masks and bitwise operations.",
+  },
+  {
+    title: "Programming",
+    description: "Convert between formats when working with different networking libraries.",
+  },
+  {
+    title: "Learning",
+    description: "Understand how IP addresses work at the binary level for networking education.",
+  },
+];
+---
+
+<NetworkingToolLayout
+  title="IP Converter - Convert IP Between Decimal, Binary, Hex"
+  description="Free online IP converter. Convert IPv4 addresses between decimal, binary, hexadecimal, and integer formats."
+  canonicalPath="/networking/ip-converter"
+  currentTool="IP Converter"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      IP Address Converter
+    </h1>
+    <p class="text-slate-500">Convert IPv4 addresses between different formats.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label for="ipInput" class="block font-medium text-slate-700 mb-1.5 text-sm">Enter IP Address (any format)</label>
+      <input
+        type="text"
+        id="ipInput"
+        placeholder="192.168.1.1 or 3232235777 or C0.A8.01.01"
+        class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none font-mono"
+      />
+    </div>
+
+    <div class="flex gap-3 flex-wrap mb-6">
+      <button onclick="convertIp()" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert</button>
+      <button onclick="clearAll()" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm">Clear</button>
+    </div>
+
+    <div id="result" class="hidden">
+      <h3 class="font-semibold text-slate-900 mb-3">Converted Formats</h3>
+      <div class="space-y-3">
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Decimal (Dotted)</div>
+              <div id="decimalIp" class="font-mono text-lg text-slate-900">-</div>
+            </div>
+            <button onclick="copyToClipboard('decimalIp')" class="text-slate-400 hover:text-slate-600 text-sm">📋</button>
+          </div>
+        </div>
+        
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Binary</div>
+              <div id="binaryIp" class="font-mono text-lg text-slate-900 break-all">-</div>
+            </div>
+            <button onclick="copyToClipboard('binaryIp')" class="text-slate-400 hover:text-slate-600 text-sm">📋</button>
+          </div>
+        </div>
+        
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Hexadecimal</div>
+              <div id="hexIp" class="font-mono text-lg text-slate-900">-</div>
+            </div>
+            <button onclick="copyToClipboard('hexIp')" class="text-slate-400 hover:text-slate-600 text-sm">📋</button>
+          </div>
+        </div>
+        
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Integer (32-bit)</div>
+              <div id="integerIp" class="font-mono text-lg text-slate-900">-</div>
+            </div>
+            <button onclick="copyToClipboard('integerIp')" class="text-slate-400 hover:text-slate-600 text-sm">📋</button>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">IP Class</div>
+          <div id="ipClass" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+        
+        <div class="bg-white border border-slate-200 rounded p-3">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">IP Type</div>
+          <div id="ipType" class="font-mono text-lg text-slate-900">-</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="error" class="hidden text-red-600 mt-4"></div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">IPv4 Address Classes</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-slate-100">
+            <th class="border border-slate-200 px-3 py-2 text-left">Class</th>
+            <th class="border border-slate-200 px-3 py-2 text-left">Range</th>
+            <th class="border border-slate-200 px-3 py-2 text-left">Default Mask</th>
+            <th class="border border-slate-200 px-3 py-2 text-left">Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="border border-slate-200 px-3 py-2">A</td><td class="border border-slate-200 px-3 py-2">1.0.0.0 – 126.255.255.255</td><td class="border border-slate-200 px-3 py-2">/8</td><td class="border border-slate-200 px-3 py-2">Large networks</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">B</td><td class="border border-slate-200 px-3 py-2">128.0.0.0 – 191.255.255.255</td><td class="border border-slate-200 px-3 py-2">/16</td><td class="border border-slate-200 px-3 py-2">Medium networks</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">C</td><td class="border border-slate-200 px-3 py-2">192.0.0.0 – 223.255.255.255</td><td class="border border-slate-200 px-3 py-2">/24</td><td class="border border-slate-200 px-3 py-2">Small networks</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">D</td><td class="border border-slate-200 px-3 py-2">224.0.0.0 – 239.255.255.255</td><td class="border border-slate-200 px-3 py-2">N/A</td><td class="border border-slate-200 px-3 py-2">Multicast</td></tr>
+          <tr><td class="border border-slate-200 px-3 py-2">E</td><td class="border border-slate-200 px-3 py-2">240.0.0.0 – 255.255.255.255</td><td class="border border-slate-200 px-3 py-2">N/A</td><td class="border border-slate-200 px-3 py-2">Reserved</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script is:inline>
+    function parseIpInput(input) {
+      input = input.trim();
+      
+      // Try decimal dotted format
+      if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(input)) {
+        const parts = input.split('.').map(Number);
+        if (parts.every(p => p >= 0 && p <= 255)) {
+          return ((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0;
+        }
+      }
+      
+      // Try integer format
+      if (/^\d+$/.test(input)) {
+        const num = parseInt(input, 10);
+        if (num >= 0 && num <= 4294967295) {
+          return num;
+        }
+      }
+      
+      // Try hex format (with or without dots)
+      const hexClean = input.replace(/[.\s:]/g, '');
+      if (/^[0-9a-fA-F]{8}$/.test(hexClean)) {
+        return parseInt(hexClean, 16);
+      }
+      
+      // Try binary format (with or without dots)
+      const binClean = input.replace(/[.\s]/g, '');
+      if (/^[01]{32}$/.test(binClean)) {
+        return parseInt(binClean, 2);
+      }
+      
+      return null;
+    }
+
+    function intToDecimal(int) {
+      return [
+        (int >>> 24) & 255,
+        (int >>> 16) & 255,
+        (int >>> 8) & 255,
+        int & 255
+      ].join('.');
+    }
+
+    function intToBinary(int) {
+      return [
+        ((int >>> 24) & 255).toString(2).padStart(8, '0'),
+        ((int >>> 16) & 255).toString(2).padStart(8, '0'),
+        ((int >>> 8) & 255).toString(2).padStart(8, '0'),
+        (int & 255).toString(2).padStart(8, '0')
+      ].join('.');
+    }
+
+    function intToHex(int) {
+      return [
+        ((int >>> 24) & 255).toString(16).toUpperCase().padStart(2, '0'),
+        ((int >>> 16) & 255).toString(16).toUpperCase().padStart(2, '0'),
+        ((int >>> 8) & 255).toString(16).toUpperCase().padStart(2, '0'),
+        (int & 255).toString(16).toUpperCase().padStart(2, '0')
+      ].join('.');
+    }
+
+    function getIpClass(firstOctet) {
+      if (firstOctet >= 1 && firstOctet <= 126) return 'Class A';
+      if (firstOctet >= 128 && firstOctet <= 191) return 'Class B';
+      if (firstOctet >= 192 && firstOctet <= 223) return 'Class C';
+      if (firstOctet >= 224 && firstOctet <= 239) return 'Class D (Multicast)';
+      if (firstOctet >= 240 && firstOctet <= 255) return 'Class E (Reserved)';
+      if (firstOctet === 127) return 'Loopback';
+      return 'Invalid';
+    }
+
+    function getIpType(int) {
+      const first = (int >>> 24) & 255;
+      const second = (int >>> 16) & 255;
+      const decimal = intToDecimal(int);
+      
+      if (first === 10) return 'Private (10.0.0.0/8)';
+      if (first === 172 && second >= 16 && second <= 31) return 'Private (172.16.0.0/12)';
+      if (first === 192 && second === 168) return 'Private (192.168.0.0/16)';
+      if (first === 127) return 'Loopback';
+      if (first === 0) return 'Current Network';
+      if (first >= 224 && first <= 239) return 'Multicast';
+      if (first >= 240) return 'Reserved';
+      if (decimal === '255.255.255.255') return 'Broadcast';
+      if (first === 169 && second === 254) return 'Link-Local (APIPA)';
+      return 'Public';
+    }
+
+    function convertIp() {
+      const input = document.getElementById('ipInput').value;
+      const resultDiv = document.getElementById('result');
+      const errorDiv = document.getElementById('error');
+
+      errorDiv.classList.add('hidden');
+      resultDiv.classList.add('hidden');
+
+      const ipInt = parseIpInput(input);
+      
+      if (ipInt === null) {
+        errorDiv.textContent = 'Invalid IP address format. Use decimal (192.168.1.1), integer, hex, or binary.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const firstOctet = (ipInt >>> 24) & 255;
+
+      document.getElementById('decimalIp').textContent = intToDecimal(ipInt);
+      document.getElementById('binaryIp').textContent = intToBinary(ipInt);
+      document.getElementById('hexIp').textContent = intToHex(ipInt);
+      document.getElementById('integerIp').textContent = ipInt.toString();
+      document.getElementById('ipClass').textContent = getIpClass(firstOctet);
+      document.getElementById('ipType').textContent = getIpType(ipInt);
+
+      resultDiv.classList.remove('hidden');
+    }
+
+    function clearAll() {
+      document.getElementById('ipInput').value = '';
+      document.getElementById('result').classList.add('hidden');
+      document.getElementById('error').classList.add('hidden');
+    }
+
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).textContent;
+      navigator.clipboard.writeText(text);
+    }
+
+    document.getElementById('ipInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') convertIp();
+    });
+  </script>
+</NetworkingToolLayout>

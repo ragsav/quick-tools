@@ -1,0 +1,217 @@
+---
+import JSONToolLayout from "../../layouts/JSONToolLayout.astro";
+
+const faqItems = [
+  { question: "What JSON format is required?", answer: "An array of objects with consistent keys works best for CSV conversion." },
+  { question: "How are nested objects handled?", answer: "Nested objects are flattened or converted to JSON strings in the CSV output." },
+  { question: "Can I customize the delimiter?", answer: "Yes, you can choose comma, semicolon, or tab as the delimiter." },
+];
+
+const howItWorks = [
+  { title: "Paste JSON", content: "Enter or paste your JSON array in the input editor." },
+  { title: "Configure", content: "Select delimiter and whether to include headers." },
+  { title: "Convert", content: "Click Convert to transform JSON to CSV format." },
+  { title: "Download", content: "Copy or download the CSV file." },
+];
+
+const useCases = [
+  { title: "Data Export", description: "Export JSON data to CSV for spreadsheet analysis." },
+  { title: "Reporting", description: "Convert API data to CSV for business reports." },
+  { title: "Database Import", description: "Prepare JSON data for import into SQL databases." },
+  { title: "Data Sharing", description: "Share data with users who prefer spreadsheet format." },
+];
+---
+
+<JSONToolLayout
+  title="JSON to CSV Converter - Convert JSON Online"
+  description="Convert JSON array to CSV format online. Customize delimiter and download as CSV file."
+  canonicalPath="/json/json-to-csv"
+  currentTool="JSON to CSV"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">JSON to CSV Converter</h1>
+    <p class="text-slate-500">Convert JSON array to CSV format</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">JSON Input (array of objects)</label>
+      <div id="inputEditor" class="border border-slate-300 rounded" style="height: 220px;"></div>
+    </div>
+
+    <div class="flex flex-wrap gap-4 mb-4 items-center">
+      <div>
+        <label class="block text-sm text-slate-600 mb-1">Delimiter</label>
+        <select id="delimiter" class="px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+          <option value=",">Comma (,)</option>
+          <option value=";">Semicolon (;)</option>
+          <option value="\t">Tab</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="includeHeader" checked class="w-4 h-4" />
+        <label for="includeHeader" class="text-sm text-slate-600">Include header row</label>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button id="convertBtn" class="btn-primary px-6 py-2 font-semibold text-white rounded">Convert to CSV</button>
+      <button id="clearBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Clear</button>
+      <button id="sampleBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">Load Sample</button>
+    </div>
+
+    <div id="statusBox" class="mb-4 hidden">
+      <div id="status" class="p-3 rounded text-sm"></div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-1.5 text-sm">CSV Output</label>
+      <div id="outputEditor" class="border border-slate-300 rounded" style="height: 200px;"></div>
+    </div>
+
+    <div class="flex gap-3">
+      <button id="copyBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">📋 Copy</button>
+      <button id="downloadBtn" class="px-4 py-2 bg-white border border-slate-300 rounded text-sm hover:bg-slate-50">⬇️ Download CSV</button>
+    </div>
+  </div>
+
+  <script is:inline>
+    const loadMonaco = () => {
+      return new Promise((resolve) => {
+        if (window.monaco) { resolve(window.monaco); return; }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js';
+        script.onload = () => {
+          require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+          require(['vs/editor/editor.main'], () => resolve(window.monaco));
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    let inputEditor, outputEditor;
+
+    loadMonaco().then((monaco) => {
+      const editorOptions = {
+        theme: 'vs',
+        minimap: { enabled: false },
+        fontSize: 13,
+        lineNumbers: 'on',
+        scrollBeyondLastLine: false,
+        automaticLayout: true,
+        tabSize: 2,
+      };
+
+      inputEditor = monaco.editor.create(document.getElementById('inputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'json',
+      });
+
+      outputEditor = monaco.editor.create(document.getElementById('outputEditor'), {
+        ...editorOptions,
+        value: '',
+        language: 'plaintext',
+        readOnly: true,
+      });
+    });
+
+    function showStatus(msg, isError) {
+      const box = document.getElementById('statusBox');
+      const status = document.getElementById('status');
+      status.innerText = msg;
+      status.className = `p-3 rounded text-sm ${isError ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`;
+      box.classList.remove('hidden');
+    }
+
+    function escapeCSV(value, delimiter) {
+      if (value === null || value === undefined) return '';
+      const str = typeof value === 'object' ? JSON.stringify(value) : String(value);
+      if (str.includes(delimiter) || str.includes('"') || str.includes('\n')) {
+        return '"' + str.replace(/"/g, '""') + '"';
+      }
+      return str;
+    }
+
+    function jsonToCSV(data, delimiter, includeHeader) {
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error('Input must be a non-empty array');
+      }
+
+      // Get all unique keys
+      const keys = [...new Set(data.flatMap(obj => Object.keys(obj)))];
+      const rows = [];
+
+      if (includeHeader) {
+        rows.push(keys.map(k => escapeCSV(k, delimiter)).join(delimiter));
+      }
+
+      for (const obj of data) {
+        const row = keys.map(key => escapeCSV(obj[key], delimiter));
+        rows.push(row.join(delimiter));
+      }
+
+      return rows.join('\n');
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const input = inputEditor.getValue().trim();
+      if (!input) {
+        showStatus('❌ Please enter JSON data', true);
+        return;
+      }
+
+      try {
+        const data = JSON.parse(input);
+        let delimiter = document.getElementById('delimiter').value;
+        if (delimiter === '\\t') delimiter = '\t';
+        const includeHeader = document.getElementById('includeHeader').checked;
+
+        const csv = jsonToCSV(data, delimiter, includeHeader);
+        outputEditor.setValue(csv);
+        showStatus(`✅ Converted ${data.length} records to CSV`, false);
+      } catch (e) {
+        showStatus('❌ Error: ' + e.message, true);
+        outputEditor.setValue('');
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputEditor.setValue('');
+      outputEditor.setValue('');
+      document.getElementById('statusBox').classList.add('hidden');
+    });
+
+    document.getElementById('sampleBtn').addEventListener('click', () => {
+      inputEditor.setValue(`[
+  {"name": "John Doe", "age": 30, "city": "New York"},
+  {"name": "Jane Smith", "age": 25, "city": "Los Angeles"},
+  {"name": "Bob Johnson", "age": 35, "city": "Chicago"}
+]`);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        navigator.clipboard.writeText(output);
+        showStatus('✅ Copied to clipboard!', false);
+      }
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      const output = outputEditor.getValue();
+      if (output) {
+        const blob = new Blob([output], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'data.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    });
+  </script>
+</JSONToolLayout>
