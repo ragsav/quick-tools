@@ -1,0 +1,327 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What resize modes are available?",
+    answer: "You can resize by exact dimensions (width/height in pixels), percentage, or maximum dimension while maintaining aspect ratio.",
+  },
+  {
+    question: "Will quality be affected?",
+    answer: "Enlarging images may reduce quality. For best results, resize to smaller dimensions or use high-quality source images.",
+  },
+  {
+    question: "Can I maintain the aspect ratio?",
+    answer: "Yes! Enable 'Maintain aspect ratio' to automatically calculate the correct height when you change the width, and vice versa.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="Image Resize - Free Online Tool"
+  description="Resize images online for free. Change dimensions, scale by percentage, or fit to maximum size. No upload required."
+  canonicalPath="/image/image-resize"
+  currentTool="Image Resize"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Image Resize
+    </h1>
+    <p class="text-slate-500">
+      Resize images to specific dimensions or by percentage.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <div
+      id="dropZone"
+      class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6"
+    >
+      <div class="text-4xl mb-2">📐</div>
+      <p class="text-slate-600 mb-2">Drag & drop image here or click to select</p>
+      <p class="text-sm text-slate-400">Supports JPG, PNG, WebP, GIF</p>
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+    </div>
+
+    <div id="controls" class="hidden">
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Original</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="originalPreview" class="max-w-full max-h-full object-contain" alt="Original" />
+          </div>
+          <p id="originalInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Resized</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="resizedPreview" class="max-w-full max-h-full object-contain" alt="Resized" />
+          </div>
+          <p id="resizedInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+      </div>
+
+      <!-- Resize Mode -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Resize Mode</label>
+        <div class="flex flex-wrap gap-2">
+          <button class="mode-btn px-4 py-2 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100" data-mode="dimensions">
+            By Dimensions
+          </button>
+          <button class="mode-btn px-4 py-2 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100" data-mode="percentage">
+            By Percentage
+          </button>
+          <button class="mode-btn px-4 py-2 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100" data-mode="maxsize">
+            Max Dimension
+          </button>
+        </div>
+      </div>
+
+      <!-- Dimensions Mode -->
+      <div id="dimensionsMode" class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Width (px)</label>
+          <input type="number" id="width" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm" min="1" max="10000" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Height (px)</label>
+          <input type="number" id="height" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm" min="1" max="10000" />
+        </div>
+      </div>
+
+      <!-- Percentage Mode -->
+      <div id="percentageMode" class="hidden mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-1">Scale (%)</label>
+        <div class="flex items-center gap-2">
+          <input type="range" id="percentage" min="10" max="200" value="100" class="flex-1" />
+          <span id="percentageValue" class="text-sm text-slate-600 w-12">100%</span>
+        </div>
+        <div class="flex gap-2 mt-2">
+          <button class="preset-btn text-xs px-2 py-1 border border-slate-300 rounded hover:bg-slate-100" data-percent="25">25%</button>
+          <button class="preset-btn text-xs px-2 py-1 border border-slate-300 rounded hover:bg-slate-100" data-percent="50">50%</button>
+          <button class="preset-btn text-xs px-2 py-1 border border-slate-300 rounded hover:bg-slate-100" data-percent="75">75%</button>
+          <button class="preset-btn text-xs px-2 py-1 border border-slate-300 rounded hover:bg-slate-100" data-percent="150">150%</button>
+          <button class="preset-btn text-xs px-2 py-1 border border-slate-300 rounded hover:bg-slate-100" data-percent="200">200%</button>
+        </div>
+      </div>
+
+      <!-- Max Size Mode -->
+      <div id="maxsizeMode" class="hidden mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-1">Maximum Dimension (px)</label>
+        <input type="number" id="maxSize" class="w-full max-w-xs px-3 py-2 border border-slate-300 rounded bg-white text-sm" min="1" max="10000" value="1920" />
+        <p class="text-xs text-slate-500 mt-1">Image will be scaled so neither width nor height exceeds this value</p>
+      </div>
+
+      <div class="flex items-center gap-4 mb-6">
+        <label class="flex items-center gap-2 text-sm text-slate-700">
+          <input type="checkbox" id="maintainRatio" checked class="rounded" />
+          Maintain aspect ratio
+        </label>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="resizeBtn"
+          class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm"
+        >
+          📐 Resize
+        </button>
+        <button
+          id="downloadBtn"
+          class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors hidden"
+        >
+          ⬇️ Download
+        </button>
+        <button
+          id="resetBtn"
+          class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+        >
+          🗑️ Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const controls = document.getElementById('controls');
+    const originalPreview = document.getElementById('originalPreview');
+    const resizedPreview = document.getElementById('resizedPreview');
+    const originalInfo = document.getElementById('originalInfo');
+    const resizedInfo = document.getElementById('resizedInfo');
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const percentageSlider = document.getElementById('percentage');
+    const percentageValue = document.getElementById('percentageValue');
+    const maxSizeInput = document.getElementById('maxSize');
+    const maintainRatio = document.getElementById('maintainRatio');
+    const resizeBtn = document.getElementById('resizeBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let originalImage = null;
+    let originalFile = null;
+    let resizedBlob = null;
+    let aspectRatio = 1;
+    let currentMode = 'dimensions';
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.toggle('bg-blue-600', btn.dataset.mode === mode);
+        btn.classList.toggle('text-white', btn.dataset.mode === mode);
+        btn.classList.toggle('border-blue-600', btn.dataset.mode === mode);
+      });
+      document.getElementById('dimensionsMode').classList.toggle('hidden', mode !== 'dimensions');
+      document.getElementById('percentageMode').classList.toggle('hidden', mode !== 'percentage');
+      document.getElementById('maxsizeMode').classList.toggle('hidden', mode !== 'maxsize');
+    }
+
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      originalFile = file;
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          originalImage = img;
+          aspectRatio = img.width / img.height;
+
+          originalPreview.src = e.target.result;
+          originalInfo.textContent = `${img.width} × ${img.height} • ${formatSize(file.size)}`;
+
+          widthInput.value = img.width;
+          heightInput.value = img.height;
+
+          controls.classList.remove('hidden');
+          dropZone.classList.add('hidden');
+          setMode('dimensions');
+          resizeImage();
+        };
+        img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function getNewDimensions() {
+      let width, height;
+
+      if (currentMode === 'dimensions') {
+        width = parseInt(widthInput.value) || originalImage.width;
+        height = parseInt(heightInput.value) || originalImage.height;
+      } else if (currentMode === 'percentage') {
+        const scale = percentageSlider.value / 100;
+        width = Math.round(originalImage.width * scale);
+        height = Math.round(originalImage.height * scale);
+      } else if (currentMode === 'maxsize') {
+        const maxDim = parseInt(maxSizeInput.value) || 1920;
+        const scale = Math.min(maxDim / originalImage.width, maxDim / originalImage.height, 1);
+        width = Math.round(originalImage.width * scale);
+        height = Math.round(originalImage.height * scale);
+      }
+
+      return { width, height };
+    }
+
+    function resizeImage() {
+      if (!originalImage) return;
+
+      const { width, height } = getNewDimensions();
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(originalImage, 0, 0, width, height);
+
+      const mimeType = originalFile.type.includes('png') ? 'image/png' : 'image/jpeg';
+      const quality = mimeType === 'image/jpeg' ? 0.92 : undefined;
+
+      canvas.toBlob((blob) => {
+        resizedBlob = blob;
+        resizedPreview.src = URL.createObjectURL(blob);
+        resizedInfo.textContent = `${width} × ${height} • ${formatSize(blob.size)}`;
+        downloadBtn.classList.remove('hidden');
+      }, mimeType, quality);
+    }
+
+    // Event listeners
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => setMode(btn.dataset.mode));
+    });
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        percentageSlider.value = btn.dataset.percent;
+        percentageValue.textContent = btn.dataset.percent + '%';
+      });
+    });
+
+    widthInput.addEventListener('input', () => {
+      if (maintainRatio.checked) {
+        heightInput.value = Math.round(widthInput.value / aspectRatio);
+      }
+    });
+
+    heightInput.addEventListener('input', () => {
+      if (maintainRatio.checked) {
+        widthInput.value = Math.round(heightInput.value * aspectRatio);
+      }
+    });
+
+    percentageSlider.addEventListener('input', () => {
+      percentageValue.textContent = percentageSlider.value + '%';
+    });
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    resizeBtn.addEventListener('click', resizeImage);
+
+    downloadBtn.addEventListener('click', () => {
+      if (!resizedBlob) return;
+      const ext = originalFile.type.includes('png') ? 'png' : 'jpg';
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(resizedBlob);
+      link.download = `resized-${originalFile.name.replace(/\.[^.]+$/, '')}.${ext}`;
+      link.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      originalImage = null;
+      originalFile = null;
+      resizedBlob = null;
+      controls.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+      fileInput.value = '';
+      downloadBtn.classList.add('hidden');
+    });
+  </script>
+</ImageToolLayout>

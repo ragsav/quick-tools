@@ -5,6 +5,17 @@
 @source "../layouts/**/*.astro";
 @source "../components/**/*.astro";
 
+/* Enable dark mode based on class */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Theme color scheme for browser UI */
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
 /* Custom button styling using cluster color */
 .btn-primary {
   background-color: var(--cluster-color, #1c398e);
@@ -12,4 +23,39 @@
 
 .btn-primary:hover {
   filter: brightness(1.1);
+}
+/* Theme toggle button */
+.theme-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: white;
+}
+
+.dark .theme-toggle .sun-icon {
+  display: block;
+}
+
+.dark .theme-toggle .moon-icon {
+  display: none;
+}
+
+.theme-toggle .sun-icon {
+  display: none;
+}
+
+.theme-toggle .moon-icon {
+  display: block;
 }

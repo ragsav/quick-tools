@@ -1,0 +1,181 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What rotation options are available?",
+    answer: "Rotate by 90°, 180°, 270° or custom angle, plus horizontal and vertical flip.",
+  },
+  {
+    question: "Will rotation affect quality?",
+    answer: "90° rotations are lossless. Custom angles may slightly affect edges.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="Image Rotate & Flip - Free Online Tool"
+  description="Rotate and flip images online. 90° rotation, custom angles, flip horizontal/vertical. No upload required."
+  canonicalPath="/image/image-rotate"
+  currentTool="Image Rotate"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Image Rotate & Flip</h1>
+    <p class="text-slate-500">Rotate and flip images with preset or custom angles.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <div id="dropZone" class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6">
+      <div class="text-4xl mb-2">🔄</div>
+      <p class="text-slate-600 mb-2">Drag & drop image here or click to select</p>
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+    </div>
+
+    <div id="controls" class="hidden">
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Original</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="originalPreview" class="max-w-full max-h-full object-contain" alt="Original" />
+          </div>
+          <p id="originalInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Transformed</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="transformedPreview" class="max-w-full max-h-full object-contain" alt="Transformed" />
+          </div>
+          <p id="transformedInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Quick Rotate</label>
+        <div class="flex flex-wrap gap-2">
+          <button id="rotate90" class="px-4 py-2 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100">↻ 90°</button>
+          <button id="rotate180" class="px-4 py-2 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100">↻ 180°</button>
+          <button id="rotate270" class="px-4 py-2 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100">↺ 90°</button>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Flip</label>
+        <div class="flex flex-wrap gap-2">
+          <button id="flipH" class="px-4 py-2 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100">↔️ Horizontal</button>
+          <button id="flipV" class="px-4 py-2 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100">↕️ Vertical</button>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Custom Angle</label>
+        <div class="flex items-center gap-4">
+          <input type="range" id="customAngle" min="-180" max="180" value="0" class="flex-1" />
+          <span id="angleValue" class="text-sm text-slate-600 w-12">0°</span>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button id="downloadBtn" class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors hidden">⬇️ Download</button>
+        <button id="resetBtn" class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors">🗑️ Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const controls = document.getElementById('controls');
+    const originalPreview = document.getElementById('originalPreview');
+    const transformedPreview = document.getElementById('transformedPreview');
+    const originalInfo = document.getElementById('originalInfo');
+    const transformedInfo = document.getElementById('transformedInfo');
+    const customAngle = document.getElementById('customAngle');
+    const angleValue = document.getElementById('angleValue');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let originalImage = null, originalFile = null, transformedBlob = null;
+    let rotation = 0, flipH = false, flipV = false;
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      originalFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          originalImage = img;
+          originalPreview.src = e.target.result;
+          originalInfo.textContent = `${img.width} × ${img.height} • ${formatSize(file.size)}`;
+          controls.classList.remove('hidden');
+          dropZone.classList.add('hidden');
+          applyTransform();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyTransform() {
+      if (!originalImage) return;
+      const radians = rotation * Math.PI / 180;
+      let newWidth, newHeight;
+      if (rotation % 90 === 0 && rotation % 180 !== 0) {
+        newWidth = originalImage.height; newHeight = originalImage.width;
+      } else {
+        newWidth = originalImage.width; newHeight = originalImage.height;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = newWidth; canvas.height = newHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.translate(newWidth / 2, newHeight / 2);
+      ctx.rotate(radians);
+      ctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+      ctx.drawImage(originalImage, -originalImage.width / 2, -originalImage.height / 2);
+      const mimeType = originalFile.type.includes('png') ? 'image/png' : 'image/jpeg';
+      canvas.toBlob((blob) => {
+        transformedBlob = blob;
+        transformedPreview.src = URL.createObjectURL(blob);
+        transformedInfo.textContent = `${newWidth} × ${newHeight} • ${formatSize(blob.size)}`;
+        downloadBtn.classList.remove('hidden');
+      }, mimeType, 0.92);
+    }
+
+    document.getElementById('rotate90').addEventListener('click', () => { rotation = (rotation + 90) % 360; applyTransform(); });
+    document.getElementById('rotate180').addEventListener('click', () => { rotation = (rotation + 180) % 360; applyTransform(); });
+    document.getElementById('rotate270').addEventListener('click', () => { rotation = (rotation + 270) % 360; applyTransform(); });
+    document.getElementById('flipH').addEventListener('click', () => { flipH = !flipH; applyTransform(); });
+    document.getElementById('flipV').addEventListener('click', () => { flipV = !flipV; applyTransform(); });
+    customAngle.addEventListener('input', () => { rotation = parseInt(customAngle.value); angleValue.textContent = rotation + '°'; });
+    customAngle.addEventListener('change', applyTransform);
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-blue-500'));
+    dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('border-blue-500'); handleFile(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+    downloadBtn.addEventListener('click', () => {
+      if (!transformedBlob) return;
+      const ext = originalFile.type.includes('png') ? 'png' : 'jpg';
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(transformedBlob);
+      link.download = `rotated.${ext}`;
+      link.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      originalImage = null; originalFile = null; transformedBlob = null;
+      rotation = 0; flipH = false; flipV = false;
+      controls.classList.add('hidden'); dropZone.classList.remove('hidden');
+      fileInput.value = ''; downloadBtn.classList.add('hidden');
+    });
+  </script>
+</ImageToolLayout>

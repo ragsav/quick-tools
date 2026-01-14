@@ -1,0 +1,188 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "Why convert JPG to PNG?",
+    answer: "PNG format supports transparency and uses lossless compression, making it ideal for graphics, logos, and images requiring editing.",
+  },
+  {
+    question: "Will the file size increase?",
+    answer: "Yes, PNG files are typically larger than JPGs due to lossless compression. The quality remains identical to the original JPG.",
+  },
+  {
+    question: "Can I add transparency after conversion?",
+    answer: "The PNG will preserve the exact JPG appearance. To add transparency, you'll need an image editor after conversion.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="JPG to PNG Converter - Free Online Tool"
+  description="Convert JPG/JPEG images to PNG format online for free. Lossless conversion preserving image quality. No upload required."
+  canonicalPath="/image/jpg-to-png"
+  currentTool="JPG to PNG"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      JPG to PNG Converter
+    </h1>
+    <p class="text-slate-500">
+      Convert JPEG images to PNG format with lossless quality.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <div
+      id="dropZone"
+      class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6"
+    >
+      <div class="text-4xl mb-2">🖼️</div>
+      <p class="text-slate-600 mb-2">Drag & drop JPG image here or click to select</p>
+      <p class="text-sm text-slate-400">Supports JPG/JPEG files</p>
+      <input type="file" id="fileInput" accept=".jpg,.jpeg,image/jpeg" class="hidden" />
+    </div>
+
+    <div id="controls" class="hidden">
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Original JPG</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="originalPreview" class="max-w-full max-h-full object-contain" alt="Original" />
+          </div>
+          <p id="originalInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Converted PNG</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="convertedPreview" class="max-w-full max-h-full object-contain" alt="Converted" />
+          </div>
+          <p id="convertedInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="convertBtn"
+          class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm"
+        >
+          🔄 Convert
+        </button>
+        <button
+          id="downloadBtn"
+          class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors hidden"
+        >
+          ⬇️ Download PNG
+        </button>
+        <button
+          id="resetBtn"
+          class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+        >
+          🗑️ Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const controls = document.getElementById('controls');
+    const originalPreview = document.getElementById('originalPreview');
+    const convertedPreview = document.getElementById('convertedPreview');
+    const originalInfo = document.getElementById('originalInfo');
+    const convertedInfo = document.getElementById('convertedInfo');
+    const convertBtn = document.getElementById('convertBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let originalImage = null;
+    let originalFile = null;
+    let convertedBlob = null;
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function handleFile(file) {
+      if (!file || !file.type.includes('jpeg')) {
+        alert('Please select a JPG/JPEG file.');
+        return;
+      }
+
+      originalFile = file;
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          originalImage = img;
+          originalPreview.src = e.target.result;
+          originalInfo.textContent = `${img.width} × ${img.height} • ${formatSize(file.size)}`;
+          controls.classList.remove('hidden');
+          dropZone.classList.add('hidden');
+          convertImage();
+        };
+        img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function convertImage() {
+      if (!originalImage) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = originalImage.width;
+      canvas.height = originalImage.height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(originalImage, 0, 0);
+
+      canvas.toBlob((blob) => {
+        convertedBlob = blob;
+        convertedPreview.src = URL.createObjectURL(blob);
+        convertedInfo.textContent = `${originalImage.width} × ${originalImage.height} • ${formatSize(blob.size)}`;
+        downloadBtn.classList.remove('hidden');
+      }, 'image/png');
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    convertBtn.addEventListener('click', convertImage);
+
+    downloadBtn.addEventListener('click', () => {
+      if (!convertedBlob) return;
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(convertedBlob);
+      link.download = originalFile.name.replace(/\.jpe?g$/i, '.png');
+      link.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      originalImage = null;
+      originalFile = null;
+      convertedBlob = null;
+      controls.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+      fileInput.value = '';
+      downloadBtn.classList.add('hidden');
+    });
+  </script>
+</ImageToolLayout>

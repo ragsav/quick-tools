@@ -1,0 +1,221 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "Why use WebP format?",
+    answer: "WebP provides superior compression - 25-35% smaller files than JPEG at the same quality. It's widely supported by modern browsers.",
+  },
+  {
+    question: "What formats can I convert?",
+    answer: "This tool accepts JPG, PNG, GIF, BMP, and most common image formats for conversion to WebP.",
+  },
+  {
+    question: "Does WebP support transparency?",
+    answer: "Yes! WebP supports both lossy and lossless compression with alpha transparency.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="Image to WebP Converter - Free Online Tool"
+  description="Convert any image to WebP format for smaller file sizes. Supports JPG, PNG, GIF, BMP. Free browser-based conversion."
+  canonicalPath="/image/image-to-webp"
+  currentTool="Image to WebP"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Image to WebP Converter
+    </h1>
+    <p class="text-slate-500">
+      Convert any image to modern WebP format for smaller file sizes.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <div
+      id="dropZone"
+      class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6"
+    >
+      <div class="text-4xl mb-2">🖼️</div>
+      <p class="text-slate-600 mb-2">Drag & drop image here or click to select</p>
+      <p class="text-sm text-slate-400">Supports JPG, PNG, GIF, BMP</p>
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+    </div>
+
+    <div id="controls" class="hidden">
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Original</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="originalPreview" class="max-w-full max-h-full object-contain" alt="Original" />
+          </div>
+          <p id="originalInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">WebP Output</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="convertedPreview" class="max-w-full max-h-full object-contain" alt="Converted" />
+          </div>
+          <p id="convertedInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Quality</label>
+          <div class="flex items-center gap-2">
+            <input type="range" id="quality" min="10" max="100" value="80" class="flex-1" />
+            <span id="qualityValue" class="text-sm text-slate-600 w-10">80%</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="lossless" class="rounded" />
+          <label for="lossless" class="text-sm text-slate-700">Lossless compression</label>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="convertBtn"
+          class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm"
+        >
+          🔄 Convert
+        </button>
+        <button
+          id="downloadBtn"
+          class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors hidden"
+        >
+          ⬇️ Download WebP
+        </button>
+        <button
+          id="resetBtn"
+          class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+        >
+          🗑️ Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const controls = document.getElementById('controls');
+    const originalPreview = document.getElementById('originalPreview');
+    const convertedPreview = document.getElementById('convertedPreview');
+    const originalInfo = document.getElementById('originalInfo');
+    const convertedInfo = document.getElementById('convertedInfo');
+    const qualitySlider = document.getElementById('quality');
+    const qualityValue = document.getElementById('qualityValue');
+    const losslessCheck = document.getElementById('lossless');
+    const convertBtn = document.getElementById('convertBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let originalImage = null;
+    let originalFile = null;
+    let convertedBlob = null;
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      originalFile = file;
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          originalImage = img;
+          originalPreview.src = e.target.result;
+          originalInfo.textContent = `${img.width} × ${img.height} • ${formatSize(file.size)} • ${file.type.split('/')[1].toUpperCase()}`;
+          controls.classList.remove('hidden');
+          dropZone.classList.add('hidden');
+          convertImage();
+        };
+        img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function convertImage() {
+      if (!originalImage) return;
+
+      const quality = losslessCheck.checked ? 1 : qualitySlider.value / 100;
+      const canvas = document.createElement('canvas');
+      canvas.width = originalImage.width;
+      canvas.height = originalImage.height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(originalImage, 0, 0);
+
+      canvas.toBlob((blob) => {
+        convertedBlob = blob;
+        convertedPreview.src = URL.createObjectURL(blob);
+
+        const savings = ((originalFile.size - blob.size) / originalFile.size * 100).toFixed(1);
+        const savingsText = savings > 0 ? ` (${savings}% smaller)` : '';
+        convertedInfo.textContent = `${originalImage.width} × ${originalImage.height} • ${formatSize(blob.size)}${savingsText}`;
+
+        downloadBtn.classList.remove('hidden');
+      }, 'image/webp', quality);
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+    qualitySlider.addEventListener('input', () => {
+      qualityValue.textContent = qualitySlider.value + '%';
+    });
+
+    losslessCheck.addEventListener('change', () => {
+      qualitySlider.disabled = losslessCheck.checked;
+      qualitySlider.parentElement.style.opacity = losslessCheck.checked ? '0.5' : '1';
+    });
+
+    convertBtn.addEventListener('click', convertImage);
+
+    downloadBtn.addEventListener('click', () => {
+      if (!convertedBlob) return;
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(convertedBlob);
+      link.download = originalFile.name.replace(/\.[^.]+$/, '.webp');
+      link.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      originalImage = null;
+      originalFile = null;
+      convertedBlob = null;
+      controls.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+      fileInput.value = '';
+      downloadBtn.classList.add('hidden');
+    });
+  </script>
+</ImageToolLayout>

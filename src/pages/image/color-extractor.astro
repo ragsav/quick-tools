@@ -1,0 +1,178 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How are colors extracted?",
+    answer: "The tool analyzes the image pixels and identifies the most dominant colors using color quantization.",
+  },
+  {
+    question: "Can I copy the color codes?",
+    answer: "Yes! Click on any color to copy its HEX code to your clipboard.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="Color Extractor - Extract Colors from Image"
+  description="Extract dominant colors and color palettes from images. Get HEX codes instantly. Free online tool."
+  canonicalPath="/image/color-extractor"
+  currentTool="Color Extractor"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Color Extractor</h1>
+    <p class="text-slate-500">Extract dominant colors and create palettes from images.</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <div id="dropZone" class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6">
+      <div class="text-4xl mb-2">🎨</div>
+      <p class="text-slate-600 mb-2">Drag & drop image here or click to select</p>
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+    </div>
+
+    <div id="controls" class="hidden">
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Image</h3>
+          <div class="bg-white border border-slate-200 rounded p-2">
+            <img id="preview" class="max-w-full max-h-64 object-contain mx-auto" alt="Preview" />
+          </div>
+        </div>
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Dominant Color</h3>
+          <div id="dominantColor" class="h-24 rounded mb-4 flex items-center justify-center text-white font-mono text-lg shadow-inner"></div>
+          
+          <h3 class="font-medium text-slate-700 mb-2">Color Palette</h3>
+          <div id="palette" class="grid grid-cols-5 gap-2"></div>
+          <p class="text-xs text-slate-500 mt-2">Click any color to copy HEX code</p>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Palette Size</label>
+        <div class="flex gap-2">
+          <button class="palette-size px-3 py-1 text-sm border border-slate-300 rounded hover:bg-slate-100" data-count="5">5</button>
+          <button class="palette-size px-3 py-1 text-sm border border-slate-300 rounded hover:bg-slate-100 bg-blue-600 text-white" data-count="8">8</button>
+          <button class="palette-size px-3 py-1 text-sm border border-slate-300 rounded hover:bg-slate-100" data-count="10">10</button>
+        </div>
+      </div>
+
+      <button id="resetBtn" class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300">🗑️ Clear</button>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-4 right-4 bg-slate-800 text-white px-4 py-2 rounded shadow-lg hidden text-sm"></div>
+
+  <script is:inline>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const controls = document.getElementById('controls');
+    const preview = document.getElementById('preview');
+    const dominantColor = document.getElementById('dominantColor');
+    const palette = document.getElementById('palette');
+    const toast = document.getElementById('toast');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let currentImage = null;
+    let paletteCount = 8;
+
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    function getContrastColor(r, g, b) {
+      return (r * 0.299 + g * 0.587 + b * 0.114) > 150 ? '#000' : '#fff';
+    }
+
+    function extractColors(img, count) {
+      const canvas = document.createElement('canvas');
+      const size = 100;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, size, size);
+      
+      const data = ctx.getImageData(0, 0, size, size).data;
+      const colors = {};
+      
+      for (let i = 0; i < data.length; i += 4) {
+        const r = Math.round(data[i] / 32) * 32;
+        const g = Math.round(data[i+1] / 32) * 32;
+        const b = Math.round(data[i+2] / 32) * 32;
+        const key = `${r},${g},${b}`;
+        colors[key] = (colors[key] || 0) + 1;
+      }
+      
+      return Object.entries(colors)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, count)
+        .map(([key]) => key.split(',').map(Number));
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2000);
+    }
+
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          currentImage = img;
+          preview.src = e.target.result;
+          controls.classList.remove('hidden');
+          dropZone.classList.add('hidden');
+          updatePalette();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updatePalette() {
+      if (!currentImage) return;
+      const colors = extractColors(currentImage, paletteCount);
+      
+      // Dominant color
+      const [r, g, b] = colors[0];
+      const hex = rgbToHex(r, g, b);
+      dominantColor.style.backgroundColor = hex;
+      dominantColor.style.color = getContrastColor(r, g, b);
+      dominantColor.textContent = hex.toUpperCase();
+      dominantColor.onclick = () => { navigator.clipboard.writeText(hex); showToast('Copied ' + hex); };
+      
+      // Palette
+      palette.innerHTML = '';
+      colors.forEach(([r, g, b]) => {
+        const hex = rgbToHex(r, g, b);
+        const div = document.createElement('div');
+        div.className = 'aspect-square rounded cursor-pointer hover:scale-105 transition-transform flex items-center justify-center text-xs font-mono';
+        div.style.backgroundColor = hex;
+        div.style.color = getContrastColor(r, g, b);
+        div.textContent = hex.toUpperCase();
+        div.onclick = () => { navigator.clipboard.writeText(hex); showToast('Copied ' + hex); };
+        palette.appendChild(div);
+      });
+    }
+
+    document.querySelectorAll('.palette-size').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.palette-size').forEach(b => b.classList.remove('bg-blue-600', 'text-white'));
+        btn.classList.add('bg-blue-600', 'text-white');
+        paletteCount = parseInt(btn.dataset.count);
+        updatePalette();
+      });
+    });
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => e.preventDefault());
+    dropZone.addEventListener('drop', (e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    resetBtn.addEventListener('click', () => { controls.classList.add('hidden'); dropZone.classList.remove('hidden'); fileInput.value = ''; });
+  </script>
+</ImageToolLayout>

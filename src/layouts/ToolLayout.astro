@@ -55,7 +55,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="">
   <head>
     <meta charset="utf-8" />
     <title>{title}</title>
@@ -173,6 +173,18 @@ const {
       )
     }
 
+    <!-- Theme initialization (prevents flash) -->
+    <script is:inline>
+      (function () {
+        const theme =
+          localStorage.getItem("theme") ||
+          (window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light");
+        if (theme === "dark") document.documentElement.classList.add("dark");
+      })();
+    </script>
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -183,10 +195,12 @@ const {
   </head>
 
   <body
-    class="font-['Inter',system-ui,sans-serif] bg-slate-50 text-slate-800 min-h-screen flex flex-col leading-relaxed"
+    class="font-['Inter',system-ui,sans-serif] bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col leading-relaxed transition-colors duration-200"
   >
     <!-- HEADER -->
-    <header class="bg-blue-900 text-white p-4">
+    <header
+      class="bg-blue-900 dark:bg-slate-800 text-white p-4 transition-colors duration-200"
+    >
       <div
         class="max-w-4xl mx-auto flex items-center justify-between flex-wrap gap-4"
       >
@@ -201,26 +215,61 @@ const {
           />
           <span>Quick Tools</span>
         </a>
-        <nav class="flex items-center gap-2 text-sm">
-          <a
-            href="/"
-            class="text-slate-400 no-underline hover:text-white transition-colors"
-            >Home</a
+        <div class="flex items-center gap-4">
+          <nav class="flex items-center gap-2 text-sm">
+            <a
+              href="/"
+              class="text-slate-400 no-underline hover:text-white transition-colors"
+              >Home</a
+            >
+            <span class="text-slate-500">/</span>
+            <a
+              href={cluster.url}
+              class="text-slate-400 no-underline hover:text-white transition-colors"
+              >{cluster.icon} {cluster.name}</a
+            >
+          </nav>
+          <button
+            type="button"
+            class="theme-toggle"
+            aria-label="Toggle dark mode"
+            onclick="toggleTheme()"
           >
-          <span class="text-slate-500">/</span>
-          <a
-            href={cluster.url}
-            class="text-slate-400 no-underline hover:text-white transition-colors"
-            >{cluster.icon} {cluster.name}</a
-          >
-        </nav>
+            <svg
+              class="sun-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+              ></path>
+            </svg>
+            <svg
+              class="moon-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+              ></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </header>
 
     <!-- MAIN CONTENT -->
     <main class="flex-1 max-w-4xl w-full mx-auto p-4 py-8">
       <div
-        class="bg-white rounded border border-slate-200 shadow-sm p-6 sm:p-8 mb-8"
+        class="bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 shadow-sm p-6 sm:p-8 mb-8 transition-colors duration-200"
         style={`--cluster-color: ${cluster.color}`}
       >
         <slot />
@@ -229,23 +278,25 @@ const {
       <!-- HOW IT WORKS SECTION -->
       {
         howItWorks.length > 0 && (
-          <section class="bg-white rounded border border-slate-200 shadow-sm p-6 sm:p-8 mb-8">
-            <h2 class="text-xl font-semibold text-slate-900 mb-6 pb-4 border-b border-slate-200">
+          <section class="bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 shadow-sm p-6 sm:p-8 mb-8 transition-colors duration-200">
+            <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-6 pb-4 border-b border-slate-200 dark:border-slate-700">
               📘 How It Works
             </h2>
             <div class="space-y-6">
               {howItWorks.map((item, index) => (
                 <div class="flex gap-4">
-                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold text-sm">
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 flex items-center justify-center font-semibold text-sm">
                     {index + 1}
                   </div>
                   <div class="flex-1">
                     {item.title && (
-                      <h3 class="font-semibold text-slate-800 mb-2">
+                      <h3 class="font-semibold text-slate-800 dark:text-slate-200 mb-2">
                         {item.title}
                       </h3>
                     )}
-                    <p class="text-slate-600 leading-relaxed">{item.content}</p>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {item.content}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -257,17 +308,17 @@ const {
       <!-- USE CASES SECTION -->
       {
         useCases.length > 0 && (
-          <section class="bg-white rounded border border-slate-200 shadow-sm p-6 sm:p-8 mb-8">
-            <h2 class="text-xl font-semibold text-slate-900 mb-6 pb-4 border-b border-slate-200">
+          <section class="bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 shadow-sm p-6 sm:p-8 mb-8 transition-colors duration-200">
+            <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-6 pb-4 border-b border-slate-200 dark:border-slate-700">
               💡 Common Use Cases
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               {useCases.map((item) => (
-                <div class="p-4 bg-slate-50 rounded border border-slate-100">
-                  <h3 class="font-semibold text-slate-800 mb-2">
+                <div class="p-4 bg-slate-50 dark:bg-slate-700 rounded border border-slate-100 dark:border-slate-600">
+                  <h3 class="font-semibold text-slate-800 dark:text-slate-200 mb-2">
                     {item.title}
                   </h3>
-                  <p class="text-slate-600 text-sm leading-relaxed">
+                  <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
                     {item.description}
                   </p>
                 </div>
@@ -281,14 +332,14 @@ const {
       {
         relatedTools.length > 0 && (
           <section class="mb-8">
-            <h2 class="text-xl font-semibold text-slate-900 mb-4">
+            <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-4">
               Related {cluster.name} Tools
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {relatedTools.map((tool) => (
                 <a
                   href={tool.url}
-                  class="flex justify-between items-center p-4 bg-white border border-slate-200 rounded no-underline text-slate-700 font-medium hover:border-blue-500 hover:shadow-md transition-all group"
+                  class="flex justify-between items-center p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded no-underline text-slate-700 dark:text-slate-300 font-medium hover:border-blue-500 hover:shadow-md transition-all group"
                 >
                   <span>{tool.name}</span>
                   <span class="text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all">
@@ -308,7 +359,9 @@ const {
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-slate-800 text-slate-400 p-8 mt-auto">
+    <footer
+      class="bg-slate-800 dark:bg-slate-950 text-slate-400 p-8 mt-auto transition-colors duration-200"
+    >
       <div
         class="max-w-4xl mx-auto flex flex-col items-center gap-4 text-center"
       >
@@ -365,6 +418,81 @@ const {
         border-color: var(--cluster-color, #1c398e);
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
       }
+
+      /* ===== DARK MODE OVERRIDES FOR SLOTTED TOOL CONTENT ===== */
+
+      /* Headings */
+      .dark .text-slate-900 {
+        color: #f1f5f9 !important;
+      }
+
+      /* Secondary headings */
+      .dark .text-slate-700 {
+        color: #cbd5e1 !important;
+      }
+
+      /* Body text */
+      .dark .text-slate-600 {
+        color: #94a3b8 !important;
+      }
+
+      /* Muted text */
+      .dark .text-slate-500 {
+        color: #94a3b8 !important;
+      }
+
+      /* Form container backgrounds */
+      .dark .bg-slate-50 {
+        background-color: #334155 !important;
+      }
+
+      /* Input and result box backgrounds */
+      .dark .bg-white:not(header *):not(footer *) {
+        background-color: #1e293b !important;
+      }
+
+      /* Borders */
+      .dark .border-slate-200 {
+        border-color: #475569 !important;
+      }
+
+      .dark .border-slate-300 {
+        border-color: #475569 !important;
+      }
+
+      /* Form inputs */
+      .dark input,
+      .dark select,
+      .dark textarea {
+        background-color: #1e293b !important;
+        color: #f1f5f9 !important;
+        border-color: #475569 !important;
+      }
+
+      .dark input::placeholder,
+      .dark textarea::placeholder {
+        color: #64748b !important;
+      }
+
+      /* Result box in dark mode */
+      .dark .result-box {
+        background-color: #1e293b !important;
+      }
+
+      /* Lists */
+      .dark ul,
+      .dark ol {
+        color: #94a3b8;
+      }
     </style>
+
+    <!-- Theme toggle script -->
+    <script is:inline>
+      function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.classList.toggle("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+      }
+    </script>
   </body>
 </html>

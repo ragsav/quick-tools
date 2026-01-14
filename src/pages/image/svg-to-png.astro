@@ -1,0 +1,275 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What resolution can I choose?",
+    answer: "You can specify any width and height in pixels. The aspect ratio can be maintained or custom dimensions can be set.",
+  },
+  {
+    question: "Can I rasterize animated SVGs?",
+    answer: "This tool captures the first frame of the SVG. For animated SVGs, only the initial state is exported.",
+  },
+  {
+    question: "Will gradients and filters work?",
+    answer: "Yes, most SVG features including gradients, filters, and embedded images are supported.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="SVG to PNG Converter - Free Online Tool"
+  description="Convert SVG vector graphics to PNG images online for free. Choose custom resolution. No upload required."
+  canonicalPath="/image/svg-to-png"
+  currentTool="SVG to PNG"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      SVG to PNG Converter
+    </h1>
+    <p class="text-slate-500">
+      Convert SVG vector graphics to PNG with custom resolution.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <div
+      id="dropZone"
+      class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6"
+    >
+      <div class="text-4xl mb-2">🎨</div>
+      <p class="text-slate-600 mb-2">Drag & drop SVG file here or click to select</p>
+      <p class="text-sm text-slate-400">Supports SVG files</p>
+      <input type="file" id="fileInput" accept=".svg,image/svg+xml" class="hidden" />
+    </div>
+
+    <div id="controls" class="hidden">
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Original SVG</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden checkered-bg">
+            <img id="originalPreview" class="max-w-full max-h-full object-contain" alt="Original" />
+          </div>
+          <p id="originalInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">PNG Output</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden checkered-bg">
+            <img id="convertedPreview" class="max-w-full max-h-full object-contain" alt="Converted" />
+          </div>
+          <p id="convertedInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Width (px)</label>
+          <input type="number" id="width" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm" min="1" max="8000" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Height (px)</label>
+          <input type="number" id="height" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm" min="1" max="8000" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Scale</label>
+          <select id="scale" class="w-full px-3 py-2 border border-slate-300 rounded bg-white text-sm">
+            <option value="1">1x</option>
+            <option value="2" selected>2x</option>
+            <option value="3">3x</option>
+            <option value="4">4x</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 mb-6">
+        <label class="flex items-center gap-2 text-sm text-slate-700">
+          <input type="checkbox" id="maintainRatio" checked class="rounded" />
+          Maintain aspect ratio
+        </label>
+        <label class="flex items-center gap-2 text-sm text-slate-700">
+          <input type="checkbox" id="transparent" checked class="rounded" />
+          Transparent background
+        </label>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="convertBtn"
+          class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm"
+        >
+          🔄 Convert
+        </button>
+        <button
+          id="downloadBtn"
+          class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors hidden"
+        >
+          ⬇️ Download PNG
+        </button>
+        <button
+          id="resetBtn"
+          class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+        >
+          🗑️ Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .checkered-bg {
+      background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+        linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+        linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    }
+  </style>
+
+  <script is:inline>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const controls = document.getElementById('controls');
+    const originalPreview = document.getElementById('originalPreview');
+    const convertedPreview = document.getElementById('convertedPreview');
+    const originalInfo = document.getElementById('originalInfo');
+    const convertedInfo = document.getElementById('convertedInfo');
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const scaleSelect = document.getElementById('scale');
+    const maintainRatio = document.getElementById('maintainRatio');
+    const transparentCheck = document.getElementById('transparent');
+    const convertBtn = document.getElementById('convertBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let originalSvg = null;
+    let originalFile = null;
+    let convertedBlob = null;
+    let aspectRatio = 1;
+    let baseWidth = 200;
+    let baseHeight = 200;
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function handleFile(file) {
+      if (!file || !file.type.includes('svg')) {
+        alert('Please select an SVG file.');
+        return;
+      }
+
+      originalFile = file;
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const svgContent = e.target.result;
+        const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+
+        const img = new Image();
+        img.onload = () => {
+          originalSvg = img;
+          baseWidth = img.width || 200;
+          baseHeight = img.height || 200;
+          aspectRatio = baseWidth / baseHeight;
+
+          originalPreview.src = url;
+          originalInfo.textContent = `${baseWidth} × ${baseHeight} • ${formatSize(file.size)}`;
+
+          widthInput.value = baseWidth * parseInt(scaleSelect.value);
+          heightInput.value = baseHeight * parseInt(scaleSelect.value);
+
+          controls.classList.remove('hidden');
+          dropZone.classList.add('hidden');
+          convertImage();
+        };
+        img.src = url;
+      };
+
+      reader.readAsText(file);
+    }
+
+    function convertImage() {
+      if (!originalSvg) return;
+
+      const width = parseInt(widthInput.value) || baseWidth;
+      const height = parseInt(heightInput.value) || baseHeight;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      if (!transparentCheck.checked) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, width, height);
+      }
+      ctx.drawImage(originalSvg, 0, 0, width, height);
+
+      canvas.toBlob((blob) => {
+        convertedBlob = blob;
+        convertedPreview.src = URL.createObjectURL(blob);
+        convertedInfo.textContent = `${width} × ${height} • ${formatSize(blob.size)}`;
+        downloadBtn.classList.remove('hidden');
+      }, 'image/png');
+    }
+
+    scaleSelect.addEventListener('change', () => {
+      const scale = parseInt(scaleSelect.value);
+      widthInput.value = baseWidth * scale;
+      heightInput.value = baseHeight * scale;
+    });
+
+    widthInput.addEventListener('input', () => {
+      if (maintainRatio.checked) {
+        heightInput.value = Math.round(widthInput.value / aspectRatio);
+      }
+    });
+
+    heightInput.addEventListener('input', () => {
+      if (maintainRatio.checked) {
+        widthInput.value = Math.round(heightInput.value * aspectRatio);
+      }
+    });
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    convertBtn.addEventListener('click', convertImage);
+
+    downloadBtn.addEventListener('click', () => {
+      if (!convertedBlob) return;
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(convertedBlob);
+      link.download = originalFile.name.replace(/\.svg$/i, '.png');
+      link.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      originalSvg = null;
+      originalFile = null;
+      convertedBlob = null;
+      controls.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+      fileInput.value = '';
+      downloadBtn.classList.add('hidden');
+    });
+  </script>
+</ImageToolLayout>

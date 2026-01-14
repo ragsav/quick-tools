@@ -1,0 +1,247 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What is HEIC format?",
+    answer: "HEIC (High Efficiency Image Container) is Apple's image format used on iPhones. It offers better compression than JPEG.",
+  },
+  {
+    question: "Why convert HEIC to JPG?",
+    answer: "HEIC isn't universally supported. Converting to JPG ensures your photos work everywhere - on all devices and websites.",
+  },
+  {
+    question: "Is the quality preserved?",
+    answer: "Yes, the conversion maintains high quality. You can also adjust the output quality to balance size and clarity.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="HEIC to JPG Converter - Free Online Tool"
+  description="Convert iPhone HEIC photos to JPG format online for free. Universal compatibility. No upload required - works in your browser."
+  canonicalPath="/image/heic-to-jpg"
+  currentTool="HEIC to JPG"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      HEIC to JPG Converter
+    </h1>
+    <p class="text-slate-500">
+      Convert iPhone HEIC photos to universally compatible JPG format.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <div
+      id="dropZone"
+      class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6"
+    >
+      <div class="text-4xl mb-2">📱</div>
+      <p class="text-slate-600 mb-2">Drag & drop HEIC file here or click to select</p>
+      <p class="text-sm text-slate-400">Supports HEIC/HEIF files from iPhone</p>
+      <input type="file" id="fileInput" accept=".heic,.heif" class="hidden" />
+    </div>
+
+    <div id="loading" class="hidden text-center py-8">
+      <div class="animate-spin inline-block w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+      <p class="text-slate-600 mt-2">Converting HEIC file...</p>
+    </div>
+
+    <div id="controls" class="hidden">
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Original HEIC</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="originalPreview" class="max-w-full max-h-full object-contain" alt="Original" />
+          </div>
+          <p id="originalInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+
+        <div>
+          <h3 class="font-medium text-slate-700 mb-2">Converted JPG</h3>
+          <div class="bg-white border border-slate-200 rounded p-2 aspect-video flex items-center justify-center overflow-hidden">
+            <img id="convertedPreview" class="max-w-full max-h-full object-contain" alt="Converted" />
+          </div>
+          <p id="convertedInfo" class="text-sm text-slate-500 mt-2"></p>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Quality</label>
+          <div class="flex items-center gap-2">
+            <input type="range" id="quality" min="10" max="100" value="90" class="flex-1" />
+            <span id="qualityValue" class="text-sm text-slate-600 w-10">90%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="convertBtn"
+          class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm"
+        >
+          🔄 Re-convert
+        </button>
+        <button
+          id="downloadBtn"
+          class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
+        >
+          ⬇️ Download JPG
+        </button>
+        <button
+          id="resetBtn"
+          class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+        >
+          🗑️ Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import heic2any from 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/+esm';
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const loading = document.getElementById('loading');
+    const controls = document.getElementById('controls');
+    const originalPreview = document.getElementById('originalPreview');
+    const convertedPreview = document.getElementById('convertedPreview');
+    const originalInfo = document.getElementById('originalInfo');
+    const convertedInfo = document.getElementById('convertedInfo');
+    const qualitySlider = document.getElementById('quality');
+    const qualityValue = document.getElementById('qualityValue');
+    const convertBtn = document.getElementById('convertBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let originalFile = null;
+    let convertedBlob = null;
+    let originalBlob = null;
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    async function handleFile(file) {
+      if (!file) return;
+
+      const ext = file.name.toLowerCase();
+      if (!ext.endsWith('.heic') && !ext.endsWith('.heif')) {
+        alert('Please select a HEIC or HEIF file.');
+        return;
+      }
+
+      originalFile = file;
+      dropZone.classList.add('hidden');
+      loading.classList.remove('hidden');
+
+      try {
+        // Convert HEIC to JPEG blob
+        const jpegBlob = await heic2any({
+          blob: file,
+          toType: 'image/jpeg',
+          quality: qualitySlider.value / 100
+        });
+
+        convertedBlob = jpegBlob;
+
+        // Create preview URLs
+        const jpegUrl = URL.createObjectURL(jpegBlob);
+        
+        // Get dimensions
+        const img = new Image();
+        img.onload = () => {
+          originalPreview.src = jpegUrl;
+          convertedPreview.src = jpegUrl;
+          originalInfo.textContent = `${img.width} × ${img.height} • ${formatSize(file.size)} • HEIC`;
+          convertedInfo.textContent = `${img.width} × ${img.height} • ${formatSize(jpegBlob.size)}`;
+
+          loading.classList.add('hidden');
+          controls.classList.remove('hidden');
+        };
+        img.src = jpegUrl;
+
+      } catch (error) {
+        console.error('Conversion error:', error);
+        alert('Failed to convert HEIC file. Please try another file.');
+        loading.classList.add('hidden');
+        dropZone.classList.remove('hidden');
+      }
+    }
+
+    async function reconvert() {
+      if (!originalFile) return;
+
+      loading.classList.remove('hidden');
+      controls.classList.add('hidden');
+
+      try {
+        const jpegBlob = await heic2any({
+          blob: originalFile,
+          toType: 'image/jpeg',
+          quality: qualitySlider.value / 100
+        });
+
+        convertedBlob = jpegBlob;
+        const jpegUrl = URL.createObjectURL(jpegBlob);
+
+        const img = new Image();
+        img.onload = () => {
+          convertedPreview.src = jpegUrl;
+          convertedInfo.textContent = `${img.width} × ${img.height} • ${formatSize(jpegBlob.size)}`;
+          loading.classList.add('hidden');
+          controls.classList.remove('hidden');
+        };
+        img.src = jpegUrl;
+      } catch (error) {
+        console.error('Conversion error:', error);
+        alert('Failed to re-convert. Please try again.');
+        loading.classList.add('hidden');
+        controls.classList.remove('hidden');
+      }
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+    qualitySlider.addEventListener('input', () => {
+      qualityValue.textContent = qualitySlider.value + '%';
+    });
+
+    convertBtn.addEventListener('click', reconvert);
+
+    downloadBtn.addEventListener('click', () => {
+      if (!convertedBlob) return;
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(convertedBlob);
+      link.download = originalFile.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg');
+      link.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      originalFile = null;
+      convertedBlob = null;
+      controls.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+      fileInput.value = '';
+    });
+  </script>
+</ImageToolLayout>

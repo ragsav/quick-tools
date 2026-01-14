@@ -1,0 +1,418 @@
+---
+import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "How do I select the crop area?",
+    answer: "Click and drag on the image to select the area you want to keep. You can also use preset aspect ratios for common sizes.",
+  },
+  {
+    question: "What aspect ratio presets are available?",
+    answer: "Common presets include 1:1 (square), 16:9 (widescreen), 4:3 (standard), 3:2 (photography), and 9:16 (portrait video).",
+  },
+  {
+    question: "Can I adjust the crop after selecting?",
+    answer: "Yes! You can drag the selection box to reposition, or drag the corners to resize it.",
+  },
+];
+---
+
+<ImageToolLayout
+  title="Image Crop - Free Online Tool"
+  description="Crop images online for free. Select area manually or use aspect ratio presets. No upload required."
+  canonicalPath="/image/image-crop"
+  currentTool="Image Crop"
+  faqItems={faqItems}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Image Crop
+    </h1>
+    <p class="text-slate-500">
+      Crop images with custom selection or preset aspect ratios.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <div
+      id="dropZone"
+      class="border-2 border-dashed border-slate-300 rounded p-8 text-center cursor-pointer hover:border-blue-500 transition-colors mb-6"
+    >
+      <div class="text-4xl mb-2">✂️</div>
+      <p class="text-slate-600 mb-2">Drag & drop image here or click to select</p>
+      <p class="text-sm text-slate-400">Supports JPG, PNG, WebP, GIF</p>
+      <input type="file" id="fileInput" accept="image/*" class="hidden" />
+    </div>
+
+    <div id="controls" class="hidden">
+      <!-- Aspect Ratio Presets -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Aspect Ratio</label>
+        <div class="flex flex-wrap gap-2">
+          <button class="ratio-btn px-3 py-1.5 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100" data-ratio="free">Free</button>
+          <button class="ratio-btn px-3 py-1.5 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100" data-ratio="1:1">1:1</button>
+          <button class="ratio-btn px-3 py-1.5 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100" data-ratio="16:9">16:9</button>
+          <button class="ratio-btn px-3 py-1.5 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100" data-ratio="4:3">4:3</button>
+          <button class="ratio-btn px-3 py-1.5 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100" data-ratio="3:2">3:2</button>
+          <button class="ratio-btn px-3 py-1.5 rounded text-sm border border-slate-300 bg-white hover:bg-slate-100" data-ratio="9:16">9:16</button>
+        </div>
+      </div>
+
+      <!-- Crop Area -->
+      <div class="mb-6">
+        <h3 class="font-medium text-slate-700 mb-2">Select Crop Area</h3>
+        <div id="cropContainer" class="relative bg-slate-900 rounded overflow-hidden inline-block max-w-full">
+          <img id="originalImage" class="block max-w-full max-h-[500px]" alt="Original" />
+          <div id="cropOverlay" class="absolute inset-0 pointer-events-none">
+            <div id="cropArea" class="absolute border-2 border-white shadow-lg cursor-move" style="left: 10%; top: 10%; width: 80%; height: 80%;">
+              <div class="absolute inset-0 bg-transparent"></div>
+              <div class="crop-handle nw"></div>
+              <div class="crop-handle ne"></div>
+              <div class="crop-handle sw"></div>
+              <div class="crop-handle se"></div>
+            </div>
+          </div>
+          <div id="dimOverlay" class="absolute inset-0 pointer-events-none"></div>
+        </div>
+        <p id="cropInfo" class="text-sm text-slate-500 mt-2"></p>
+      </div>
+
+      <!-- Preview -->
+      <div class="mb-6">
+        <h3 class="font-medium text-slate-700 mb-2">Preview</h3>
+        <div class="bg-white border border-slate-200 rounded p-2 inline-block">
+          <img id="croppedPreview" class="block max-w-[300px] max-h-[200px]" alt="Cropped preview" />
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button
+          id="cropBtn"
+          class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm"
+        >
+          ✂️ Crop
+        </button>
+        <button
+          id="downloadBtn"
+          class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors hidden"
+        >
+          ⬇️ Download
+        </button>
+        <button
+          id="resetBtn"
+          class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+        >
+          🗑️ Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    #dimOverlay {
+      background: 
+        linear-gradient(to right, rgba(0,0,0,0.5) var(--left), transparent var(--left)),
+        linear-gradient(to left, rgba(0,0,0,0.5) var(--right), transparent var(--right)),
+        linear-gradient(to bottom, rgba(0,0,0,0.5) var(--top), transparent var(--top)),
+        linear-gradient(to top, rgba(0,0,0,0.5) var(--bottom), transparent var(--bottom));
+    }
+    .crop-handle {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border: 2px solid #3b82f6;
+      border-radius: 2px;
+    }
+    .crop-handle.nw { top: -6px; left: -6px; cursor: nw-resize; }
+    .crop-handle.ne { top: -6px; right: -6px; cursor: ne-resize; }
+    .crop-handle.sw { bottom: -6px; left: -6px; cursor: sw-resize; }
+    .crop-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
+  </style>
+
+  <script is:inline>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const controls = document.getElementById('controls');
+    const originalImage = document.getElementById('originalImage');
+    const cropArea = document.getElementById('cropArea');
+    const cropContainer = document.getElementById('cropContainer');
+    const dimOverlay = document.getElementById('dimOverlay');
+    const cropInfo = document.getElementById('cropInfo');
+    const croppedPreview = document.getElementById('croppedPreview');
+    const cropBtn = document.getElementById('cropBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let originalImageEl = null;
+    let originalFile = null;
+    let croppedBlob = null;
+    let cropRatio = null;
+    let isDragging = false;
+    let isResizing = false;
+    let resizeHandle = null;
+    let startX, startY, startLeft, startTop, startWidth, startHeight;
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function handleFile(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      originalFile = file;
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          originalImageEl = img;
+          originalImage.src = e.target.result;
+          controls.classList.remove('hidden');
+          dropZone.classList.add('hidden');
+          
+          setTimeout(() => {
+            setCropArea(10, 10, 80, 80);
+            updatePreview();
+          }, 100);
+        };
+        img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function setCropArea(leftPct, topPct, widthPct, heightPct) {
+      cropArea.style.left = leftPct + '%';
+      cropArea.style.top = topPct + '%';
+      cropArea.style.width = widthPct + '%';
+      cropArea.style.height = heightPct + '%';
+      updateDimOverlay();
+      updateCropInfo();
+    }
+
+    function updateDimOverlay() {
+      const rect = cropArea.getBoundingClientRect();
+      const containerRect = cropContainer.getBoundingClientRect();
+      
+      const left = ((rect.left - containerRect.left) / containerRect.width * 100);
+      const top = ((rect.top - containerRect.top) / containerRect.height * 100);
+      const right = 100 - left - (rect.width / containerRect.width * 100);
+      const bottom = 100 - top - (rect.height / containerRect.height * 100);
+
+      dimOverlay.style.setProperty('--left', left + '%');
+      dimOverlay.style.setProperty('--top', top + '%');
+      dimOverlay.style.setProperty('--right', right + '%');
+      dimOverlay.style.setProperty('--bottom', bottom + '%');
+    }
+
+    function updateCropInfo() {
+      const containerRect = cropContainer.getBoundingClientRect();
+      const scaleX = originalImageEl.width / containerRect.width;
+      const scaleY = originalImageEl.height / containerRect.height;
+
+      const left = parseFloat(cropArea.style.left) / 100 * containerRect.width;
+      const top = parseFloat(cropArea.style.top) / 100 * containerRect.height;
+      const width = parseFloat(cropArea.style.width) / 100 * containerRect.width;
+      const height = parseFloat(cropArea.style.height) / 100 * containerRect.height;
+
+      const realWidth = Math.round(width * scaleX);
+      const realHeight = Math.round(height * scaleY);
+
+      cropInfo.textContent = `Selection: ${realWidth} × ${realHeight} px`;
+    }
+
+    function updatePreview() {
+      if (!originalImageEl) return;
+
+      const containerRect = cropContainer.getBoundingClientRect();
+      const scaleX = originalImageEl.width / containerRect.width;
+      const scaleY = originalImageEl.height / containerRect.height;
+
+      const left = parseFloat(cropArea.style.left) / 100 * containerRect.width * scaleX;
+      const top = parseFloat(cropArea.style.top) / 100 * containerRect.height * scaleY;
+      const width = parseFloat(cropArea.style.width) / 100 * containerRect.width * scaleX;
+      const height = parseFloat(cropArea.style.height) / 100 * containerRect.height * scaleY;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(width));
+      canvas.height = Math.max(1, Math.round(height));
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(originalImageEl, -left, -top);
+
+      croppedPreview.src = canvas.toDataURL('image/png');
+    }
+
+    function performCrop() {
+      if (!originalImageEl) return;
+
+      const containerRect = cropContainer.getBoundingClientRect();
+      const scaleX = originalImageEl.width / containerRect.width;
+      const scaleY = originalImageEl.height / containerRect.height;
+
+      const left = parseFloat(cropArea.style.left) / 100 * containerRect.width * scaleX;
+      const top = parseFloat(cropArea.style.top) / 100 * containerRect.height * scaleY;
+      const width = parseFloat(cropArea.style.width) / 100 * containerRect.width * scaleX;
+      const height = parseFloat(cropArea.style.height) / 100 * containerRect.height * scaleY;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(width));
+      canvas.height = Math.max(1, Math.round(height));
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(originalImageEl, -left, -top);
+
+      const mimeType = originalFile.type.includes('png') ? 'image/png' : 'image/jpeg';
+      canvas.toBlob((blob) => {
+        croppedBlob = blob;
+        downloadBtn.classList.remove('hidden');
+      }, mimeType, 0.92);
+    }
+
+    // Drag and resize handling
+    cropArea.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('crop-handle')) {
+        isResizing = true;
+        resizeHandle = e.target.classList.contains('nw') ? 'nw' :
+                       e.target.classList.contains('ne') ? 'ne' :
+                       e.target.classList.contains('sw') ? 'sw' : 'se';
+      } else {
+        isDragging = true;
+      }
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = parseFloat(cropArea.style.left);
+      startTop = parseFloat(cropArea.style.top);
+      startWidth = parseFloat(cropArea.style.width);
+      startHeight = parseFloat(cropArea.style.height);
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging && !isResizing) return;
+
+      const containerRect = cropContainer.getBoundingClientRect();
+      const dx = (e.clientX - startX) / containerRect.width * 100;
+      const dy = (e.clientY - startY) / containerRect.height * 100;
+
+      if (isDragging) {
+        let newLeft = Math.max(0, Math.min(100 - startWidth, startLeft + dx));
+        let newTop = Math.max(0, Math.min(100 - startHeight, startTop + dy));
+        cropArea.style.left = newLeft + '%';
+        cropArea.style.top = newTop + '%';
+      } else if (isResizing) {
+        let newLeft = startLeft, newTop = startTop, newWidth = startWidth, newHeight = startHeight;
+
+        if (resizeHandle.includes('e')) {
+          newWidth = Math.max(5, Math.min(100 - startLeft, startWidth + dx));
+        }
+        if (resizeHandle.includes('w')) {
+          const maxDx = startWidth - 5;
+          const actualDx = Math.max(-startLeft, Math.min(maxDx, dx));
+          newLeft = startLeft + actualDx;
+          newWidth = startWidth - actualDx;
+        }
+        if (resizeHandle.includes('s')) {
+          newHeight = Math.max(5, Math.min(100 - startTop, startHeight + dy));
+        }
+        if (resizeHandle.includes('n')) {
+          const maxDy = startHeight - 5;
+          const actualDy = Math.max(-startTop, Math.min(maxDy, dy));
+          newTop = startTop + actualDy;
+          newHeight = startHeight - actualDy;
+        }
+
+        // Apply aspect ratio if set
+        if (cropRatio) {
+          if (resizeHandle.includes('e') || resizeHandle.includes('w')) {
+            newHeight = newWidth / cropRatio;
+          } else {
+            newWidth = newHeight * cropRatio;
+          }
+        }
+
+        cropArea.style.left = newLeft + '%';
+        cropArea.style.top = newTop + '%';
+        cropArea.style.width = newWidth + '%';
+        cropArea.style.height = newHeight + '%';
+      }
+
+      updateDimOverlay();
+      updateCropInfo();
+      updatePreview();
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      isResizing = false;
+      resizeHandle = null;
+    });
+
+    // Aspect ratio buttons
+    document.querySelectorAll('.ratio-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.ratio-btn').forEach(b => {
+          b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+        });
+        btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+
+        if (btn.dataset.ratio === 'free') {
+          cropRatio = null;
+        } else {
+          const [w, h] = btn.dataset.ratio.split(':').map(Number);
+          cropRatio = w / h;
+          
+          // Adjust current crop area to match ratio
+          const currentWidth = parseFloat(cropArea.style.width);
+          const newHeight = currentWidth / cropRatio;
+          cropArea.style.height = Math.min(100, newHeight) + '%';
+          updateDimOverlay();
+          updateCropInfo();
+          updatePreview();
+        }
+      });
+    });
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+      handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    cropBtn.addEventListener('click', performCrop);
+
+    downloadBtn.addEventListener('click', () => {
+      if (!croppedBlob) return;
+      const ext = originalFile.type.includes('png') ? 'png' : 'jpg';
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(croppedBlob);
+      link.download = `cropped-${originalFile.name.replace(/\.[^.]+$/, '')}.${ext}`;
+      link.click();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      originalImageEl = null;
+      originalFile = null;
+      croppedBlob = null;
+      cropRatio = null;
+      controls.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+      fileInput.value = '';
+      downloadBtn.classList.add('hidden');
+    });
+  </script>
+</ImageToolLayout>

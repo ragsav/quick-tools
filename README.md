@@ -4,6 +4,8 @@ A collection of free, fast, and easy-to-use online utility tools built with [Ast
 
 🌐 **Live Website:** [https://quicktools.live](https://quicktools.live)
 
+✨ **Features:** Dark mode support, 90+ tools, fully browser-based, no data uploaded
+
 ---
 
 ## 🛠️ Available Tools
@@ -54,7 +56,7 @@ A collection of free, fast, and easy-to-use online utility tools built with [Ast
 
 ---
 
-### � JSON Tools
+### 📋 JSON Tools
 | Tool | Description |
 |------|-------------|
 | [JSON Formatter](https://quicktools.live/json/json-formatter) | Format and beautify JSON with indentation |
@@ -83,7 +85,7 @@ A collection of free, fast, and easy-to-use online utility tools built with [Ast
 
 ---
 
-### �🔢 Math Tools
+### 🔢 Math Tools
 | Tool | Description |
 |------|-------------|
 | [Average Calculator](https://quicktools.live/math/average-calculator) | Calculate mean, median, and mode |
@@ -153,12 +155,38 @@ A collection of free, fast, and easy-to-use online utility tools built with [Ast
 
 ---
 
+### 🖼️ Image Tools
+| Tool | Description |
+|------|-------------|
+| [Image Compress](https://quicktools.live/image/image-compress) | Compress and resize images |
+| [PNG to JPG](https://quicktools.live/image/png-to-jpg) | Convert PNG images to JPG |
+| [JPG to PNG](https://quicktools.live/image/jpg-to-png) | Convert JPG images to PNG |
+| [Image to WebP](https://quicktools.live/image/image-to-webp) | Convert images to WebP format |
+| [WebP to PNG](https://quicktools.live/image/webp-to-png) | Convert WebP to PNG |
+| [SVG to PNG](https://quicktools.live/image/svg-to-png) | Convert SVG to PNG |
+| [HEIC to JPG](https://quicktools.live/image/heic-to-jpg) | Convert HEIC (iPhone) to JPG |
+| [GIF to PNG](https://quicktools.live/image/gif-to-png) | Extract PNG frames from GIF |
+| [BMP to PNG](https://quicktools.live/image/bmp-to-png) | Convert BMP to PNG |
+| [Image to ICO](https://quicktools.live/image/image-to-ico) | Create ICO favicons |
+| [Image to PDF](https://quicktools.live/image/image-to-pdf) | Convert images to PDF |
+| [Image Resize](https://quicktools.live/image/image-resize) | Resize images by dimensions or percentage |
+| [Image Crop](https://quicktools.live/image/image-crop) | Crop images to custom dimensions |
+| [Image Rotate](https://quicktools.live/image/image-rotate) | Rotate and flip images |
+| [Image Filters](https://quicktools.live/image/image-filters) | Apply filters (grayscale, blur, etc.) |
+| [Image Metadata](https://quicktools.live/image/image-metadata) | View EXIF and image metadata |
+| [Color Extractor](https://quicktools.live/image/color-extractor) | Extract color palette from images |
+| [Base64 to Image](https://quicktools.live/image/base64-to-image) | Convert Base64 to image |
+| [Image to Base64](https://quicktools.live/image/image-to-base64) | Convert image to Base64 |
+
+---
+
 ## 🚀 Tech Stack
 
 - **Framework:** [Astro](https://astro.build/) - Static Site Generator
-- **Styling:** Vanilla CSS with CSS Variables
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) with dark mode support
 - **Hosting:** [Cloudflare Pages](https://pages.cloudflare.com/)
 - **Domain:** [quicktools.live](https://quicktools.live)
+- **Features:** Dark/Light theme toggle, localStorage persistence, system preference detection
 
 ---
 
