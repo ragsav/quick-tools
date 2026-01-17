@@ -82,19 +82,54 @@ const useCases = [
 ---
 
 <ConverterToolLayout
-  title="File Size Converter - Convert Bytes, KB, MB, GB, TB"
-  description="Convert between file size units: bytes, KB, MB, GB, TB, and PB. Free online file size calculator."
+  title="File Size Unit Converter - Convert KB, MB, GB, TB, Bytes"
+  description="Convert between digital storage units: bytes, KB, MB, GB, TB, and PB. Understand file sizes in different units. Free online calculator."
   canonicalPath="/converters/file-size"
-  currentTool="File Size Converter"
+  currentTool="File Size Unit Converter"
   faqItems={faqItems}
   howItWorks={howItWorks}
   useCases={useCases}
 >
   <div class="tool-header">
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
-      File Size Converter
+    <h1
+      class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2"
+    >
+      File Size Unit Converter
     </h1>
-    <p class="text-slate-500">Convert between bytes, KB, MB, GB, and more.</p>
+    <p class="text-slate-500 dark:text-slate-400">
+      Convert between digital storage units: bytes, KB, MB, GB, TB, and PB.
+    </p>
+  </div>
+
+  <!-- Important Disclaimer -->
+  <div
+    class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6"
+  >
+    <div class="flex items-start gap-3">
+      <svg
+        class="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 flex-shrink-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <div>
+        <p class="text-sm text-blue-800 dark:text-blue-200 font-medium">
+          This is a unit conversion tool
+        </p>
+        <p class="text-sm text-blue-700 dark:text-blue-300 mt-1">
+          This tool converts between storage unit measurements (KB ↔ MB ↔ GB).
+          It does not compress or reduce actual file sizes. Use this to
+          understand how the same storage amount is expressed in different
+          units.
+        </p>
+      </div>
+    </div>
   </div>
 
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">

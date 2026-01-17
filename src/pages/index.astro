@@ -247,10 +247,11 @@ const toolClusters = [
 				priority: "medium",
 			},
 			{
-				name: "File Size Converter",
+				name: "File Size Unit Converter",
 				url: "/converters/file-size",
 				status: "live",
 				priority: "low",
+				subtitle: "(KB, MB, GB)",
 			},
 			{
 				name: "Time Unit Converter",
@@ -825,8 +826,40 @@ const allLiveTools = toolClusters.flatMap((c) =>
 					<span>Quick Tools</span>
 				</a>
 				<div class="flex items-center gap-4">
-					<p class="text-slate-400 text-sm hidden sm:block">
-						Free online utilities — no login, no ads, just tools
+					<!-- Category Dropdown -->
+					<div class="relative" id="category-dropdown">
+						<button
+							type="button"
+							class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"
+							onclick="toggleCategoryDropdown()"
+							aria-expanded="false"
+							aria-haspopup="true"
+						>
+							<span>Categories</span>
+							<svg class="w-4 h-4 transition-transform" id="dropdown-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</button>
+						<div
+							id="category-menu"
+							class="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 py-2 z-50 hidden"
+						>
+							{toolClusters.map((cluster) => (
+								<a
+									href={cluster.url}
+									class="flex items-center gap-3 px-4 py-2.5 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+								>
+									<span class="text-xl">{cluster.icon}</span>
+									<div>
+										<div class="font-medium text-sm">{cluster.name}</div>
+										<div class="text-xs text-slate-500 dark:text-slate-400">{cluster.tools.length} tools</div>
+									</div>
+								</a>
+							))}
+						</div>
+					</div>
+					<p class="text-slate-400 text-sm hidden lg:block">
+						Free online utilities — no login, no ads
 					</p>
 					<button
 						type="button"
@@ -875,11 +908,45 @@ const allLiveTools = toolClusters.flatMap((c) =>
 						>Toolkit</span
 					>
 				</h1>
-				<p class="text-lg opacity-95 max-w-xl mx-auto mb-8">
+				<p class="text-lg opacity-95 max-w-xl mx-auto mb-6">
 					{totalTools}+ free calculators and utilities for dates,
 					text, numbers, and more. All tools run in your browser —
 					fast, private, and completely free.
 				</p>
+
+				<!-- Search Bar -->
+				<div class="max-w-lg mx-auto mb-8">
+					<div class="relative">
+						<svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+						</svg>
+						<input
+							type="text"
+							id="search-input"
+							placeholder="Search for a tool... (e.g., date calculator, JSON formatter)"
+							class="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 text-base shadow-lg border-2 border-transparent focus:border-blue-400 dark:focus:border-blue-500 focus:outline-none transition-all"
+							autocomplete="off"
+							oninput="handleSearch(this.value)"
+						/>
+						<button
+							id="clear-search"
+							type="button"
+							class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors hidden"
+							onclick="clearSearch()"
+						>
+							<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+							</svg>
+						</button>
+					</div>
+					<!-- Search Results Dropdown -->
+					<div
+						id="search-results"
+						class="absolute left-1/2 -translate-x-1/2 w-full max-w-lg mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 max-h-80 overflow-y-auto hidden z-50"
+					>
+					</div>
+				</div>
+
 				<div class="flex justify-center gap-8 sm:gap-12 flex-wrap">
 					<div class="flex flex-col">
 						<span class="text-3xl sm:text-4xl font-bold"
@@ -941,15 +1008,15 @@ const allLiveTools = toolClusters.flatMap((c) =>
 									</div>
 								</div>
 
-								<ul class="space-y-2">
-									{cluster.tools.map((tool) => (
+								<ul class="space-y-2" id={`cluster-${cluster.id}`}>
+									{cluster.tools.slice(0, 6).map((tool) => (
 										<li>
 											{tool.status === "live" ? (
 												<a
 													href={tool.url}
 													class="tool-link flex justify-between items-center px-3 py-2 bg-slate-50 dark:bg-slate-700 rounded no-underline text-slate-700 dark:text-slate-300 text-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition-all group"
 												>
-													<span>{tool.name}</span>
+													<span>{tool.name} {tool.subtitle && <span class="text-slate-400 text-xs ml-1">{tool.subtitle}</span>}</span>
 													<span class="group-hover:translate-x-1 transition-transform">
 														→
 													</span>
@@ -965,6 +1032,46 @@ const allLiveTools = toolClusters.flatMap((c) =>
 										</li>
 									))}
 								</ul>
+								<!-- Hidden tools (shown on expand) -->
+								{cluster.tools.length > 6 && (
+									<>
+										<ul class="space-y-2 mt-2 hidden" id={`cluster-${cluster.id}-more`}>
+											{cluster.tools.slice(6).map((tool) => (
+												<li>
+													{tool.status === "live" ? (
+														<a
+															href={tool.url}
+															class="tool-link flex justify-between items-center px-3 py-2 bg-slate-50 dark:bg-slate-700 rounded no-underline text-slate-700 dark:text-slate-300 text-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition-all group"
+														>
+															<span>{tool.name}</span>
+															<span class="group-hover:translate-x-1 transition-transform">
+																→
+															</span>
+														</a>
+													) : (
+														<span class="flex justify-between items-center px-3 py-2 bg-slate-50 dark:bg-slate-700 rounded text-slate-400 dark:text-slate-500 text-sm cursor-default">
+															<span>{tool.name}</span>
+															<span class="text-[10px] bg-slate-100 dark:bg-slate-600 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded uppercase font-semibold tracking-wide">
+																Soon
+															</span>
+														</span>
+													)}
+												</li>
+											))}
+										</ul>
+										<button
+											type="button"
+											class="mt-3 w-full py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center justify-center gap-1 transition-colors"
+											onclick={`toggleClusterTools('${cluster.id}')`}
+											id={`cluster-${cluster.id}-btn`}
+										>
+											<span class="btn-text">Show {cluster.tools.length - 6} more</span>
+											<svg class="w-4 h-4 btn-icon transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+											</svg>
+										</button>
+									</>
+								)}
 							</div>
 						))
 					}
@@ -1042,33 +1149,59 @@ const allLiveTools = toolClusters.flatMap((c) =>
 
 			<!-- POPULAR TOOLS -->
 			<section class="mb-12">
-				<h2
-					class="text-2xl font-bold text-slate-900 mb-6 pb-2 border-b border-slate-200"
-				>
-					Popular Tools
-				</h2>
-				<div class="flex flex-wrap gap-3">
+				<div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-200">
+					<h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100">
+						All Tools
+						<span class="text-base font-normal text-slate-500 dark:text-slate-400 ml-2">({allLiveTools.length})</span>
+					</h2>
+				</div>
+				<!-- Initially visible tools (first 18) -->
+				<div id="popular-tools-visible" class="flex flex-wrap gap-3">
 					{
-						allLiveTools.length > 0 ? (
-							allLiveTools.map((tool) => (
-								<a
-									href={tool.url}
-									class="inline-flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-5 py-3 rounded no-underline text-slate-700 dark:text-slate-300 font-medium hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 hover:shadow-md transition-all group"
-								>
-									<span>{tool.name}</span>
-									<span class="group-hover:translate-x-1 transition-transform">
-										→
-									</span>
-								</a>
-							))
-						) : (
-							<p class="text-slate-500 italic">
-								More tools coming soon! Check back regularly for
-								updates.
-							</p>
-						)
+						allLiveTools.slice(0, 18).map((tool) => (
+							<a
+								href={tool.url}
+								class="inline-flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2.5 rounded-lg no-underline text-slate-700 dark:text-slate-300 text-sm font-medium hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 hover:shadow-md transition-all group"
+							>
+								<span>{tool.name}</span>
+								<span class="group-hover:translate-x-1 transition-transform text-slate-400">
+									→
+								</span>
+							</a>
+						))
 					}
 				</div>
+				<!-- Hidden tools (shown on expand) -->
+				{allLiveTools.length > 18 && (
+					<>
+						<div id="popular-tools-hidden" class="flex flex-wrap gap-3 mt-3 hidden">
+							{
+								allLiveTools.slice(18).map((tool) => (
+									<a
+										href={tool.url}
+										class="inline-flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2.5 rounded-lg no-underline text-slate-700 dark:text-slate-300 text-sm font-medium hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 hover:shadow-md transition-all group"
+									>
+										<span>{tool.name}</span>
+										<span class="group-hover:translate-x-1 transition-transform text-slate-400">
+											→
+										</span>
+									</a>
+								))
+							}
+						</div>
+						<button
+							type="button"
+							id="popular-tools-toggle"
+							class="mt-4 mx-auto flex items-center gap-2 px-6 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-lg font-medium text-sm transition-colors"
+							onclick="togglePopularTools()"
+						>
+							<span id="popular-toggle-text">Show {allLiveTools.length - 18} more tools</span>
+							<svg id="popular-toggle-icon" class="w-4 h-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+							</svg>
+						</button>
+					</>
+				)}
 			</section>
 		</main>
 
@@ -1125,6 +1258,167 @@ const allLiveTools = toolClusters.flatMap((c) =>
 				const isDark = html.classList.toggle("dark");
 				localStorage.setItem("theme", isDark ? "dark" : "light");
 			}
+
+			// Category dropdown
+			function toggleCategoryDropdown() {
+				const menu = document.getElementById('category-menu');
+				const arrow = document.getElementById('dropdown-arrow');
+				const isOpen = !menu.classList.contains('hidden');
+				menu.classList.toggle('hidden');
+				arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+			}
+
+			// Close dropdown when clicking outside
+			document.addEventListener('click', (e) => {
+				const dropdown = document.getElementById('category-dropdown');
+				if (dropdown && !dropdown.contains(e.target)) {
+					document.getElementById('category-menu')?.classList.add('hidden');
+					const arrow = document.getElementById('dropdown-arrow');
+					if (arrow) arrow.style.transform = '';
+				}
+			});
+
+			// Search functionality
+			const allTools = [
+				// This will be populated from the toolClusters data
+			];
+		</script>
+
+		<!-- Pass data to client-side scripts -->
+		<script is:inline define:vars={{ toolClusters, allLiveTools }}>
+			// Store data globally for access by other scripts
+			window.__TOOL_DATA__ = { toolClusters, allLiveTools };
+		</script>
+
+		<!-- Search and expand functionality -->
+		<script is:inline>
+			// Get data from global store
+			const { toolClusters, allLiveTools } = window.__TOOL_DATA__ || { toolClusters: [], allLiveTools: [] };
+
+			// Build search index from all tools
+			const searchIndex = [];
+			toolClusters.forEach(cluster => {
+				cluster.tools.forEach(tool => {
+					if (tool.status === 'live') {
+						searchIndex.push({
+							name: tool.name,
+							url: tool.url,
+							category: cluster.name,
+							icon: cluster.icon,
+							searchTerms: (tool.name + ' ' + cluster.name).toLowerCase()
+						});
+					}
+				});
+			});
+
+			// Make functions global so onclick handlers can access them
+			window.handleSearch = function(query) {
+				const resultsContainer = document.getElementById('search-results');
+				const clearBtn = document.getElementById('clear-search');
+				
+				if (!query.trim()) {
+					resultsContainer.classList.add('hidden');
+					clearBtn.classList.add('hidden');
+					return;
+				}
+
+				clearBtn.classList.remove('hidden');
+				const searchTerms = query.toLowerCase().split(' ').filter(t => t);
+				
+				const matches = searchIndex.filter(tool => {
+					return searchTerms.every(term => tool.searchTerms.includes(term));
+				}).slice(0, 8);
+
+				if (matches.length === 0) {
+					resultsContainer.innerHTML = `
+						<div class="px-4 py-6 text-center text-slate-500 dark:text-slate-400">
+							<svg class="w-12 h-12 mx-auto mb-2 text-slate-300 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+							</svg>
+							<p class="font-medium">No tools found</p>
+							<p class="text-sm">Try different keywords</p>
+						</div>
+					`;
+				} else {
+					resultsContainer.innerHTML = matches.map(tool => `
+						<a href="${tool.url}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0">
+							<span class="text-xl">${tool.icon}</span>
+							<div class="flex-1 min-w-0">
+								<div class="font-medium text-slate-800 dark:text-slate-100 truncate">${tool.name}</div>
+								<div class="text-xs text-slate-500 dark:text-slate-400">${tool.category}</div>
+							</div>
+							<svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+							</svg>
+						</a>
+					`).join('');
+				}
+
+				resultsContainer.classList.remove('hidden');
+			};
+
+			window.clearSearch = function() {
+				const input = document.getElementById('search-input');
+				const resultsContainer = document.getElementById('search-results');
+				const clearBtn = document.getElementById('clear-search');
+				
+				input.value = '';
+				resultsContainer.classList.add('hidden');
+				clearBtn.classList.add('hidden');
+				input.focus();
+			};
+
+			// Popular tools toggle
+			let popularExpanded = false;
+			window.togglePopularTools = function() {
+				const hidden = document.getElementById('popular-tools-hidden');
+				const text = document.getElementById('popular-toggle-text');
+				const icon = document.getElementById('popular-toggle-icon');
+				
+				popularExpanded = !popularExpanded;
+				hidden.classList.toggle('hidden');
+				icon.style.transform = popularExpanded ? 'rotate(180deg)' : '';
+				text.textContent = popularExpanded ? 'Show less' : `Show ${allLiveTools.length - 18} more tools`;
+			};
+
+			// Cluster tools toggle
+			const clusterStates = {};
+			window.toggleClusterTools = function(clusterId) {
+				const moreContainer = document.getElementById(`cluster-${clusterId}-more`);
+				const btn = document.getElementById(`cluster-${clusterId}-btn`);
+				if (!moreContainer || !btn) return;
+
+				clusterStates[clusterId] = !clusterStates[clusterId];
+				const isExpanded = clusterStates[clusterId];
+				
+				moreContainer.classList.toggle('hidden');
+				const btnText = btn.querySelector('.btn-text');
+				const btnIcon = btn.querySelector('.btn-icon');
+				
+				if (btnText) {
+					const cluster = toolClusters.find(c => c.id === clusterId);
+					btnText.textContent = isExpanded ? 'Show less' : `Show ${cluster.tools.length - 6} more`;
+				}
+				if (btnIcon) {
+					btnIcon.style.transform = isExpanded ? 'rotate(180deg)' : '';
+				}
+			};
+
+			// Close search results when clicking outside
+			document.addEventListener('click', (e) => {
+				const searchInput = document.getElementById('search-input');
+				const searchResults = document.getElementById('search-results');
+				if (searchInput && searchResults && !searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+					searchResults.classList.add('hidden');
+				}
+			});
+
+			// Keyboard navigation for search
+			document.getElementById('search-input')?.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape') {
+					window.clearSearch();
+				}
+			});
 		</script>
 	</body>
 </html>
