@@ -13,210 +13,808 @@ const faqItems = [
       "Loan amount, interest rate, and loan term. Longer terms mean lower EMI but more total interest.",
   },
   {
-    question: "Is this tool free?",
+    question: "How do the strategies work?",
     answer:
-      "Yes, this tool is completely free and works directly in your browser.",
+      "The strategies show how small changes (like paying 1 extra EMI per year) can significantly reduce your total interest and loan tenure.",
   },
 ];
 
 const howItWorks = [
   {
-    title: "EMI Formula",
+    title: "Enter Loan Details",
     content:
-      "EMI = [P × R × (1+R)^N] / [(1+R)^N - 1], where P = principal, R = monthly rate, N = months. Provides fixed payment amount.",
+      "Input your loan amount, interest rate, and tenure. We calculate your standard EMI immediately.",
   },
   {
-    title: "Monthly Rate Conversion",
+    title: "Compare Strategies",
     content:
-      "Monthly rate = annual rate ÷ 12 ÷ 100. A 7% annual rate becomes 0.00583 monthly rate for the formula.",
+      "See how different repayment methods (Extra EMI, Annual Hike, etc.) affect your total interest and time to be debt-free.",
   },
   {
-    title: "Total Payment",
+    title: "Visualize Savings",
     content:
-      "Total payment = EMI × number of months. This is the total amount you'll pay over the loan's lifetime.",
-  },
-  {
-    title: "Interest Calculate",
-    content:
-      "Total interest = total payment - principal. Shows how much extra you pay beyond the borrowed amount.",
-  },
-  {
-    title: "Term Trade-offs",
-    content:
-      "Longer terms = lower EMI but higher total interest. Shorter terms = higher EMI but less total interest paid.",
+      "The interactive chart shows the breakdown of principal vs interest over time for the selected strategy.",
   },
 ];
 
 const useCases = [
   {
-    title: "Home Loan Planning",
+    title: "Home Loan Optimization",
     description:
-      "Calculate mortgage payments before buying. Know what monthly payment you can afford and total cost over 15-30 years.",
+      "Find out how much you can save on a 20-year home loan by paying just a little extra each year.",
   },
   {
-    title: "Car Loan Comparison",
+    title: "Debt Free Planning",
     description:
-      "Compare financing options for vehicles. See how different rates and terms affect your monthly payment.",
-  },
-  {
-    title: "Personal Loan Assessment",
-    description:
-      "Calculate EMI before borrowing for expenses. Understand the monthly commitment you're taking on.",
-  },
-  {
-    title: "Refinancing Decision",
-    description:
-      "Compare current loan EMI to refinanced terms. See if lower rate or different term makes sense.",
-  },
-  {
-    title: "Budget Planning",
-    description:
-      "Understand loan impact on monthly budget. Ensure EMI fits within your income and expenses.",
-  },
-  {
-    title: "Prepayment Analysis",
-    description:
-      "Calculate how extra payments reduce total interest. Compare loan completion times at different payment levels.",
+      "Calculate the fastest way to become debt-free without straining your monthly budget.",
   },
 ];
 ---
 
 <SalaryToolLayout
-  title="Loan EMI Calculator - Calculate Monthly Loan Payments"
-  description="Calculate your monthly EMI for home loans, car loans, or personal loans. See interest breakdown."
+  title="Loan EMI Calculator - Smart Repayment Strategies"
+  description="Calculate your loan EMI and discover smart repayment strategies to save huge amounts on interest and reduce your loan tenure."
   canonicalPath="/salary/loan-emi"
   currentTool="Loan EMI Calculator"
   faqItems={faqItems}
   howItWorks={howItWorks}
   useCases={useCases}
 >
+  <!-- Chart.js CDN -->
+  <script
+    is:inline
+    src="https://cdn.jsdelivr.net/npm/chart.js"
+    crossorigin="anonymous"></script>
+
   <div class="tool-header">
     <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
       Loan EMI Calculator
     </h1>
     <p class="text-slate-500">
-      Calculate your Equated Monthly Installment (EMI) for any loan.
+      Optimize your debt with smart repayment strategies
     </p>
   </div>
 
+  <!-- INPUT PANEL -->
   <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
-    <div class="grid md:grid-cols-3 gap-4 mb-6">
+    <div class="grid md:grid-cols-4 gap-4 mb-6">
       <div>
         <label
-          for="principal"
+          for="loanAmount"
           class="block font-medium text-slate-700 mb-1.5 text-sm"
-          >Loan Amount ($)</label
+          >Loan Amount (₹/$)</label
         >
         <input
           type="number"
-          id="principal"
-          placeholder="200000"
+          id="loanAmount"
+          value="5000000"
           class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
-          oninput="calculate()"
         />
       </div>
       <div>
         <label
-          for="rate"
+          for="interestRate"
           class="block font-medium text-slate-700 mb-1.5 text-sm"
-          >Interest Rate (% per year)</label
+          >Interest Rate (%)</label
         >
         <input
           type="number"
-          id="rate"
-          placeholder="7"
+          id="interestRate"
+          value="8.5"
           step="0.1"
           class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
-          oninput="calculate()"
         />
       </div>
       <div>
         <label
-          for="years"
+          for="tenureYears"
           class="block font-medium text-slate-700 mb-1.5 text-sm"
-          >Loan Term (years)</label
+          >Tenure (Years)</label
         >
         <input
           type="number"
-          id="years"
-          placeholder="30"
+          id="tenureYears"
+          value="20"
           class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
-          oninput="calculate()"
+        />
+      </div>
+      <div>
+        <label
+          for="loanStartDate"
+          class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Start Date</label
+        >
+        <input
+          type="date"
+          id="loanStartDate"
+          class="w-full px-4 py-3 border border-slate-300 rounded bg-white text-slate-800 outline-none"
         />
       </div>
     </div>
 
-    <div class="result-box p-4 bg-white rounded">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+    <!-- Results Row -->
+    <div class="result-box p-4 bg-white rounded mb-6">
+      <div class="grid grid-cols-3 gap-4 text-center">
         <div>
           <div class="text-xs text-slate-500 uppercase mb-1">Monthly EMI</div>
-          <div class="text-2xl font-bold text-purple-600" id="emi">$0</div>
+          <div class="text-2xl font-bold text-purple-600" id="emiValue">-</div>
+          <div class="text-xs text-slate-500 mt-1" id="emiNote">
+            Standard Payment
+          </div>
         </div>
         <div>
           <div class="text-xs text-slate-500 uppercase mb-1">
             Total Interest
           </div>
-          <div class="text-xl font-bold text-red-500" id="totalInterest">
-            $0
-          </div>
+          <div class="text-xl font-bold text-red-500" id="totalInterest">-</div>
         </div>
         <div>
           <div class="text-xs text-slate-500 uppercase mb-1">Total Payment</div>
-          <div class="text-xl font-bold text-slate-900" id="totalPayment">
-            $0
-          </div>
-        </div>
-        <div>
-          <div class="text-xs text-slate-500 uppercase mb-1">Principal</div>
-          <div class="text-xl font-bold text-green-600" id="principalDisplay">
-            $0
+          <div class="text-xl font-bold text-green-600" id="totalPayment">
+            -
           </div>
         </div>
       </div>
     </div>
+
+    <button
+      onclick="initializeCalculation()"
+      class="w-full btn-primary text-white font-bold py-3 px-6 rounded"
+    >
+      Calculate EMI
+    </button>
   </div>
 
-  <section class="mt-8 pt-6 border-t border-slate-200">
-    <h2 class="text-xl font-semibold text-slate-900 mb-4">EMI Formula</h2>
-    <p class="text-slate-600">EMI = [P × R × (1+R)^N] / [(1+R)^N - 1]</p>
-    <p class="text-sm text-slate-500 mt-2">
-      Where P = Principal, R = Monthly interest rate, N = Number of months
-    </p>
-  </section>
+  <!-- Optimization Strategies (horizontal scroll) -->
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">
+      Optimization Strategies
+    </h2>
+    <div
+      id="suggestionsWrapper"
+      class="flex gap-3 overflow-x-auto pb-3"
+      style="scroll-snap-type: x mandatory;"
+    >
+      <!-- Cards injected via JS -->
+    </div>
+  </div>
 
-  <script is:inline>
-    function calculate() {
-      const principal =
-        parseFloat(document.getElementById("principal").value) || 0;
-      const annualRate = parseFloat(document.getElementById("rate").value) || 0;
-      const years = parseFloat(document.getElementById("years").value) || 0;
+  <!-- Chart -->
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-6">
+    <h3 class="font-semibold text-slate-800 mb-4" id="chartTitle">
+      Payment Schedule
+    </h3>
+    <div class="h-[380px] w-full relative bg-white rounded p-2">
+      <canvas id="loanChart"></canvas>
+    </div>
+  </div>
 
-      if (principal === 0 || annualRate === 0 || years === 0) {
-        document.getElementById("emi").innerText = "$0";
-        return;
+  <!-- Amortization Table -->
+  <div class="bg-slate-50 border border-slate-200 rounded overflow-hidden mb-6">
+    <button
+      class="w-full flex justify-between items-center px-6 py-3 hover:bg-slate-100 transition-colors font-medium text-slate-700 text-left text-sm"
+      onclick="toggleTable()"
+    >
+      <span>Amortization Schedule</span>
+      <span id="tableIcon" class="transform transition-transform">▲</span>
+    </button>
+    <div
+      id="tableContainer"
+      class="max-h-[500px] overflow-auto transition-all duration-300"
+    >
+      <table class="w-full text-sm text-left">
+        <thead
+          class="bg-slate-100 text-xs font-medium text-slate-500 uppercase sticky top-0 z-10"
+        >
+          <tr>
+            <th class="px-4 py-2 border-b border-slate-200">#</th>
+            <th class="px-4 py-2 border-b border-slate-200">Date</th>
+            <th class="px-4 py-2 border-b border-slate-200 text-right"
+              >Opening</th
+            >
+            <th class="px-4 py-2 border-b border-slate-200 text-right">EMI</th>
+            <th class="px-4 py-2 border-b border-slate-200 text-right"
+              >Principal</th
+            >
+            <th class="px-4 py-2 border-b border-slate-200 text-right"
+              >Interest</th
+            >
+            <th class="px-4 py-2 border-b border-slate-200 text-right"
+              >Closing</th
+            >
+          </tr>
+        </thead>
+        <tbody
+          id="scheduleTableBody"
+          class="divide-y divide-slate-100 bg-white"
+        >
+          <!-- Rows -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</SalaryToolLayout>
+
+<style is:global>
+  .strategy-card {
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+  .strategy-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  .active-card {
+    border-color: var(--cluster-color, #1c398e) !important;
+    box-shadow: 0 0 0 2px var(--cluster-color, #1c398e) !important;
+  }
+  .card-base {
+    border-left: 3px solid #64748b;
+  }
+  .card-blue {
+    border-left: 3px solid #3b82f6;
+  }
+  .card-green {
+    border-left: 3px solid #22c55e;
+  }
+  .card-purple {
+    border-left: 3px solid #a855f7;
+  }
+  .card-teal {
+    border-left: 3px solid #14b8a6;
+  }
+  .card-orange {
+    border-left: 3px solid #f97316;
+  }
+</style>
+
+<script is:inline>
+  // --- APP LOGIC ---
+  let loanChart = null;
+  let globalParams = {};
+
+  let strategyState = {
+    extraEMIsCount: 1,
+    hikePercent: 10,
+    targetYears: 10,
+  };
+
+  function formatCurrency(num) {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(num);
+  }
+
+  function formatTimeSaved(monthsSaved) {
+    const y = Math.floor(monthsSaved / 12);
+    const m = Math.floor(monthsSaved % 12);
+    if (y > 0 && m > 0) return `${y}y ${m}m`;
+    if (y > 0) return `${y} Years`;
+    return `${m} Months`;
+  }
+
+  function toggleTable() {
+    const el = document.getElementById("tableContainer");
+    const icon = document.getElementById("tableIcon");
+    if (el.style.maxHeight === "0px") {
+      el.style.maxHeight = "500px";
+      icon.style.transform = "rotate(0deg)";
+    } else {
+      el.style.maxHeight = "0px";
+      icon.style.transform = "rotate(180deg)";
+    }
+  }
+
+  // --- 1. INITIALIZATION ---
+  function initializeCalculation() {
+    const P = parseFloat(document.getElementById("loanAmount").value);
+    const R = parseFloat(document.getElementById("interestRate").value);
+    const Y = parseFloat(document.getElementById("tenureYears").value);
+    const D = document.getElementById("loanStartDate").value;
+
+    if (!P || !R || !Y || !D) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    const r = R / 12 / 100;
+    const n = Y * 12;
+    const baseEMI = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+
+    const today = new Date();
+    const start = new Date(D);
+    let monthsElapsed =
+      (today.getFullYear() - start.getFullYear()) * 12 +
+      (today.getMonth() - start.getMonth());
+    if (monthsElapsed < 0) monthsElapsed = 0;
+    if (monthsElapsed > n) monthsElapsed = n;
+
+    globalParams = {
+      P,
+      R,
+      Y,
+      n,
+      r,
+      baseEMI,
+      startDate: start,
+      monthsElapsed,
+    };
+
+    const baseResults = runEngine("base");
+    renderStrategyCards(baseResults);
+    applyStrategy("base", null, "card-base");
+  }
+
+  // --- 2. MATH ENGINE ---
+  function runEngine(type, customVal) {
+    const { P, r, n, baseEMI, startDate, monthsElapsed } = globalParams;
+    let balance = P;
+    let months = 0;
+    let totalInt = 0;
+    let totalPaid = 0;
+    let schedule = [];
+    let yearlyData = [];
+    let cyPrin = 0,
+      cyInt = 0,
+      cyBal = 0;
+
+    let fixedExtraAnnual = 0;
+    if (type === "target_tenure") {
+      const targetTotalMonths = monthsElapsed + customVal * 12;
+      if (targetTotalMonths < n) {
+        fixedExtraAnnual = solveForTargetTenure(targetTotalMonths);
+      }
+    }
+
+    while (balance > 10 && months < 1200) {
+      months++;
+      let interest = balance * r;
+      let currentPayment = baseEMI;
+
+      if (months > monthsElapsed) {
+        if (type === "extra_annual") {
+          if ((months - monthsElapsed) % 12 === 0)
+            currentPayment += baseEMI * customVal;
+        } else if (type === "hike_emi") {
+          currentPayment = baseEMI * (1 + customVal / 100);
+        } else if (type === "boost_quarterly") {
+          if ((months - monthsElapsed) % 3 === 0)
+            currentPayment += baseEMI * 0.5;
+        } else if (type === "boost_semiannual") {
+          if ((months - monthsElapsed) % 6 === 0) currentPayment += baseEMI;
+        } else if (type === "target_tenure") {
+          if ((months - monthsElapsed) % 12 === 0)
+            currentPayment += fixedExtraAnnual;
+        }
       }
 
-      const monthlyRate = annualRate / 12 / 100;
-      const months = years * 12;
+      if (balance + interest < currentPayment)
+        currentPayment = balance + interest;
+      let prin = currentPayment - interest;
+      let open = balance;
+      balance -= prin;
+      if (balance < 0) balance = 0;
 
-      // EMI Formula
-      const emi =
-        (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
-        (Math.pow(1 + monthlyRate, months) - 1);
-      const totalPayment = emi * months;
-      const totalInterest = totalPayment - principal;
+      totalInt += interest;
+      totalPaid += currentPayment;
 
-      const fmt = (n) =>
-        "$" +
-        n.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
+      let d = new Date(startDate);
+      d.setMonth(startDate.getMonth() + months);
+      let dateStr = d.toLocaleDateString("en-IN", {
+        month: "short",
+        year: "numeric",
+      });
 
-      document.getElementById("emi").innerText = fmt(emi);
-      document.getElementById("totalInterest").innerText = fmt(totalInterest);
-      document.getElementById("totalPayment").innerText = fmt(totalPayment);
-      document.getElementById("principalDisplay").innerText = fmt(principal);
+      schedule.push({
+        id: months,
+        date: dateStr,
+        open,
+        pay: currentPayment,
+        prin,
+        int: interest,
+        close: balance,
+      });
+
+      cyPrin += prin;
+      cyInt += interest;
+      cyBal = balance;
+
+      if (months % 12 === 0 || balance === 0) {
+        if (cyPrin > 0 || cyInt > 0) {
+          yearlyData.push({
+            year: d.getFullYear(),
+            prin: cyPrin,
+            int: cyInt,
+            bal: cyBal,
+          });
+          cyPrin = 0;
+          cyInt = 0;
+        }
+      }
     }
-  </script>
-</SalaryToolLayout>
+
+    return {
+      totalInt,
+      totalPaid,
+      months,
+      schedule,
+      yearlyData,
+      extraAnnualVal: fixedExtraAnnual,
+    };
+  }
+
+  function solveForTargetTenure(targetTotalMonths) {
+    let low = 0,
+      high = globalParams.P,
+      solution = 0;
+    for (let i = 0; i < 20; i++) {
+      let mid = (low + high) / 2;
+      let finalMonth = simulateSimple(mid);
+      if (finalMonth > targetTotalMonths) low = mid;
+      else high = mid;
+      solution = mid;
+    }
+    return solution;
+  }
+
+  function simulateSimple(extraAnnual) {
+    const { P, r, baseEMI, monthsElapsed } = globalParams;
+    let bal = P,
+      m = 0;
+    while (bal > 10 && m < 1200) {
+      m++;
+      let int = bal * r;
+      let pay = baseEMI;
+      if (m > monthsElapsed && (m - monthsElapsed) % 12 === 0)
+        pay += extraAnnual;
+      if (bal + int < pay) pay = bal + int;
+      bal -= pay - int;
+    }
+    return m;
+  }
+
+  // --- 3. UI RENDERING ---
+  function renderStrategyCards(baseResults) {
+    const container = document.getElementById("suggestionsWrapper");
+    const { baseEMI } = globalParams;
+
+    const s1 = runEngine("extra_annual", strategyState.extraEMIsCount);
+    const s2 = runEngine("hike_emi", strategyState.hikePercent);
+    const s3 = runEngine("boost_quarterly", null);
+    const s4 = runEngine("boost_semiannual", null);
+    const s5 = runEngine("target_tenure", strategyState.targetYears);
+
+    let html = "";
+
+    html += createCardHTML(
+      "card-base",
+      "card-base",
+      "Standard Plan",
+      "base",
+      null,
+      "Regular Schedule",
+      baseResults.totalInt,
+      baseResults.months,
+      false,
+      baseResults,
+    );
+    html += createCardHTML(
+      "card-s1",
+      "card-blue",
+      "Extra EMI / Year",
+      "extra_annual",
+      strategyState.extraEMIsCount,
+      `Pay <b>${strategyState.extraEMIsCount}</b> extra EMI(s) yearly`,
+      s1.totalInt,
+      s1.months,
+      true,
+      baseResults,
+      "input-emi",
+      "EMIs",
+      1,
+    );
+    html += createCardHTML(
+      "card-s2",
+      "card-green",
+      "Hike EMI %",
+      "hike_emi",
+      strategyState.hikePercent,
+      `Increase EMI by <b>${strategyState.hikePercent}%</b>`,
+      s2.totalInt,
+      s2.months,
+      true,
+      baseResults,
+      "input-hike",
+      "%",
+      1,
+    );
+
+    const qVal = formatCurrency(baseEMI * 0.5);
+    html += createCardHTML(
+      "card-s3",
+      "card-purple",
+      "Quarterly Boost",
+      "boost_quarterly",
+      null,
+      `Pay 0.5 EMI (<b>${qVal}</b>) quarterly`,
+      s3.totalInt,
+      s3.months,
+      false,
+      baseResults,
+    );
+
+    const saVal = formatCurrency(baseEMI);
+    html += createCardHTML(
+      "card-s4",
+      "card-teal",
+      "6-Month Boost",
+      "boost_semiannual",
+      null,
+      `Pay 1 EMI (<b>${saVal}</b>) semi-annually`,
+      s4.totalInt,
+      s4.months,
+      false,
+      baseResults,
+    );
+
+    let s5Desc = "";
+    const remainingMonths = baseResults.months - globalParams.monthsElapsed;
+    if (strategyState.targetYears * 12 >= remainingMonths) {
+      s5Desc = "Target is longer than remaining tenure.";
+    } else {
+      s5Desc = `Pay <b>${formatCurrency(s5.extraAnnualVal)}</b> annually`;
+    }
+    html += createCardHTML(
+      "card-s5",
+      "card-orange",
+      "Lumpsum Benefit",
+      "target_tenure",
+      strategyState.targetYears,
+      s5Desc,
+      s5.totalInt,
+      s5.months,
+      true,
+      baseResults,
+      "input-target",
+      "Years Target",
+      1,
+    );
+
+    container.innerHTML = html;
+  }
+
+  function createCardHTML(
+    id,
+    colorClass,
+    title,
+    type,
+    val,
+    desc,
+    strategyInt,
+    strategyMonths,
+    hasInput,
+    baseResults,
+    inputId,
+    inputLabel,
+    minVal,
+  ) {
+    let inputHTML = "";
+    if (hasInput) {
+      inputHTML = `
+            <div class="mt-2 flex items-center gap-2 bg-white/80 p-1.5 rounded" onclick="event.stopPropagation()">
+                <label class="text-xs font-medium text-slate-600 whitespace-nowrap">Set:</label>
+                <input type="number" id="${inputId}" value="${val}" min="${minVal}"
+                    class="w-16 px-1 py-0.5 border border-slate-300 rounded text-center text-sm font-bold text-slate-800 outline-none"
+                    onchange="updateCardParam('${type}', this.value)">
+                <label class="text-xs font-medium text-slate-600 whitespace-nowrap">${inputLabel}</label>
+            </div>`;
+    }
+
+    const isBase = type === "base";
+    const savingsLabel = isBase ? "Total Interest" : "Interest Saved";
+    const savingsVal = isBase
+      ? formatCurrency(strategyInt)
+      : formatCurrency(baseResults.totalInt - strategyInt);
+    const timeLabel = isBase ? "Tenure" : "Time Saved";
+    const timeVal = isBase
+      ? `${globalParams.Y} Years`
+      : formatTimeSaved(baseResults.months - strategyMonths);
+    const badgeStyle =
+      "text-[10px] px-2 py-0.5 rounded-full font-medium uppercase bg-slate-200 text-slate-500 strat-badge";
+
+    return `
+        <div id="${id}" class="strategy-card ${colorClass} bg-white border border-slate-200 rounded p-4 relative min-w-[260px] flex-shrink-0" style="scroll-snap-align:start;" onclick="applyStrategy('${type}', ${val}, '${id}')">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-semibold text-slate-800 text-sm">${title}</span>
+                <span class="${badgeStyle}">Select</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mb-1">
+                <div>
+                    <div class="text-[10px] uppercase font-medium text-slate-500 mb-0.5">${savingsLabel}</div>
+                    <div class="font-bold text-slate-800 text-sm">${savingsVal}</div>
+                </div>
+                <div>
+                    <div class="text-[10px] uppercase font-medium text-slate-500 mb-0.5">${timeLabel}</div>
+                    <div class="font-bold text-slate-800 text-sm">${timeVal}</div>
+                </div>
+            </div>
+            ${inputHTML}
+            <div class="text-xs text-slate-500 border-t border-dashed border-slate-200 pt-2 mt-2 leading-relaxed">
+                ${desc}
+            </div>
+        </div>`;
+  }
+
+  // --- 4. INTERACTION ---
+  window.updateCardParam = function (type, newVal) {
+    newVal = parseFloat(newVal);
+    if (!newVal || newVal < 0) return;
+
+    if (type === "extra_annual") strategyState.extraEMIsCount = newVal;
+    if (type === "hike_emi") strategyState.hikePercent = newVal;
+    if (type === "target_tenure") strategyState.targetYears = newVal;
+
+    const baseResults = runEngine("base");
+    renderStrategyCards(baseResults);
+
+    const activeCard = document.querySelector(".active-card");
+    const activeType = activeCard ? activeCard.id.replace("card-", "") : null;
+    let map = { s1: "extra_annual", s2: "hike_emi", s5: "target_tenure" };
+
+    if (activeType && map[activeType] === type) {
+      applyStrategy(type, newVal, "card-" + activeType);
+    }
+  };
+
+  window.applyStrategy = function (type, val, cardId) {
+    if (type === "extra_annual") val = strategyState.extraEMIsCount;
+    if (type === "hike_emi") val = strategyState.hikePercent;
+    if (type === "target_tenure") val = strategyState.targetYears;
+
+    const res = runEngine(type, val);
+
+    document.getElementById("totalInterest").innerText = formatCurrency(
+      res.totalInt,
+    );
+    document.getElementById("totalPayment").innerText = formatCurrency(
+      res.totalPaid,
+    );
+    document.getElementById("emiValue").innerText = formatCurrency(
+      globalParams.baseEMI,
+    );
+
+    const note = document.getElementById("emiNote");
+    const emiVal = document.getElementById("emiValue");
+
+    if (type === "base") note.innerText = "Standard Payment";
+    else if (type === "extra_annual")
+      note.innerText = `+ ${val} Extra EMI(s) yearly`;
+    else if (type === "hike_emi") {
+      emiVal.innerText = formatCurrency(globalParams.baseEMI * (1 + val / 100));
+      note.innerText = `Increased by ${val}%`;
+    } else if (type === "boost_quarterly")
+      note.innerText = `+ 0.5 EMI quarterly`;
+    else if (type === "boost_semiannual")
+      note.innerText = `+ 1 EMI semi-annually`;
+    else if (type === "target_tenure") note.innerText = `+ Lumpsum annually`;
+
+    // Reset Cards UI
+    document.querySelectorAll(".strategy-card").forEach((c) => {
+      c.classList.remove("active-card");
+      const badge = c.querySelector(".strat-badge");
+      if (badge) {
+        badge.innerText = "Select";
+        badge.className =
+          "text-[10px] px-2 py-0.5 rounded-full font-medium uppercase bg-slate-200 text-slate-500 strat-badge";
+      }
+    });
+
+    const active = document.getElementById(cardId);
+    if (active) {
+      active.classList.add("active-card");
+      const badge = active.querySelector(".strat-badge");
+      if (badge) {
+        badge.innerText = "Active";
+        badge.className =
+          "text-[10px] px-2 py-0.5 rounded-full font-medium uppercase btn-primary text-white strat-badge";
+      }
+    }
+
+    const titles = {
+      base: "Payment Schedule (Standard)",
+      extra_annual: `Schedule (${val} Extra EMIs/Year)`,
+      hike_emi: `Schedule (${val}% Hike)`,
+      boost_quarterly: "Schedule (Quarterly Boost)",
+      boost_semiannual: "Schedule (6-Month Boost)",
+      target_tenure: `Schedule (Target ${val} Years)`,
+    };
+    document.getElementById("chartTitle").innerText = titles[type];
+
+    renderChart(res.yearlyData);
+    renderTable(res.schedule);
+  };
+
+  function renderTable(data) {
+    const tbody = document.getElementById("scheduleTableBody");
+    tbody.innerHTML = data
+      .map(
+        (row) => `
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-4 py-2 border-b border-slate-100 font-mono text-xs text-slate-500">${row.id}</td>
+                <td class="px-4 py-2 border-b border-slate-100 font-medium text-slate-700">${row.date}</td>
+                <td class="px-4 py-2 border-b border-slate-100 text-right text-slate-600">${formatCurrency(row.open)}</td>
+                <td class="px-4 py-2 border-b border-slate-100 text-right font-bold text-slate-800">${formatCurrency(row.pay)}</td>
+                <td class="px-4 py-2 border-b border-slate-100 text-right text-emerald-600">${formatCurrency(row.prin)}</td>
+                <td class="px-4 py-2 border-b border-slate-100 text-right text-rose-600">${formatCurrency(row.int)}</td>
+                <td class="px-4 py-2 border-b border-slate-100 text-right font-medium text-slate-800">${formatCurrency(row.close)}</td>
+            </tr>
+        `,
+      )
+      .join("");
+  }
+
+  function renderChart(data) {
+    const ctx = document.getElementById("loanChart").getContext("2d");
+    if (loanChart) loanChart.destroy();
+
+    loanChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: data.map((d) => d.year),
+        datasets: [
+          {
+            label: "Principal",
+            data: data.map((d) => d.prin),
+            backgroundColor: "#7c3aed",
+            borderRadius: 3,
+          },
+          {
+            label: "Interest",
+            data: data.map((d) => d.int),
+            backgroundColor: "#ef4444",
+            borderRadius: 3,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { stacked: true, grid: { display: false } },
+          y: {
+            stacked: true,
+            ticks: {
+              callback: (v) =>
+                v >= 100000 ? "₹" + (v / 100000).toFixed(1) + "L" : v,
+            },
+          },
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              afterBody: (ctx) =>
+                `Outstanding: ${formatCurrency(data[ctx[0].dataIndex].bal)}`,
+            },
+            backgroundColor: "rgba(15, 23, 42, 0.9)",
+            padding: 12,
+            cornerRadius: 8,
+          },
+          legend: {
+            position: "bottom",
+            labels: { usePointStyle: true, boxWidth: 8 },
+          },
+        },
+      },
+    });
+  }
+
+  // On Load
+  window.onload = function () {
+    document.getElementById("loanStartDate").value = new Date()
+      .toISOString()
+      .split("T")[0];
+    initializeCalculation();
+  };
+</script>

@@ -1,0 +1,378 @@
+---
+import DevToolLayout from "../../layouts/DevToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "Is my contact information saved on a server?",
+    answer:
+      "No. The QR code is generated entirely in your browser. Your data never leaves your device.",
+  },
+  {
+    question: "Will this work on iPhone and Android?",
+    answer:
+      "Yes. Most modern smartphone cameras can scan this QR code and will automatically prompt to add the contact.",
+  },
+];
+
+const howItWorks = [
+  {
+    title: "Data Entry",
+    content: "You enter your contact details (Name, Phone, Email, etc.) into the form.",
+  },
+  {
+    title: "vCard Generation",
+    content: "The tool formats your data into a standard vCard (VCF) text string.",
+  },
+  {
+    title: "QR Code Creation",
+    content: "That vCard string is encoded into a QR code image that phones can understand.",
+  },
+  {
+    title: "Scanning",
+    content: "When users scan the code, their phone recognizes the vCard format and offers to save the contact.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Business Cards",
+    description: "Print this QR code on your physical business cards so people can save your info instantly.",
+  },
+  {
+    title: "Event Badges",
+    description: "Add a QR code to your conference badge to make networking seamless.",
+  },
+  {
+    title: "Resumes/CVs",
+    description: "Include a contact QR code on your resume to make it easy for recruiters to reach you.",
+  },
+  {
+    title: "Storefronts",
+    description: "Allow customers to quickly save your business contact details to their phones.",
+  },
+];
+---
+
+<DevToolLayout
+  title="Scan to Save Contact - Quick Tools"
+  description="Generate a QR code that automatically prompts to add a contact to your phone's address book when scanned. Perfect for business cards and networking."
+  canonicalPath="/dev/scan-to-save-contact"
+  currentTool="Scan to Save Contact"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      Scan to Save Contact
+    </h1>
+    <p class="text-slate-500">
+      Create a QR code that lets people save your contact info instantly by scanning it.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label for="N_GIVEN" class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >First Name</label
+        >
+        <input
+          type="text"
+          id="N_GIVEN"
+          autocomplete="given-name"
+          class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+          placeholder="John"
+        />
+      </div>
+      <div>
+        <label for="N_FAMILY" class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Last Name</label
+        >
+        <input
+          type="text"
+          id="N_FAMILY"
+          autocomplete="family-name"
+          class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+          placeholder="Doe"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label for="TEL" class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Phone Number</label
+        >
+        <input
+          type="tel"
+          id="TEL"
+          autocomplete="tel"
+          class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+          placeholder="+1234567890"
+        />
+      </div>
+      <div>
+        <label for="EMAIL" class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Email Address</label
+        >
+        <input
+          type="email"
+          id="EMAIL"
+          autocomplete="email"
+          class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+          placeholder="john@example.com"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label for="ORG" class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Organization / Company</label
+        >
+        <input
+          type="text"
+          id="ORG"
+          autocomplete="organization"
+          class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+          placeholder="Acme Corp"
+        />
+      </div>
+      <div>
+        <label for="TITLE" class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Designation / Job Title</label
+        >
+        <input
+          type="text"
+          id="TITLE"
+          autocomplete="organization-title"
+          class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+          placeholder="Software Engineer"
+        />
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="URL" class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Website</label
+      >
+      <input
+        type="text"
+        id="URL"
+        autocomplete="url"
+        class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+        placeholder="https://example.com"
+      />
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-slate-700 mb-2 text-sm  pb-1">Address</label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2">
+          <input
+            type="text"
+            id="ADR_STREET"
+            autocomplete="street-address"
+            class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            placeholder="Street Address"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            id="ADR_CITY"
+            autocomplete="address-level2"
+            class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            placeholder="City"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            id="ADR_REGION"
+            autocomplete="address-level1"
+            class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            placeholder="State / Province"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            id="ADR_POSTAL"
+            autocomplete="postal-code"
+            class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            placeholder="Zip / Postal Code"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            id="ADR_COUNTRY"
+            autocomplete="country-name"
+            class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            placeholder="Country"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label for="BDAY" class="block font-medium text-slate-700 mb-1.5 text-sm"
+          >Birthday</label
+        >
+        <input
+          type="date"
+          id="BDAY"
+          autocomplete="bday"
+          class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+        />
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="NOTE" class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Extra Details / Note</label
+      >
+      <textarea
+        id="NOTE"
+        rows="3"
+        class="w-full px-4 py-2 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+        placeholder="Met at the conference..."
+      ></textarea>
+    </div>
+
+    <div class="flex flex-col items-center p-6 bg-white rounded border border-slate-200">
+      <div id="qrContainer" class="mb-4">
+        <canvas id="qrCanvas" class="hidden"></canvas>
+        <div
+          id="placeholder"
+          class="text-slate-400 text-sm p-8 text-center border-2 border-dashed border-slate-300 rounded"
+        >
+          Enter details to generate QR code
+        </div>
+      </div>
+
+      <button
+        id="downloadBtn"
+        class="hidden px-4 py-2 bg-white border border-slate-300 rounded text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-1"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+          ></path>
+        </svg>
+        Download QR Code
+      </button>
+    </div>
+  </div>
+
+  <script is:inline src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script is:inline>
+    const downloadBtn = document.getElementById("downloadBtn");
+    const qrCanvas = document.getElementById("qrCanvas");
+    const placeholder = document.getElementById("placeholder");
+
+    const inputs = document.querySelectorAll("input, textarea");
+
+    function debounce(func, wait) {
+      let timeout;
+      return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+      };
+    }
+
+    const generateQR = () => {
+      const nGiven = document.getElementById("N_GIVEN").value.trim();
+      const nFamily = document.getElementById("N_FAMILY").value.trim();
+      const tel = document.getElementById("TEL").value.trim();
+      const email = document.getElementById("EMAIL").value.trim();
+      const org = document.getElementById("ORG").value.trim();
+      const title = document.getElementById("TITLE").value.trim();
+      const url = document.getElementById("URL").value.trim();
+      const note = document.getElementById("NOTE").value.trim();
+      const bday = document.getElementById("BDAY").value;
+
+      const adrStreet = document.getElementById("ADR_STREET").value.trim();
+      const adrCity = document.getElementById("ADR_CITY").value.trim();
+      const adrRegion = document.getElementById("ADR_REGION").value.trim();
+      const adrPostal = document.getElementById("ADR_POSTAL").value.trim();
+      const adrCountry = document.getElementById("ADR_COUNTRY").value.trim();
+
+      if (!nGiven && !nFamily && !org && !tel && !email) {
+        qrCanvas.classList.add("hidden");
+        placeholder.classList.remove("hidden");
+        downloadBtn.classList.add("hidden");
+        return;
+      }
+
+      let vcard = `BEGIN:VCARD\nVERSION:3.0\n`;
+      vcard += `N:${nFamily};${nGiven};;;\n`;
+      const fullName = `${nGiven} ${nFamily}`.trim();
+      vcard += `FN:${fullName}\n`;
+      if (org) vcard += `ORG:${org.replace(/;/g, '\\;')}\n`;
+      if (title) vcard += `TITLE:${title}\n`;
+      if (tel) vcard += `TEL;TYPE=CELL:${tel}\n`;
+      if (email) vcard += `EMAIL:${email}\n`;
+      if (url) vcard += `URL:${url}\n`;
+
+      if (adrStreet || adrCity || adrRegion || adrPostal || adrCountry) {
+        vcard += `ADR;TYPE=HOME:;;${adrStreet};${adrCity};${adrRegion};${adrPostal};${adrCountry}\n`;
+      }
+
+      if (bday) {
+        vcard += `BDAY:${bday}\n`;
+      }
+
+      if (note) vcard += `NOTE:${note}\n`;
+      vcard += `REV:${new Date().toISOString()}\n`;
+      vcard += `END:VCARD`;
+
+      QRCode.toCanvas(
+        qrCanvas,
+        vcard,
+        {
+          width: 300,
+          margin: 1,
+          color: {
+            dark: "#000000",
+            light: "#ffffff",
+          },
+        },
+        function (error) {
+          if (error) {
+            console.error(error);
+            return;
+          }
+          qrCanvas.classList.remove("hidden");
+          placeholder.classList.add("hidden");
+          downloadBtn.classList.remove("hidden");
+        },
+      );
+    };
+
+    const debouncedGenerate = debounce(generateQR, 300);
+    inputs.forEach((input) => {
+      input.addEventListener("input", debouncedGenerate);
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.download = `contact-qr-${Date.now()}.png`;
+      link.href = qrCanvas.toDataURL();
+      link.click();
+    });
+  </script>
+</DevToolLayout>
