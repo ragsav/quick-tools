@@ -11,9 +11,37 @@ const faqItems = [
     answer: "Any image format the Base64 encodes - PNG, JPEG, GIF, WebP, SVG, and more.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Select Options",
+    content: "Upload your file or enter the required input.",
+  },
+  {
+    title: "Process Data",
+    content: "The tool processes your data securely in the browser.",
+  },
+  {
+    title: "Get Results",
+    content: "Download or copy the generated output instantly.",
+  },
+];
+
+const useCases = [
+  {
+    title: "General Usage",
+    description: "Use the Base64 to Image to quickly process data without installing software.",
+  },
+  {
+    title: "Professional Work",
+    description: "Streamline your daily workflow with our secure, browser-based tool.",
+  },
+];
 ---
 
 <ImageToolLayout
+  useCases={useCases}
+  howItWorks={howItWorks}
   title="Base64 to Image - Decode Base64 to Image"
   description="Convert Base64 string to image. Decode and download as PNG, JPG, or other formats. Free online tool."
   canonicalPath="/image/base64-to-image"

@@ -7,6 +7,17 @@
 import ToolLayout from "./ToolLayout.astro";
 import { CONSTANT } from "../constants";
 
+
+interface HowItWorksItem {
+  title?: string;
+  content: string;
+}
+
+interface UseCaseItem {
+  title: string;
+  description: string;
+}
+
 interface FAQItem {
   question: string;
   answer: string;
@@ -18,6 +29,8 @@ interface Props {
   canonicalPath: string;
   currentTool?: string;
   faqItems?: FAQItem[];
+  howItWorks?: HowItWorksItem[];
+  useCases?: UseCaseItem[];
 }
 
 const {
@@ -26,6 +39,9 @@ const {
   canonicalPath,
   currentTool = "",
   faqItems = [],
+
+  howItWorks = [],
+  useCases = [],
 } = Astro.props;
 
 const cluster = {
@@ -74,6 +90,10 @@ const relatedTools = allTools
   cluster={cluster}
   relatedTools={relatedTools}
   faqItems={faqItems}
+
+  howItWorks={howItWorks}
+  useCases={useCases}
+
 >
   <slot />
 </ToolLayout>

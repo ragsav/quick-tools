@@ -15,9 +15,37 @@ const faqItems = [
     answer: "Typically yes, PNG files are larger than WebP. This is the trade-off for broader compatibility.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Select Options",
+    content: "Upload your file or enter the required input.",
+  },
+  {
+    title: "Process Data",
+    content: "The tool processes your data securely in the browser.",
+  },
+  {
+    title: "Get Results",
+    content: "Download or copy the generated output instantly.",
+  },
+];
+
+const useCases = [
+  {
+    title: "General Usage",
+    description: "Use the WebP to PNG Converter to quickly process data without installing software.",
+  },
+  {
+    title: "Professional Work",
+    description: "Streamline your daily workflow with our secure, browser-based tool.",
+  },
+];
 ---
 
 <ImageToolLayout
+  useCases={useCases}
+  howItWorks={howItWorks}
   title="WebP to PNG Converter - Free Online Tool"
   description="Convert WebP images to PNG format online for free. Universal compatibility with lossless quality. No upload required."
   canonicalPath="/image/webp-to-png"

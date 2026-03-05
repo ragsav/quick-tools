@@ -15,9 +15,37 @@ const faqItems = [
     answer: "Since everything runs in your browser, the limit depends on your device's memory. Most modern devices can handle images up to 20-50MB.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Select Options",
+    content: "Upload your file or enter the required input.",
+  },
+  {
+    title: "Process Data",
+    content: "The tool processes your data securely in the browser.",
+  },
+  {
+    title: "Get Results",
+    content: "Download or copy the generated output instantly.",
+  },
+];
+
+const useCases = [
+  {
+    title: "General Usage",
+    description: "Use the Image Compress & Resize to quickly process data without installing software.",
+  },
+  {
+    title: "Professional Work",
+    description: "Streamline your daily workflow with our secure, browser-based tool.",
+  },
+];
 ---
 
 <ImageToolLayout
+  useCases={useCases}
+  howItWorks={howItWorks}
   title="Image Compress & Resize - Free Online Tool"
   description="Compress and resize images online for free. Reduce file size without losing quality. No upload required - works entirely in your browser."
   canonicalPath="/image/image-compress"

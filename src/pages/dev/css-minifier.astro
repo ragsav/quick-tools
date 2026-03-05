@@ -1,0 +1,162 @@
+---
+import DevToolLayout from "../../layouts/DevToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What is CSS Minifier?",
+    answer:
+      "It is a free online tool to help you minify CSS code by removing whitespace and comments.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser.",
+  },
+];
+
+const howItWorks = [
+  {
+    title: "Step 1",
+    content: "Enter your CSS code in the provided field.",
+  },
+  {
+    title: "Step 2",
+    content: "Click the minify button.",
+  },
+  {
+    title: "Step 3",
+    content: "Copy the minified output.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Web Development",
+    description: "Use this tool to reduce CSS file size for faster page loads.",
+  },
+];
+---
+
+<DevToolLayout
+  title="CSS Minifier - Free Online Tool"
+  description="Minify your CSS code to reduce file size"
+  canonicalPath="/dev/css-minifier"
+  currentTool="CSS Minifier"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      CSS Minifier
+    </h1>
+    <p class="text-slate-500">Minify your CSS code to reduce file size</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label for="input" class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Input</label
+      >
+      <textarea
+        id="input"
+        rows="10"
+        placeholder="/* Paste your CSS here */&#10;.container {&#10;  display: flex;&#10;  margin: 0 auto;&#10;}"
+        class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono"
+      ></textarea>
+    </div>
+
+    <div class="flex gap-3 mb-4">
+      <button
+        onclick="process()"
+        class="px-6 py-2 font-semibold text-white rounded bg-emerald-600 hover:bg-emerald-700"
+        >Minify CSS</button
+      >
+      <div id="stats" class="px-4 py-2 text-sm text-slate-600 flex items-center"></div>
+    </div>
+
+    <div class="mb-4">
+      <div class="flex justify-between items-center mb-1.5">
+        <label class="block font-medium text-slate-700 text-sm">Output</label>
+        <button onclick="copyOutput()" class="text-xs text-blue-600 hover:text-blue-800">Copy Result</button>
+      </div>
+      <textarea
+        id="output"
+        rows="10"
+        readonly
+        placeholder="Minified CSS will appear here"
+        class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-slate-50 text-slate-800 outline-none resize-y font-mono"
+      ></textarea>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">About CSS Minifier</h2>
+    <p class="text-slate-600">
+      This is a utility designed to make your web pages load faster by reducing the size of your CSS files.
+    </p>
+  </section>
+
+      <script is:inline>
+    // We attach the process and copyOutput functions to window
+    // because this script block gets scoped, but our onclick handlers
+    // are looking for global functions.
+
+    window.process = async function() {
+      try {
+        const input = document.getElementById("input").value;
+        if (!input.trim()) {
+            document.getElementById("output").value = "";
+            document.getElementById("stats").innerText = "";
+            return;
+        }
+
+        document.getElementById("output").value = "Minifying...";
+
+        const response = await fetch("/api/minify-css", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ input })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Failed to minify CSS");
+        }
+
+        const minified = result.minified;
+
+        document.getElementById("output").value = minified;
+
+        // Calculate savings
+        const originalSize = new Blob([input]).size;
+        const minifiedSize = new Blob([minified]).size;
+        const savings = originalSize > 0
+            ? ((originalSize - minifiedSize) / originalSize * 100).toFixed(1)
+            : 0;
+
+        document.getElementById("stats").innerText = `Original: ${originalSize}B | Minified: ${minifiedSize}B | Saved: ${savings}%`;
+      } catch (e) {
+        document.getElementById("output").value = "Error minifying CSS: " + e.message;
+      }
+    };
+
+    window.copyOutput = function() {
+      const output = document.getElementById("output");
+      if (!output.value || output.value === "Minifying...") return;
+      output.select();
+
+      if (navigator.clipboard) {
+          navigator.clipboard.writeText(output.value)
+          .then(() => alert("Copied to clipboard!"))
+          .catch(() => alert("Failed to copy!"));
+      } else {
+          document.execCommand("copy");
+          alert("Copied to clipboard!");
+      }
+    };
+  </script>
+</DevToolLayout>

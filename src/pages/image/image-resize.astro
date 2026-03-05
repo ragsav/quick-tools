@@ -15,9 +15,37 @@ const faqItems = [
     answer: "Yes! Enable 'Maintain aspect ratio' to automatically calculate the correct height when you change the width, and vice versa.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Select Options",
+    content: "Upload your file or enter the required input.",
+  },
+  {
+    title: "Process Data",
+    content: "The tool processes your data securely in the browser.",
+  },
+  {
+    title: "Get Results",
+    content: "Download or copy the generated output instantly.",
+  },
+];
+
+const useCases = [
+  {
+    title: "General Usage",
+    description: "Use the Image Resize to quickly process data without installing software.",
+  },
+  {
+    title: "Professional Work",
+    description: "Streamline your daily workflow with our secure, browser-based tool.",
+  },
+];
 ---
 
 <ImageToolLayout
+  useCases={useCases}
+  howItWorks={howItWorks}
   title="Image Resize - Free Online Tool"
   description="Resize images online for free. Change dimensions, scale by percentage, or fit to maximum size. No upload required."
   canonicalPath="/image/image-resize"
