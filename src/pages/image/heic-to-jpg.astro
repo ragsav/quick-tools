@@ -15,9 +15,37 @@ const faqItems = [
     answer: "Yes, the conversion maintains high quality. You can also adjust the output quality to balance size and clarity.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Select Options",
+    content: "Upload your file or enter the required input.",
+  },
+  {
+    title: "Process Data",
+    content: "The tool processes your data securely in the browser.",
+  },
+  {
+    title: "Get Results",
+    content: "Download or copy the generated output instantly.",
+  },
+];
+
+const useCases = [
+  {
+    title: "General Usage",
+    description: "Use the HEIC to JPG Converter to quickly process data without installing software.",
+  },
+  {
+    title: "Professional Work",
+    description: "Streamline your daily workflow with our secure, browser-based tool.",
+  },
+];
 ---
 
 <ImageToolLayout
+  useCases={useCases}
+  howItWorks={howItWorks}
   title="HEIC to JPG Converter - Free Online Tool"
   description="Convert iPhone HEIC photos to JPG format online for free. Universal compatibility. No upload required - works in your browser."
   canonicalPath="/image/heic-to-jpg"

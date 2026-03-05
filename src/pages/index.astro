@@ -432,6 +432,18 @@ const toolClusters = [
 		url: "/dev/",
 		tools: [
 			{
+				name: "HTML Minifier",
+				url: "/dev/html-minifier",
+				status: "live",
+				priority: "medium",
+			},
+			{
+				name: "CSS Minifier",
+				url: "/dev/css-minifier",
+				status: "live",
+				priority: "medium",
+			},
+			{
 				name: "JSON Formatter",
 				url: "/dev/json-formatter",
 				status: "live",
@@ -754,6 +766,24 @@ const allLiveTools = toolClusters.flatMap((c) =>
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={seo.title} />
 		<meta name="twitter:description" content={seo.description} />
+
+
+		<!-- JSON-LD: WebSite -->
+		<script
+			type="application/ld+json"
+			set:html={JSON.stringify({
+				"@context": "https://schema.org",
+				"@type": "WebSite",
+				"name": seo.title,
+				"url": seo.canonical,
+				"description": seo.description,
+				"potentialAction": {
+					"@type": "SearchAction",
+					"target": `${seo.canonical}/?q={search_term_string}`,
+					"query-input": "required name=search_term_string"
+				}
+			})}
+		/>
 
 		<!-- JSON-LD -->
 		<script

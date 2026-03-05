@@ -1,0 +1,172 @@
+---
+import DevToolLayout from "../../layouts/DevToolLayout.astro";
+
+const faqItems = [
+  {
+    question: "What is HTML Minifier?",
+    answer:
+      "It is a free online tool to help you minify HTML code by removing unnecessary whitespace, comments, and line breaks.",
+  },
+  {
+    question: "Does minifying HTML affect how the page looks?",
+    answer:
+      "No, minification only removes whitespace and comments that browsers ignore. The visual appearance of your page will remain exactly the same.",
+  },
+  {
+    question: "Is this tool free?",
+    answer:
+      "Yes, this tool is completely free and works directly in your browser without uploading your code to any server.",
+  },
+];
+
+const howItWorks = [
+  {
+    title: "Step 1",
+    content: "Enter or paste your HTML code in the provided input field.",
+  },
+  {
+    title: "Step 2",
+    content: "Click the minify button to process the HTML.",
+  },
+  {
+    title: "Step 3",
+    content: "Copy the minified output or see how much space was saved.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Web Performance Optimization",
+    description: "Use this tool to reduce HTML file sizes before deploying to production, which leads to faster page load times.",
+  },
+  {
+    title: "Code Obfuscation",
+    description: "Make your HTML slightly harder for casual users to read by removing all formatting.",
+  },
+];
+---
+
+<DevToolLayout
+  title="HTML Minifier - Free Online Tool"
+  description="Minify your HTML code to reduce file size and improve page load times"
+  canonicalPath="/dev/html-minifier"
+  currentTool="HTML Minifier"
+  faqItems={faqItems}
+  howItWorks={howItWorks}
+  useCases={useCases}
+>
+  <div class="tool-header">
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+      HTML Minifier
+    </h1>
+    <p class="text-slate-500">Minify your HTML code to reduce file size and improve page load times</p>
+  </div>
+
+  <div class="bg-slate-50 border border-slate-200 rounded p-6 mb-8">
+    <div class="mb-4">
+      <label for="input" class="block font-medium text-slate-700 mb-1.5 text-sm"
+        >Input HTML</label
+      >
+      <textarea
+        id="input"
+        rows="10"
+        placeholder="<!-- Paste your HTML here -->&#10;<!DOCTYPE html>&#10;<html>&#10;  <head>&#10;    <title>My Page</title>&#10;  </head>&#10;  <body>&#10;    <h1>Hello World!</h1>&#10;  </body>&#10;</html>"
+        class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-white text-slate-800 outline-none resize-y font-mono"
+      ></textarea>
+    </div>
+
+    <div class="flex gap-3 mb-4">
+      <button
+        onclick="process()"
+        class="px-6 py-2 font-semibold text-white rounded bg-emerald-600 hover:bg-emerald-700"
+        >Minify HTML</button
+      >
+      <div id="stats" class="px-4 py-2 text-sm text-slate-600 flex items-center"></div>
+    </div>
+
+    <div class="mb-4">
+      <div class="flex justify-between items-center mb-1.5">
+        <label class="block font-medium text-slate-700 text-sm">Output HTML</label>
+        <button onclick="copyOutput()" class="text-xs text-blue-600 hover:text-blue-800">Copy Result</button>
+      </div>
+      <textarea
+        id="output"
+        rows="10"
+        readonly
+        placeholder="Minified HTML will appear here"
+        class="w-full px-4 py-3 text-sm border border-slate-300 rounded bg-slate-50 text-slate-800 outline-none resize-y font-mono"
+      ></textarea>
+    </div>
+  </div>
+
+  <section class="mt-8 pt-6 border-t border-slate-200">
+    <h2 class="text-xl font-semibold text-slate-900 mb-4">About HTML Minifier</h2>
+    <p class="text-slate-600">
+      This is a utility designed to make your web pages load faster by reducing the size of your HTML files.
+      The processing happens entirely in your browser, ensuring your code remains private and secure.
+    </p>
+  </section>
+
+      <script is:inline>
+    // We attach the process and copyOutput functions to window
+    // because this script block gets scoped, but our onclick handlers
+    // are looking for global functions.
+
+    window.process = async function() {
+      try {
+        const input = document.getElementById("input").value;
+        if (!input.trim()) {
+            document.getElementById("output").value = "";
+            document.getElementById("stats").innerText = "";
+            return;
+        }
+
+        document.getElementById("output").value = "Minifying...";
+
+        const response = await fetch("/api/minify-html", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ input })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Failed to minify HTML");
+        }
+
+        const minified = result.minified;
+
+        document.getElementById("output").value = minified;
+
+        // Calculate savings
+        const originalSize = new Blob([input]).size;
+        const minifiedSize = new Blob([minified]).size;
+        const savings = originalSize > 0
+            ? ((originalSize - minifiedSize) / originalSize * 100).toFixed(1)
+            : 0;
+
+        document.getElementById("stats").innerText = `Original: ${originalSize}B | Minified: ${minifiedSize}B | Saved: ${savings}%`;
+      } catch (e) {
+        document.getElementById("output").value = "Error minifying HTML: " + e.message;
+      }
+    };
+
+    window.copyOutput = function() {
+      const output = document.getElementById("output");
+      if (!output.value || output.value === "Minifying...") return;
+      output.select();
+
+      if (navigator.clipboard) {
+          navigator.clipboard.writeText(output.value)
+          .then(() => alert("Copied to clipboard!"))
+          .catch(() => alert("Failed to copy!"));
+      } else {
+          document.execCommand("copy");
+          alert("Copied to clipboard!");
+      }
+    };
+  </script>
+</DevToolLayout>

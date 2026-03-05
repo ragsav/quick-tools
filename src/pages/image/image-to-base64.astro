@@ -11,9 +11,37 @@ const faqItems = [
     answer: "You can encode as PNG, JPEG, or WebP, and get the raw Base64 or full data URL.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Select Options",
+    content: "Upload your file or enter the required input.",
+  },
+  {
+    title: "Process Data",
+    content: "The tool processes your data securely in the browser.",
+  },
+  {
+    title: "Get Results",
+    content: "Download or copy the generated output instantly.",
+  },
+];
+
+const useCases = [
+  {
+    title: "General Usage",
+    description: "Use the Image to Base64 to quickly process data without installing software.",
+  },
+  {
+    title: "Professional Work",
+    description: "Streamline your daily workflow with our secure, browser-based tool.",
+  },
+];
 ---
 
 <ImageToolLayout
+  useCases={useCases}
+  howItWorks={howItWorks}
   title="Image to Base64 - Encode Image as Base64"
   description="Convert images to Base64 string. Get data URI for embedding in HTML/CSS. Free online tool."
   canonicalPath="/image/image-to-base64"

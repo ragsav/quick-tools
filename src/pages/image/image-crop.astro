@@ -15,9 +15,37 @@ const faqItems = [
     answer: "Yes! You can drag the selection box to reposition, or drag the corners to resize it.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Select Options",
+    content: "Upload your file or enter the required input.",
+  },
+  {
+    title: "Process Data",
+    content: "The tool processes your data securely in the browser.",
+  },
+  {
+    title: "Get Results",
+    content: "Download or copy the generated output instantly.",
+  },
+];
+
+const useCases = [
+  {
+    title: "General Usage",
+    description: "Use the Image Crop to quickly process data without installing software.",
+  },
+  {
+    title: "Professional Work",
+    description: "Streamline your daily workflow with our secure, browser-based tool.",
+  },
+];
 ---
 
 <ImageToolLayout
+  useCases={useCases}
+  howItWorks={howItWorks}
   title="Image Crop - Free Online Tool"
   description="Crop images online for free. Select area manually or use aspect ratio presets. No upload required."
   canonicalPath="/image/image-crop"

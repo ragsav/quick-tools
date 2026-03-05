@@ -15,9 +15,37 @@ const faqItems = [
     answer: "Yes, extracting pages preserves the original quality.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Upload PDF",
+    content: "Select the PDF file you want to process.",
+  },
+  {
+    title: "Process",
+    content: "Our tool processes your file entirely in your browser. No data is sent to our servers.",
+  },
+  {
+    title: "Download",
+    content: "Get your processed file instantly.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Document Management",
+    description: "Easily modify PDF documents without installing complex software.",
+  },
+  {
+    title: "Secure Processing",
+    description: "Since files are processed locally, your sensitive documents remain private.",
+  },
+];
 ---
 
 <PDFToolLayout
+  useCases={useCases}
+  howItWorks={howItWorks}
   title="PDF Split - Extract Pages from PDF Online"
   description="Split PDF files and extract specific pages. Visual page selector with drag-drop reordering. Free online tool - works in your browser."
   canonicalPath="/pdf/pdf-split"

@@ -11,9 +11,37 @@ const faqItems = [
     answer: "JPEG and TIFF files commonly contain EXIF data. PNG and WebP have limited metadata support.",
   },
 ];
+
+const howItWorks = [
+  {
+    title: "Select Options",
+    content: "Upload your file or enter the required input.",
+  },
+  {
+    title: "Process Data",
+    content: "The tool processes your data securely in the browser.",
+  },
+  {
+    title: "Get Results",
+    content: "Download or copy the generated output instantly.",
+  },
+];
+
+const useCases = [
+  {
+    title: "General Usage",
+    description: "Use the Image Metadata Viewer to quickly process data without installing software.",
+  },
+  {
+    title: "Professional Work",
+    description: "Streamline your daily workflow with our secure, browser-based tool.",
+  },
+];
 ---
 
 <ImageToolLayout
+  useCases={useCases}
+  howItWorks={howItWorks}
   title="Image Metadata Viewer - Free Online EXIF Reader"
   description="View image EXIF metadata online. See camera info, date, GPS coordinates, and settings. No upload required."
   canonicalPath="/image/image-metadata"
