@@ -169,9 +169,9 @@ const faqItems = [
     }
 
     async function handleFiles(files) {
-      for (const file of files) {
-        if (!file.type.startsWith('image/')) continue;
+      const validFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
 
+      const processedImages = await Promise.all(validFiles.map(async file => {
         const dataUrl = await new Promise(resolve => {
           const reader = new FileReader();
           reader.onload = e => resolve(e.target.result);
@@ -184,14 +184,16 @@ const faqItems = [
           img.src = dataUrl;
         });
 
-        images.push({
+        return {
           name: file.name,
           dataUrl,
           size: file.size,
           width: dims.width,
           height: dims.height
-        });
-      }
+        };
+      }));
+
+      images.push(...processedImages);
       renderImageList();
     }
 
