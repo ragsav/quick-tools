@@ -1,5 +1,6 @@
 ---
 import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+import DownloadResetButtons from "../../components/DownloadResetButtons.astro";
 
 const faqItems = [
   {
@@ -91,8 +92,11 @@ const faqItems = [
 
       <div class="flex flex-wrap gap-3">
         <button id="resetFilters" class="px-4 py-2 font-semibold bg-amber-100 text-amber-700 rounded text-sm hover:bg-amber-200">↩ Reset Filters</button>
-        <button id="downloadBtn" class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700">⬇️ Download</button>
-        <button id="resetBtn" class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300">🗑️ Clear</button>
+        <DownloadResetButtons
+          downloadText="⬇️ Download"
+          resetText="🗑️ Clear"
+          showDownloadInitially={true}
+        />
       </div>
     </div>
   </div>

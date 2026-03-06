@@ -1,5 +1,6 @@
 ---
 import ImageToolLayout from "../../layouts/ImageToolLayout.astro";
+import DownloadResetButtons from "../../components/DownloadResetButtons.astro";
 
 const faqItems = [
   {
@@ -92,18 +93,7 @@ const faqItems = [
         >
           ✂️ Crop
         </button>
-        <button
-          id="downloadBtn"
-          class="px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors hidden"
-        >
-          ⬇️ Download
-        </button>
-        <button
-          id="resetBtn"
-          class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
-        >
-          🗑️ Reset
-        </button>
+        <DownloadResetButtons downloadText="⬇️ Download" />
       </div>
     </div>
   </div>

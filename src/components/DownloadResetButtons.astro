@@ -1,0 +1,30 @@
+---
+export interface Props {
+  downloadText?: string;
+  downloadId?: string;
+  resetText?: string;
+  resetId?: string;
+  showDownloadInitially?: boolean;
+}
+
+const {
+  downloadText = "⬇️ Download",
+  downloadId = "downloadBtn",
+  resetText = "🗑️ Reset",
+  resetId = "resetBtn",
+  showDownloadInitially = false
+} = Astro.props;
+---
+
+<button
+  id={downloadId}
+  class={`px-6 py-2 font-semibold bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors ${showDownloadInitially ? '' : 'hidden'}`}
+>
+  {downloadText}
+</button>
+<button
+  id={resetId}
+  class="px-6 py-2 font-semibold bg-slate-200 text-slate-700 rounded text-sm hover:bg-slate-300 transition-colors"
+>
+  {resetText}
+</button>
