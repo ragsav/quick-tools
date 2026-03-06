@@ -1,8 +1,12 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const astroFilePath = path.resolve(__dirname, 'svg-to-png.astro');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const astroFilePath = path.resolve(__dirname, '../src/pages/image/svg-to-png.astro');
 const astroContent = fs.readFileSync(astroFilePath, 'utf-8');
 const scriptMatch = astroContent.match(/<script is:inline>([\s\S]*?)<\/script>/);
 
