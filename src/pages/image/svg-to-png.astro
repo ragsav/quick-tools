@@ -128,7 +128,9 @@ const faqItems = [
     }
   </style>
 
-  <script is:inline>
+  <script>
+    import { formatSize, handleFile as processFile, convertImage as doConvertImage } from '../../utils/image/svg-to-png-utils.js';
+
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const controls = document.getElementById('controls');
@@ -152,35 +154,21 @@ const faqItems = [
     let baseWidth = 200;
     let baseHeight = 200;
 
-    function formatSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-    }
-
     function handleFile(file) {
-      if (!file || !file.type.includes('svg')) {
-        alert('Please select an SVG file.');
-        return;
-      }
-
       originalFile = file;
-      const reader = new FileReader();
+      processFile(file, {
+        onError: (msg) => {
+          originalFile = null;
+          alert(msg);
+        },
+        onSuccess: (data) => {
+          originalSvg = data.img;
+          baseWidth = data.baseWidth;
+          baseHeight = data.baseHeight;
+          aspectRatio = data.aspectRatio;
 
-      reader.onload = (e) => {
-        const svgContent = e.target.result;
-        const blob = new Blob([svgContent], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-
-        const img = new Image();
-        img.onload = () => {
-          originalSvg = img;
-          baseWidth = img.width || 200;
-          baseHeight = img.height || 200;
-          aspectRatio = baseWidth / baseHeight;
-
-          originalPreview.src = url;
-          originalInfo.textContent = `${baseWidth} × ${baseHeight} • ${formatSize(file.size)}`;
+          originalPreview.src = data.url;
+          originalInfo.textContent = `${baseWidth} × ${baseHeight} • ${formatSize(data.fileSize)}`;
 
           widthInput.value = baseWidth * parseInt(scaleSelect.value);
           heightInput.value = baseHeight * parseInt(scaleSelect.value);
@@ -188,11 +176,8 @@ const faqItems = [
           controls.classList.remove('hidden');
           dropZone.classList.add('hidden');
           convertImage();
-        };
-        img.src = url;
-      };
-
-      reader.readAsText(file);
+        }
+      });
     }
 
     function convertImage() {
@@ -201,23 +186,19 @@ const faqItems = [
       const width = parseInt(widthInput.value) || baseWidth;
       const height = parseInt(heightInput.value) || baseHeight;
 
-      const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-
-      const ctx = canvas.getContext('2d');
-      if (!transparentCheck.checked) {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, width, height);
-      }
-      ctx.drawImage(originalSvg, 0, 0, width, height);
-
-      canvas.toBlob((blob) => {
-        convertedBlob = blob;
-        convertedPreview.src = URL.createObjectURL(blob);
-        convertedInfo.textContent = `${width} × ${height} • ${formatSize(blob.size)}`;
-        downloadBtn.classList.remove('hidden');
-      }, 'image/png');
+      doConvertImage({
+        originalSvg,
+        width,
+        height,
+        isTransparent: transparentCheck.checked
+      }, {
+        onSuccess: (blob) => {
+          convertedBlob = blob;
+          convertedPreview.src = URL.createObjectURL(blob);
+          convertedInfo.textContent = `${width} × ${height} • ${formatSize(blob.size)}`;
+          downloadBtn.classList.remove('hidden');
+        }
+      });
     }
 
     scaleSelect.addEventListener('change', () => {
