@@ -110,6 +110,7 @@ const faqItems = [
   </div>
 
   <script is:inline type="module">
+    import { formatSize } from '/scripts/formatSize.js';
     import { PDFDocument } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
 
     const dropZone = document.getElementById('dropZone');
@@ -126,11 +127,6 @@ const faqItems = [
 
     let images = [];
 
-    function formatSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-    }
 
     function renderImageList() {
       if (images.length === 0) {
