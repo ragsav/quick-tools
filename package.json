@@ -15,8 +15,5 @@
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.530",
     "tailwindcss": "^4.1.18"
-  },
-  "devDependencies": {
-    "jsdom": "^28.1.0"
   }
 }
