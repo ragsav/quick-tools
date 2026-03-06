@@ -179,10 +179,12 @@ const useCases = [
     const fromSel = document.getElementById("fromCurrency");
     const toSel = document.getElementById("toCurrency");
 
-    Object.entries(rates).forEach(([code, data]) => {
-      fromSel.innerHTML += `<option value="${code}">${code} - ${data.name}</option>`;
-      toSel.innerHTML += `<option value="${code}">${code} - ${data.name}</option>`;
-    });
+    const optionsHTML = Object.entries(rates)
+      .map(([code, data]) => `<option value="${code}">${code} - ${data.name}</option>`)
+      .join("");
+
+    fromSel.innerHTML = optionsHTML;
+    toSel.innerHTML = optionsHTML;
 
     fromSel.value = "USD";
     toSel.value = "EUR";
