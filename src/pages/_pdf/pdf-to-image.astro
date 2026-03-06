@@ -198,6 +198,7 @@ const faqItems = [
         const format = formatSelect.value;
         const scale = parseFloat(scaleSelect.value);
         const quality = qualitySlider.value / 100;
+        const fragment = document.createDocumentFragment();
 
         for (let i = 1; i <= pdfDoc.numPages; i++) {
           progressBar.style.width = (i / pdfDoc.numPages * 100) + '%';
@@ -236,8 +237,10 @@ const faqItems = [
               '</button>' +
             '</div>' +
             '<p class="text-xs text-slate-500 text-center mt-1">Page ' + i + '</p>';
-          imageGrid.appendChild(imgDiv);
+          fragment.appendChild(imgDiv);
         }
+
+        imageGrid.appendChild(fragment);
 
         // Add download handlers
         document.querySelectorAll('.download-single').forEach(function(btn) {
