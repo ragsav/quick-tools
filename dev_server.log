@@ -1,0 +1,25 @@
+
+> quick-tools@0.0.1 dev
+> astro dev
+
+▶ Astro collects anonymous usage data.
+  This information helps us improve Astro.
+  Run "astro telemetry disable" to opt-out.
+  https://astro.build/telemetry
+
+04:21:19 [types] Generated 1ms
+04:21:19 [content] Syncing content
+04:21:19 [content] Synced content
+
+ astro  v5.16.6 ready in 654 ms
+
+┃ Local    http://localhost:4321/
+┃ Network  use --host to expose
+
+04:21:19 watching for file changes...
+
+ update  ▶ New version of Astro available: 5.18.0
+  Run bun x @astrojs/upgrade to update
+
+04:21:49 [200] /image/image-crop 153ms
+04:21:50 [200] /_image 130ms

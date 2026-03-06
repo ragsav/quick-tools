@@ -130,7 +130,9 @@ const faqItems = [
     .crop-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
   </style>
 
-  <script is:inline>
+  <script>
+    import { cropImage } from '../../utils/imageCropUtils';
+
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const controls = document.getElementById('controls');
@@ -249,30 +251,25 @@ const faqItems = [
       croppedPreview.src = canvas.toDataURL('image/png');
     }
 
-    function performCrop() {
+    async function performCrop() {
       if (!originalImageEl) return;
 
       const containerRect = cropContainer.getBoundingClientRect();
-      const scaleX = originalImageEl.width / containerRect.width;
-      const scaleY = originalImageEl.height / containerRect.height;
-
-      const left = parseFloat(cropArea.style.left) / 100 * containerRect.width * scaleX;
-      const top = parseFloat(cropArea.style.top) / 100 * containerRect.height * scaleY;
-      const width = parseFloat(cropArea.style.width) / 100 * containerRect.width * scaleX;
-      const height = parseFloat(cropArea.style.height) / 100 * containerRect.height * scaleY;
-
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.max(1, Math.round(width));
-      canvas.height = Math.max(1, Math.round(height));
-
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(originalImageEl, -left, -top);
+      const cropAreaRect = {
+        left: parseFloat(cropArea.style.left),
+        top: parseFloat(cropArea.style.top),
+        width: parseFloat(cropArea.style.width),
+        height: parseFloat(cropArea.style.height)
+      };
 
       const mimeType = originalFile.type.includes('png') ? 'image/png' : 'image/jpeg';
-      canvas.toBlob((blob) => {
-        croppedBlob = blob;
+
+      try {
+        croppedBlob = await cropImage(originalImageEl, containerRect, cropAreaRect, mimeType);
         downloadBtn.classList.remove('hidden');
-      }, mimeType, 0.92);
+      } catch (error) {
+        console.error('Cropping failed:', error);
+      }
     }
 
     // Drag and resize handling
