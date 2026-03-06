@@ -137,6 +137,7 @@ const faqItems = [
 
       function renderPageGrid() {
         pageGrid.innerHTML = '';
+        const fragment = document.createDocumentFragment();
         
         pages.forEach(function(page, index) {
           const div = document.createElement('div');
@@ -188,9 +189,11 @@ const faqItems = [
             }
           });
           
-          pageGrid.appendChild(div);
+          fragment.appendChild(div);
         });
         
+        pageGrid.appendChild(fragment);
+
         // Add delete handlers
         document.querySelectorAll('.delete-btn').forEach(function(btn) {
           btn.addEventListener('click', function(e) {
