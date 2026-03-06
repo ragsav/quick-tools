@@ -188,6 +188,16 @@ const useCases = [
   </section>
 
   <script is:inline>
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
     // Set current datetime as default
     const now = new Date();
     document.getElementById("dateInput").value = now.toISOString().slice(0, 16);
@@ -211,9 +221,9 @@ const useCases = [
       const isoString = date.toISOString();
 
       document.getElementById("isoOutput").innerHTML = `
-        <div class="mb-2"><strong>Full:</strong> ${isoString}</div>
-        <div class="mb-2"><strong>Date:</strong> ${isoString.split("T")[0]}</div>
-        <div><strong>Unix:</strong> ${date.getTime()}</div>
+        <div class="mb-2"><strong>Full:</strong> ${escapeHtml(isoString)}</div>
+        <div class="mb-2"><strong>Date:</strong> ${escapeHtml(isoString.split("T")[0])}</div>
+        <div><strong>Unix:</strong> ${escapeHtml(date.getTime())}</div>
       `;
     }
 
@@ -241,9 +251,9 @@ const useCases = [
         };
 
         document.getElementById("dateOutput").innerHTML = `
-          <div class="mb-2"><strong>Local:</strong> ${date.toLocaleString("en-US", options)}</div>
-          <div class="mb-2"><strong>UTC:</strong> ${date.toUTCString()}</div>
-          <div><strong>Unix timestamp:</strong> ${date.getTime()}</div>
+          <div class="mb-2"><strong>Local:</strong> ${escapeHtml(date.toLocaleString("en-US", options))}</div>
+          <div class="mb-2"><strong>UTC:</strong> ${escapeHtml(date.toUTCString())}</div>
+          <div><strong>Unix timestamp:</strong> ${escapeHtml(date.getTime())}</div>
         `;
       } catch (e) {
         document.getElementById("dateOutput").innerText = "Invalid ISO format";
