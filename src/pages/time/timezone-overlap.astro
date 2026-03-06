@@ -173,9 +173,11 @@ const useCases = [
 
     // Populate selector
     const selector = document.getElementById("zoneSelector");
+    let optionsHtml = "";
     timezones.forEach((tz, i) => {
-      selector.innerHTML += `<option value="${i}">${tz.name}</option>`;
+      optionsHtml += `<option value="${i}">${tz.name}</option>`;
     });
+    selector.innerHTML += optionsHtml;
 
     function addZone() {
       const idx = parseInt(selector.value);
