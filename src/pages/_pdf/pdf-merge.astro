@@ -262,26 +262,55 @@ const faqItems = [
         try {
           const mergedPdf = await PDFLib.PDFDocument.create();
           
-          // Group pages by source PDF
-          const pdfCache = new Map();
+          // Group pages by source PDF data
+          const pdfGroups = new Map();
           
           for (let i = 0; i < pages.length; i++) {
-            progressBar.style.width = ((i + 1) / pages.length * 100) + '%';
-            progressText.textContent = 'Adding page ' + (i + 1) + ' of ' + pages.length + '...';
-            
             const page = pages[i];
             const key = page.pdfData;
             
-            let srcDoc;
-            if (pdfCache.has(key)) {
-              srcDoc = pdfCache.get(key);
-            } else {
-              srcDoc = await PDFLib.PDFDocument.load(page.pdfData);
-              pdfCache.set(key, srcDoc);
+            if (!pdfGroups.has(key)) {
+              pdfGroups.set(key, {
+                pdfData: page.pdfData,
+                pageIndices: [],
+                finalPositions: []
+              });
             }
             
-            const copiedPages = await mergedPdf.copyPages(srcDoc, [page.pageIndex]);
-            mergedPdf.addPage(copiedPages[0]);
+            const group = pdfGroups.get(key);
+            group.pageIndices.push(page.pageIndex);
+            group.finalPositions.push(i);
+          }
+
+          // Prepare an array for the final copied pages in their target order
+          const finalCopiedPages = new Array(pages.length);
+
+          let processedGroups = 0;
+          const totalGroups = pdfGroups.size;
+
+          // Process each source document
+          for (const [key, group] of pdfGroups.entries()) {
+            processedGroups++;
+            progressBar.style.width = (processedGroups / totalGroups * 50) + '%';
+            progressText.textContent = 'Processing PDF ' + processedGroups + ' of ' + totalGroups + '...';
+
+            const srcDoc = await PDFLib.PDFDocument.load(group.pdfData);
+
+            // Batch copy all needed pages from this source document at once
+            const copiedPages = await mergedPdf.copyPages(srcDoc, group.pageIndices);
+
+            // Place each copied page into its correct final position
+            for (let j = 0; j < copiedPages.length; j++) {
+              finalCopiedPages[group.finalPositions[j]] = copiedPages[j];
+            }
+          }
+
+          // Add all copied pages to the merged document in the correct order
+          for (let i = 0; i < finalCopiedPages.length; i++) {
+            progressBar.style.width = (50 + ((i + 1) / finalCopiedPages.length * 50)) + '%';
+            progressText.textContent = 'Adding page ' + (i + 1) + ' of ' + finalCopiedPages.length + '...';
+
+            mergedPdf.addPage(finalCopiedPages[i]);
           }
           
           progressText.textContent = 'Generating merged PDF...';
