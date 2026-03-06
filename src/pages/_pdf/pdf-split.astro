@@ -282,19 +282,34 @@ const faqItems = [
           fileName.textContent = file.name;
           fileInfo.textContent = totalPages + ' pages • ' + formatSize(file.size);
           
-          pages = [];
+          pages = new Array(totalPages);
           selectedOrder = [];
           
-          for (let i = 1; i <= totalPages; i++) {
-            progressBar.style.width = (i / totalPages * 100) + '%';
-            progressText.textContent = 'Rendering page ' + i + ' of ' + totalPages + '...';
+          const CHUNK_SIZE = 5;
+          let completedPages = 0;
+
+          for (let i = 0; i < totalPages; i += CHUNK_SIZE) {
+            const chunkPromises = [];
+            const endChunk = Math.min(i + CHUNK_SIZE, totalPages);
+
+            for (let j = i; j < endChunk; j++) {
+              const pageNum = j + 1;
+
+              chunkPromises.push(
+                renderPageThumbnail(pdfDoc, pageNum).then(thumbnail => {
+                  pages[j] = {
+                    thumbnail: thumbnail,
+                    selected: false,
+                    pageIndex: j
+                  };
+                  completedPages++;
+                  progressBar.style.width = (completedPages / totalPages * 100) + '%';
+                  progressText.textContent = 'Rendering page ' + completedPages + ' of ' + totalPages + '...';
+                })
+              );
+            }
             
-            const thumbnail = await renderPageThumbnail(pdfDoc, i);
-            pages.push({
-              thumbnail: thumbnail,
-              selected: false,
-              pageIndex: i - 1
-            });
+            await Promise.all(chunkPromises);
           }
           
           progress.classList.add('hidden');
