@@ -195,6 +195,62 @@ const faqItems = [
       renderImageList();
     }
 
+    async function embedImageInPdf(pdfDoc, img) {
+      const base64 = img.dataUrl.split(',')[1];
+      let imgBytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+
+      try {
+        if (img.dataUrl.includes('image/png')) {
+          return await pdfDoc.embedPng(imgBytes);
+        } else {
+          return await pdfDoc.embedJpg(imgBytes);
+        }
+      } catch {
+        // If embedding fails, try converting via canvas
+        const canvas = document.createElement('canvas');
+        const imgEl = new Image();
+        await new Promise(resolve => {
+          imgEl.onload = resolve;
+          imgEl.src = img.dataUrl;
+        });
+        canvas.width = imgEl.width;
+        canvas.height = imgEl.height;
+        canvas.getContext('2d').drawImage(imgEl, 0, 0);
+        const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        const jpgBase64 = jpgDataUrl.split(',')[1];
+        imgBytes = Uint8Array.from(atob(jpgBase64), c => c.charCodeAt(0));
+        return await pdfDoc.embedJpg(imgBytes);
+      }
+    }
+
+    function calculatePageDimensions({ embedImg, pageSize, orientation, margin }) {
+      let pageWidth, pageHeight;
+
+      if (pageSize === 'fit') {
+        pageWidth = embedImg.width + margin * 2;
+        pageHeight = embedImg.height + margin * 2;
+      } else {
+        const sizes = {
+          a4: [595.28, 841.89],
+          letter: [612, 792]
+        };
+        [pageWidth, pageHeight] = sizes[pageSize] || sizes.a4;
+        if (orientation === 'landscape') {
+          [pageWidth, pageHeight] = [pageHeight, pageWidth];
+        }
+      }
+
+      return { pageWidth, pageHeight };
+    }
+
+    function downloadPdf(pdfBytes, filename) {
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    }
+
     async function createPDF() {
       if (images.length === 0) return;
 
@@ -211,51 +267,14 @@ const faqItems = [
         progressText.textContent = `Processing image ${i + 1} of ${images.length}...`;
 
         const img = images[i];
-        let imgBytes;
+        const embedImg = await embedImageInPdf(pdfDoc, img);
 
-        // Convert data URL to bytes
-        const base64 = img.dataUrl.split(',')[1];
-        imgBytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-
-        let embedImg;
-        try {
-          if (img.dataUrl.includes('image/png')) {
-            embedImg = await pdfDoc.embedPng(imgBytes);
-          } else {
-            embedImg = await pdfDoc.embedJpg(imgBytes);
-          }
-        } catch {
-          // If embedding fails, try converting via canvas
-          const canvas = document.createElement('canvas');
-          const imgEl = new Image();
-          await new Promise(resolve => {
-            imgEl.onload = resolve;
-            imgEl.src = img.dataUrl;
-          });
-          canvas.width = imgEl.width;
-          canvas.height = imgEl.height;
-          canvas.getContext('2d').drawImage(imgEl, 0, 0);
-          const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-          const jpgBase64 = jpgDataUrl.split(',')[1];
-          imgBytes = Uint8Array.from(atob(jpgBase64), c => c.charCodeAt(0));
-          embedImg = await pdfDoc.embedJpg(imgBytes);
-        }
-
-        let pageWidth, pageHeight;
-
-        if (pageSize === 'fit') {
-          pageWidth = embedImg.width + margin * 2;
-          pageHeight = embedImg.height + margin * 2;
-        } else {
-          const sizes = {
-            a4: [595.28, 841.89],
-            letter: [612, 792]
-          };
-          [pageWidth, pageHeight] = sizes[pageSize] || sizes.a4;
-          if (orientation === 'landscape') {
-            [pageWidth, pageHeight] = [pageHeight, pageWidth];
-          }
-        }
+        const { pageWidth, pageHeight } = calculatePageDimensions({
+          embedImg,
+          pageSize,
+          orientation,
+          margin
+        });
 
         const page = pdfDoc.addPage([pageWidth, pageHeight]);
 
@@ -281,12 +300,7 @@ const faqItems = [
       progressText.textContent = 'Generating PDF...';
       const pdfBytes = await pdfDoc.save();
 
-      // Download
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'images.pdf';
-      link.click();
+      downloadPdf(pdfBytes, 'images.pdf');
 
       progress.classList.add('hidden');
       createPdfBtn.disabled = false;
