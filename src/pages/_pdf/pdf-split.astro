@@ -320,14 +320,16 @@ const faqItems = [
           const srcDoc = await PDFLib.PDFDocument.load(pdfData);
           const newDoc = await PDFLib.PDFDocument.create();
           
-          for (let i = 0; i < selectedOrder.length; i++) {
-            progressBar.style.width = ((i + 1) / selectedOrder.length * 100) + '%';
-            progressText.textContent = 'Extracting page ' + (selectedOrder[i] + 1) + '...';
-            
-            const copiedPages = await newDoc.copyPages(srcDoc, [selectedOrder[i]]);
-            newDoc.addPage(copiedPages[0]);
+          progressText.textContent = 'Extracting pages...';
+          progressBar.style.width = '50%';
+
+          const copiedPages = await newDoc.copyPages(srcDoc, selectedOrder);
+          for (let i = 0; i < copiedPages.length; i++) {
+            newDoc.addPage(copiedPages[i]);
           }
           
+          progressBar.style.width = '100%';
+
           progressText.textContent = 'Generating PDF...';
           const pdfBytes = await newDoc.save();
           
