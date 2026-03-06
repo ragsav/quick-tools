@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { handleFile, formatSize, convertImage } from '../utils/svg-to-png-utils.js';
+import { handleFile, formatSize, convertImage } from '../../../utils/image/svg-to-png-utils.js';
 
 describe('svg-to-png handleFile utility', () => {
   let originalFileReader;
