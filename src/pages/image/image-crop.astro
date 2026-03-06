@@ -130,36 +130,32 @@ const faqItems = [
     .crop-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
   </style>
 
-  <script is:inline>
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const controls = document.getElementById('controls');
-    const originalImage = document.getElementById('originalImage');
-    const cropArea = document.getElementById('cropArea');
-    const cropContainer = document.getElementById('cropContainer');
-    const dimOverlay = document.getElementById('dimOverlay');
-    const cropInfo = document.getElementById('cropInfo');
-    const croppedPreview = document.getElementById('croppedPreview');
-    const cropBtn = document.getElementById('cropBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const resetBtn = document.getElementById('resetBtn');
+  <script>
+    import { cropImage } from '../../utils/imageCropUtils';
 
-    let originalImageEl = null;
-    let originalFile = null;
-    let croppedBlob = null;
-    let cropRatio = null;
+    const dropZone = document.getElementById('dropZone') as HTMLElement;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const controls = document.getElementById('controls') as HTMLElement;
+    const originalImage = document.getElementById('originalImage') as HTMLImageElement;
+    const cropArea = document.getElementById('cropArea') as HTMLElement;
+    const cropContainer = document.getElementById('cropContainer') as HTMLElement;
+    const dimOverlay = document.getElementById('dimOverlay') as HTMLElement;
+    const cropInfo = document.getElementById('cropInfo') as HTMLElement;
+    const croppedPreview = document.getElementById('croppedPreview') as HTMLImageElement;
+    const cropBtn = document.getElementById('cropBtn') as HTMLButtonElement;
+    const downloadBtn = document.getElementById('downloadBtn') as HTMLButtonElement;
+    const resetBtn = document.getElementById('resetBtn') as HTMLButtonElement;
+
+    let originalImageEl: HTMLImageElement | null = null;
+    let originalFile: File | null = null;
+    let croppedBlob: Blob | null = null;
+    let cropRatio: number | null = null;
     let isDragging = false;
     let isResizing = false;
-    let resizeHandle = null;
-    let startX, startY, startLeft, startTop, startWidth, startHeight;
+    let resizeHandle: string | null = null;
+    let startX = 0, startY = 0, startLeft = 0, startTop = 0, startWidth = 0, startHeight = 0;
 
-    function formatSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-    }
-
-    function handleFile(file) {
+    function handleFile(file: File) {
       if (!file || !file.type.startsWith('image/')) {
         alert('Please select an image file.');
         return;
@@ -169,10 +165,13 @@ const faqItems = [
       const reader = new FileReader();
 
       reader.onload = (e) => {
+        const result = e.target?.result as string;
+        if (!result) return;
+
         const img = new Image();
         img.onload = () => {
           originalImageEl = img;
-          originalImage.src = e.target.result;
+          originalImage.src = result;
           controls.classList.remove('hidden');
           dropZone.classList.add('hidden');
           
@@ -181,13 +180,13 @@ const faqItems = [
             updatePreview();
           }, 100);
         };
-        img.src = e.target.result;
+        img.src = result;
       };
 
       reader.readAsDataURL(file);
     }
 
-    function setCropArea(leftPct, topPct, widthPct, heightPct) {
+    function setCropArea(leftPct: number, topPct: number, widthPct: number, heightPct: number) {
       cropArea.style.left = leftPct + '%';
       cropArea.style.top = topPct + '%';
       cropArea.style.width = widthPct + '%';
@@ -212,12 +211,11 @@ const faqItems = [
     }
 
     function updateCropInfo() {
+      if (!originalImageEl) return;
       const containerRect = cropContainer.getBoundingClientRect();
       const scaleX = originalImageEl.width / containerRect.width;
       const scaleY = originalImageEl.height / containerRect.height;
 
-      const left = parseFloat(cropArea.style.left) / 100 * containerRect.width;
-      const top = parseFloat(cropArea.style.top) / 100 * containerRect.height;
       const width = parseFloat(cropArea.style.width) / 100 * containerRect.width;
       const height = parseFloat(cropArea.style.height) / 100 * containerRect.height;
 
@@ -244,44 +242,42 @@ const faqItems = [
       canvas.height = Math.max(1, Math.round(height));
 
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(originalImageEl, -left, -top);
+      if (ctx) {
+        ctx.drawImage(originalImageEl, -left, -top);
+      }
 
       croppedPreview.src = canvas.toDataURL('image/png');
     }
 
-    function performCrop() {
-      if (!originalImageEl) return;
+    async function performCrop() {
+      if (!originalImageEl || !originalFile) return;
 
       const containerRect = cropContainer.getBoundingClientRect();
-      const scaleX = originalImageEl.width / containerRect.width;
-      const scaleY = originalImageEl.height / containerRect.height;
-
-      const left = parseFloat(cropArea.style.left) / 100 * containerRect.width * scaleX;
-      const top = parseFloat(cropArea.style.top) / 100 * containerRect.height * scaleY;
-      const width = parseFloat(cropArea.style.width) / 100 * containerRect.width * scaleX;
-      const height = parseFloat(cropArea.style.height) / 100 * containerRect.height * scaleY;
-
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.max(1, Math.round(width));
-      canvas.height = Math.max(1, Math.round(height));
-
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(originalImageEl, -left, -top);
+      const cropAreaRect = {
+        left: parseFloat(cropArea.style.left),
+        top: parseFloat(cropArea.style.top),
+        width: parseFloat(cropArea.style.width),
+        height: parseFloat(cropArea.style.height)
+      };
 
       const mimeType = originalFile.type.includes('png') ? 'image/png' : 'image/jpeg';
-      canvas.toBlob((blob) => {
-        croppedBlob = blob;
+
+      try {
+        croppedBlob = await cropImage(originalImageEl, containerRect, cropAreaRect, mimeType);
         downloadBtn.classList.remove('hidden');
-      }, mimeType, 0.92);
+      } catch (error) {
+        console.error('Cropping failed:', error);
+      }
     }
 
     // Drag and resize handling
     cropArea.addEventListener('mousedown', (e) => {
-      if (e.target.classList.contains('crop-handle')) {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('crop-handle')) {
         isResizing = true;
-        resizeHandle = e.target.classList.contains('nw') ? 'nw' :
-                       e.target.classList.contains('ne') ? 'ne' :
-                       e.target.classList.contains('sw') ? 'sw' : 'se';
+        resizeHandle = target.classList.contains('nw') ? 'nw' :
+                       target.classList.contains('ne') ? 'ne' :
+                       target.classList.contains('sw') ? 'sw' : 'se';
       } else {
         isDragging = true;
       }
@@ -306,7 +302,7 @@ const faqItems = [
         let newTop = Math.max(0, Math.min(100 - startHeight, startTop + dy));
         cropArea.style.left = newLeft + '%';
         cropArea.style.top = newTop + '%';
-      } else if (isResizing) {
+      } else if (isResizing && resizeHandle) {
         let newLeft = startLeft, newTop = startTop, newWidth = startWidth, newHeight = startHeight;
 
         if (resizeHandle.includes('e')) {
@@ -355,16 +351,17 @@ const faqItems = [
     });
 
     // Aspect ratio buttons
-    document.querySelectorAll('.ratio-btn').forEach(btn => {
+    document.querySelectorAll('.ratio-btn').forEach(b => {
+      const btn = b as HTMLElement;
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.ratio-btn').forEach(b => {
-          b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+        document.querySelectorAll('.ratio-btn').forEach(other => {
+          other.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
         });
         btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
 
         if (btn.dataset.ratio === 'free') {
           cropRatio = null;
-        } else {
+        } else if (btn.dataset.ratio) {
           const [w, h] = btn.dataset.ratio.split(':').map(Number);
           cropRatio = w / h;
           
@@ -390,13 +387,20 @@ const faqItems = [
     dropZone.addEventListener('drop', (e) => {
       e.preventDefault();
       dropZone.classList.remove('border-blue-500', 'bg-blue-50');
-      handleFile(e.dataTransfer.files[0]);
+      if (e.dataTransfer?.files[0]) {
+        handleFile(e.dataTransfer.files[0]);
+      }
     });
-    fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+    fileInput.addEventListener('change', (e) => {
+      const target = e.target as HTMLInputElement;
+      if (target.files && target.files[0]) {
+        handleFile(target.files[0]);
+      }
+    });
     cropBtn.addEventListener('click', performCrop);
 
     downloadBtn.addEventListener('click', () => {
-      if (!croppedBlob) return;
+      if (!croppedBlob || !originalFile) return;
       const ext = originalFile.type.includes('png') ? 'png' : 'jpg';
       const link = document.createElement('a');
       link.href = URL.createObjectURL(croppedBlob);
