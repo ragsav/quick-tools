@@ -159,6 +159,7 @@ const faqItems = [
 
       function renderSelectedGrid() {
         selectedGrid.innerHTML = '';
+        const fragment = document.createDocumentFragment();
         
         selectedOrder.forEach(function(pageIndex, orderIndex) {
           const page = pages[pageIndex];
@@ -208,8 +209,10 @@ const faqItems = [
             }
           });
           
-          selectedGrid.appendChild(div);
+          fragment.appendChild(div);
         });
+
+        selectedGrid.appendChild(fragment);
       }
 
       async function renderPageThumbnail(pdfDoc, pageNum, scale) {
@@ -245,6 +248,7 @@ const faqItems = [
 
       function renderPageGrid() {
         pageGrid.innerHTML = '';
+        const fragment = document.createDocumentFragment();
         
         pages.forEach(function(page, index) {
           const div = document.createElement('div');
@@ -259,8 +263,10 @@ const faqItems = [
           
           div.addEventListener('click', function() { togglePage(index); });
           
-          pageGrid.appendChild(div);
+          fragment.appendChild(div);
         });
+
+        pageGrid.appendChild(fragment);
       }
 
       async function handleFile(file) {
