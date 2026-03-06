@@ -140,6 +140,15 @@ const useCases = [
       box.classList.remove('hidden');
     }
 
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function renderTable(data, keys) {
       const thead = document.getElementById('tableHead');
       const tbody = document.getElementById('tableBody');
@@ -148,7 +157,7 @@ const useCases = [
       let headerHtml = '<tr>';
       keys.forEach(key => {
         const sortClass = sortColumn === key ? (sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc') : '';
-        headerHtml += `<th class="${sortClass}" data-key="${key}">${key}<span class="sort-icon"></span></th>`;
+        headerHtml += `<th class="${sortClass}" data-key="${escapeHtml(key)}">${escapeHtml(key)}<span class="sort-icon"></span></th>`;
       });
       headerHtml += '</tr>';
       thead.innerHTML = headerHtml;
@@ -159,7 +168,7 @@ const useCases = [
         bodyHtml += '<tr>';
         keys.forEach(key => {
           const val = row[key] !== undefined ? (typeof row[key] === 'object' ? JSON.stringify(row[key]) : row[key]) : '';
-          bodyHtml += `<td>${val}</td>`;
+          bodyHtml += `<td>${escapeHtml(val)}</td>`;
         });
         bodyHtml += '</tr>';
       });
