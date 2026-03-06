@@ -182,6 +182,15 @@ const useCases = [
       box.classList.remove('hidden');
     }
 
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function detectDelimiter(text) {
       const firstLine = text.split('\n')[0];
       const tabCount = (firstLine.match(/\t/g) || []).length;
@@ -231,14 +240,14 @@ const useCases = [
       const previewRows = rows.slice(0, 6);
       let html = '<thead><tr>';
       previewRows[0].forEach((cell, i) => {
-        html += `<th>${cell || `Column ${i+1}`}</th>`;
+        html += `<th>${escapeHtml(cell || `Column ${i+1}`)}</th>`;
       });
       html += '</tr></thead><tbody>';
       
       for (let i = 1; i < previewRows.length; i++) {
         html += '<tr>';
         previewRows[i].forEach(cell => {
-          html += `<td>${cell}</td>`;
+          html += `<td>${escapeHtml(cell)}</td>`;
         });
         html += '</tr>';
       }

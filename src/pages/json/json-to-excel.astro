@@ -105,6 +105,15 @@ const useCases = [
       box.classList.remove('hidden');
     }
 
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function showPreview(data) {
       if (!Array.isArray(data) || data.length === 0) return;
       
@@ -112,14 +121,14 @@ const useCases = [
       const previewData = data.slice(0, 5);
       
       let html = '<thead class="bg-slate-100"><tr>';
-      keys.forEach(k => html += `<th class="px-3 py-2 text-left border-b border-slate-200">${k}</th>`);
+      keys.forEach(k => html += `<th class="px-3 py-2 text-left border-b border-slate-200">${escapeHtml(k)}</th>`);
       html += '</tr></thead><tbody>';
       
       previewData.forEach(row => {
         html += '<tr>';
         keys.forEach(k => {
           const val = row[k] !== undefined ? (typeof row[k] === 'object' ? JSON.stringify(row[k]) : row[k]) : '';
-          html += `<td class="px-3 py-2 border-b border-slate-100">${val}</td>`;
+          html += `<td class="px-3 py-2 border-b border-slate-100">${escapeHtml(val)}</td>`;
         });
         html += '</tr>';
       });
