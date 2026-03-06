@@ -488,76 +488,76 @@ const useCases = [
 
     let html = "";
 
-    html += createCardHTML(
-      "card-base",
-      "card-base",
-      "Standard Plan",
-      "base",
-      null,
-      "Regular Schedule",
-      baseResults.totalInt,
-      baseResults.months,
-      false,
+    html += createCardHTML({
+      id: "card-base",
+      colorClass: "card-base",
+      title: "Standard Plan",
+      type: "base",
+      val: null,
+      desc: "Regular Schedule",
+      strategyInt: baseResults.totalInt,
+      strategyMonths: baseResults.months,
+      hasInput: false,
       baseResults,
-    );
-    html += createCardHTML(
-      "card-s1",
-      "card-blue",
-      "Extra EMI / Year",
-      "extra_annual",
-      strategyState.extraEMIsCount,
-      `Pay <b>${strategyState.extraEMIsCount}</b> extra EMI(s) yearly`,
-      s1.totalInt,
-      s1.months,
-      true,
+    });
+    html += createCardHTML({
+      id: "card-s1",
+      colorClass: "card-blue",
+      title: "Extra EMI / Year",
+      type: "extra_annual",
+      val: strategyState.extraEMIsCount,
+      desc: `Pay <b>${strategyState.extraEMIsCount}</b> extra EMI(s) yearly`,
+      strategyInt: s1.totalInt,
+      strategyMonths: s1.months,
+      hasInput: true,
       baseResults,
-      "input-emi",
-      "EMIs",
-      1,
-    );
-    html += createCardHTML(
-      "card-s2",
-      "card-green",
-      "Hike EMI %",
-      "hike_emi",
-      strategyState.hikePercent,
-      `Increase EMI by <b>${strategyState.hikePercent}%</b>`,
-      s2.totalInt,
-      s2.months,
-      true,
+      inputId: "input-emi",
+      inputLabel: "EMIs",
+      minVal: 1,
+    });
+    html += createCardHTML({
+      id: "card-s2",
+      colorClass: "card-green",
+      title: "Hike EMI %",
+      type: "hike_emi",
+      val: strategyState.hikePercent,
+      desc: `Increase EMI by <b>${strategyState.hikePercent}%</b>`,
+      strategyInt: s2.totalInt,
+      strategyMonths: s2.months,
+      hasInput: true,
       baseResults,
-      "input-hike",
-      "%",
-      1,
-    );
+      inputId: "input-hike",
+      inputLabel: "%",
+      minVal: 1,
+    });
 
     const qVal = formatCurrency(baseEMI * 0.5);
-    html += createCardHTML(
-      "card-s3",
-      "card-purple",
-      "Quarterly Boost",
-      "boost_quarterly",
-      null,
-      `Pay 0.5 EMI (<b>${qVal}</b>) quarterly`,
-      s3.totalInt,
-      s3.months,
-      false,
+    html += createCardHTML({
+      id: "card-s3",
+      colorClass: "card-purple",
+      title: "Quarterly Boost",
+      type: "boost_quarterly",
+      val: null,
+      desc: `Pay 0.5 EMI (<b>${qVal}</b>) quarterly`,
+      strategyInt: s3.totalInt,
+      strategyMonths: s3.months,
+      hasInput: false,
       baseResults,
-    );
+    });
 
     const saVal = formatCurrency(baseEMI);
-    html += createCardHTML(
-      "card-s4",
-      "card-teal",
-      "6-Month Boost",
-      "boost_semiannual",
-      null,
-      `Pay 1 EMI (<b>${saVal}</b>) semi-annually`,
-      s4.totalInt,
-      s4.months,
-      false,
+    html += createCardHTML({
+      id: "card-s4",
+      colorClass: "card-teal",
+      title: "6-Month Boost",
+      type: "boost_semiannual",
+      val: null,
+      desc: `Pay 1 EMI (<b>${saVal}</b>) semi-annually`,
+      strategyInt: s4.totalInt,
+      strategyMonths: s4.months,
+      hasInput: false,
       baseResults,
-    );
+    });
 
     let s5Desc = "";
     const remainingMonths = baseResults.months - globalParams.monthsElapsed;
@@ -566,26 +566,26 @@ const useCases = [
     } else {
       s5Desc = `Pay <b>${formatCurrency(s5.extraAnnualVal)}</b> annually`;
     }
-    html += createCardHTML(
-      "card-s5",
-      "card-orange",
-      "Lumpsum Benefit",
-      "target_tenure",
-      strategyState.targetYears,
-      s5Desc,
-      s5.totalInt,
-      s5.months,
-      true,
+    html += createCardHTML({
+      id: "card-s5",
+      colorClass: "card-orange",
+      title: "Lumpsum Benefit",
+      type: "target_tenure",
+      val: strategyState.targetYears,
+      desc: s5Desc,
+      strategyInt: s5.totalInt,
+      strategyMonths: s5.months,
+      hasInput: true,
       baseResults,
-      "input-target",
-      "Years Target",
-      1,
-    );
+      inputId: "input-target",
+      inputLabel: "Years Target",
+      minVal: 1,
+    });
 
     container.innerHTML = html;
   }
 
-  function createCardHTML(
+  function createCardHTML({
     id,
     colorClass,
     title,
@@ -599,7 +599,7 @@ const useCases = [
     inputId,
     inputLabel,
     minVal,
-  ) {
+  }) {
     let inputHTML = "";
     if (hasInput) {
       inputHTML = `
