@@ -15,5 +15,9 @@
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.530",
     "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "playwright": "^1.58.2"
   }
 }
