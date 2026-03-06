@@ -109,8 +109,9 @@ const faqItems = [
     </div>
   </div>
 
-  <script is:inline type="module">
-    import { PDFDocument } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+  <script type="module">
+    import { PDFDocument } from 'pdf-lib';
+    import { renderImageList as renderList } from './image-to-pdf.js';
 
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
@@ -126,38 +127,10 @@ const faqItems = [
 
     let images = [];
 
-    function formatSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-    }
+    const elements = { imageList, options, actions, dropZone };
 
     function renderImageList() {
-      if (images.length === 0) {
-        imageList.classList.add('hidden');
-        options.classList.add('hidden');
-        actions.classList.add('hidden');
-        dropZone.classList.remove('hidden');
-        return;
-      }
-
-      dropZone.classList.add('hidden');
-      imageList.classList.remove('hidden');
-      options.classList.remove('hidden');
-      actions.classList.remove('hidden');
-
-      imageList.innerHTML = images.map((img, i) => `
-        <div class="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded" data-index="${i}">
-          <span class="text-slate-400 cursor-move">⋮⋮</span>
-          <img src="${img.dataUrl}" class="w-12 h-12 object-cover rounded" />
-          <div class="flex-1">
-            <p class="text-sm font-medium text-slate-700 truncate">${img.name}</p>
-            <p class="text-xs text-slate-500">${img.width} × ${img.height} • ${formatSize(img.size)}</p>
-          </div>
-          <button class="remove-btn text-red-500 hover:text-red-700 p-1" data-index="${i}">✕</button>
-        </div>
-      `).join('');
-
+      renderList(images, elements);
       // Add remove handlers
       document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
