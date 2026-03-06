@@ -65,7 +65,9 @@ const faqItems = [
 
   <div id="toast" class="fixed bottom-4 right-4 bg-slate-800 text-white px-4 py-2 rounded shadow-lg hidden text-sm"></div>
 
-  <script is:inline>
+  <script>
+    import { showToast } from '../../utils/toast.js';
+
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const controls = document.getElementById('controls');
@@ -111,12 +113,6 @@ const faqItems = [
         .map(([key]) => key.split(',').map(Number));
     }
 
-    function showToast(msg) {
-      toast.textContent = msg;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 2000);
-    }
-
     function handleFile(file) {
       if (!file || !file.type.startsWith('image/')) return;
       const reader = new FileReader();
@@ -144,7 +140,7 @@ const faqItems = [
       dominantColor.style.backgroundColor = hex;
       dominantColor.style.color = getContrastColor(r, g, b);
       dominantColor.textContent = hex.toUpperCase();
-      dominantColor.onclick = () => { navigator.clipboard.writeText(hex); showToast('Copied ' + hex); };
+      dominantColor.onclick = () => { navigator.clipboard.writeText(hex); showToast(toast, 'Copied ' + hex); };
       
       // Palette
       palette.innerHTML = '';
@@ -155,7 +151,7 @@ const faqItems = [
         div.style.backgroundColor = hex;
         div.style.color = getContrastColor(r, g, b);
         div.textContent = hex.toUpperCase();
-        div.onclick = () => { navigator.clipboard.writeText(hex); showToast('Copied ' + hex); };
+        div.onclick = () => { navigator.clipboard.writeText(hex); showToast(toast, 'Copied ' + hex); };
         palette.appendChild(div);
       });
     }
