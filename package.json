@@ -12,8 +12,14 @@
     "@astrojs/sitemap": "^3.6.0",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.6",
+    "canvas": "^3.2.1",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.530",
     "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "@vitest/ui": "^4.0.18",
+    "jsdom": "^28.1.0",
+    "vitest": "^4.0.18"
   }
 }
