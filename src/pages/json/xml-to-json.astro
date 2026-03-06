@@ -118,6 +118,17 @@ const useCases = [
         throw new Error('Invalid XML: ' + errorNode.textContent.split('\n')[0]);
       }
 
+      function appendNodeValue(obj, key, value) {
+        if (!obj[key]) {
+          obj[key] = value;
+          return;
+        }
+        if (!Array.isArray(obj[key])) {
+          obj[key] = [obj[key]];
+        }
+        obj[key].push(value);
+      }
+
       function parseNode(node) {
         const obj = {};
 
@@ -139,14 +150,7 @@ const useCases = [
             const childName = child.nodeName;
             const childValue = parseNode(child);
 
-            if (obj[childName]) {
-              if (!Array.isArray(obj[childName])) {
-                obj[childName] = [obj[childName]];
-              }
-              obj[childName].push(childValue);
-            } else {
-              obj[childName] = childValue;
-            }
+            appendNodeValue(obj, childName, childValue);
           } else if (child.nodeType === Node.TEXT_NODE) {
             const text = child.textContent.trim();
             if (text) textContent += text;
