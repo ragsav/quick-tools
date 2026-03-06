@@ -269,7 +269,7 @@ const useCases = [
       blocksContainer.innerHTML = cidrBlocks.map(cidr => `
         <div class="bg-white border border-slate-200 rounded p-3 flex justify-between items-center">
           <span class="font-mono text-slate-900">${cidr}</span>
-          <button onclick="navigator.clipboard.writeText('${cidr}')" class="text-slate-400 hover:text-slate-600 text-sm">📋</button>
+          <button onclick="navigator.clipboard.writeText('${cidr}')" class="text-slate-400 hover:text-slate-600 text-sm" title="Copy to clipboard" aria-label="Copy to clipboard">📋</button>
         </div>
       `).join('');
 

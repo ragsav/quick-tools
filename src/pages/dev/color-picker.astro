@@ -134,7 +134,7 @@ const useCases = [
             class="flex-1 px-3 py-2 border border-slate-300 rounded font-mono outline-none"
             oninput="updateFromHex()"
           />
-          <button onclick="copy('hex')" class="px-2 text-orange-600">📋</button>
+          <button onclick="copy('hex')" class="px-2 text-orange-600" title="Copy to clipboard" aria-label="Copy to clipboard">📋</button>
         </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
@@ -147,7 +147,7 @@ const useCases = [
             class="flex-1 px-3 py-2 border border-slate-300 rounded font-mono text-sm outline-none"
             oninput="updateFromRgb()"
           />
-          <button onclick="copy('rgb')" class="px-2 text-orange-600">📋</button>
+          <button onclick="copy('rgb')" class="px-2 text-orange-600" title="Copy to clipboard" aria-label="Copy to clipboard">📋</button>
         </div>
       </div>
       <div class="p-4 bg-white border border-slate-200 rounded">
@@ -160,7 +160,7 @@ const useCases = [
             class="flex-1 px-3 py-2 border border-slate-300 rounded font-mono text-sm outline-none"
             oninput="updateFromHsl()"
           />
-          <button onclick="copy('hsl')" class="px-2 text-orange-600">📋</button>
+          <button onclick="copy('hsl')" class="px-2 text-orange-600" title="Copy to clipboard" aria-label="Copy to clipboard">📋</button>
         </div>
       </div>
     </div>
