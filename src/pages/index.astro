@@ -1317,6 +1317,16 @@ const allLiveTools = toolClusters.flatMap((c) =>
 				});
 			});
 
+			function escapeHtml(unsafe) {
+				if (!unsafe) return '';
+				return String(unsafe)
+					.replace(/&/g, "&amp;")
+					.replace(/</g, "&lt;")
+					.replace(/>/g, "&gt;")
+					.replace(/"/g, "&quot;")
+					.replace(/'/g, "&#039;");
+			}
+
 			// Make functions global so onclick handlers can access them
 			window.handleSearch = function(query) {
 				const resultsContainer = document.getElementById('search-results');
@@ -1347,11 +1357,11 @@ const allLiveTools = toolClusters.flatMap((c) =>
 					`;
 				} else {
 					resultsContainer.innerHTML = matches.map(tool => `
-						<a href="${tool.url}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0">
-							<span class="text-xl">${tool.icon}</span>
+						<a href="${escapeHtml(tool.url)}" class="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0">
+							<span class="text-xl">${escapeHtml(tool.icon)}</span>
 							<div class="flex-1 min-w-0">
-								<div class="font-medium text-slate-800 dark:text-slate-100 truncate">${tool.name}</div>
-								<div class="text-xs text-slate-500 dark:text-slate-400">${tool.category}</div>
+								<div class="font-medium text-slate-800 dark:text-slate-100 truncate">${escapeHtml(tool.name)}</div>
+								<div class="text-xs text-slate-500 dark:text-slate-400">${escapeHtml(tool.category)}</div>
 							</div>
 							<svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

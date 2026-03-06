@@ -1,0 +1,21 @@
+
+> quick-tools@0.0.1 dev
+> astro dev
+
+04:18:11 [types] Generated 1ms
+04:18:11 [content] Syncing content
+04:18:11 [content] Synced content
+04:18:11 [vite] Re-optimizing dependencies because vite config has changed
+
+ astro  v5.16.6 ready in 465 ms
+
+┃ Local    http://localhost:4321/
+┃ Network  use --host to expose
+
+04:18:11 watching for file changes...
+
+ update  ▶ New version of Astro available: 5.18.0
+  Run npx @astrojs/upgrade to update
+
+04:18:47 [200] / 181ms
+04:18:48 [200] /_image 69ms
