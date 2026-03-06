@@ -202,9 +202,20 @@ const useCases = [
         .replace(new RegExp(`${separator}+`, "g"), separator); // Remove duplicate separators
 
       document.getElementById("output").value = slug;
-      document.getElementById("preview").innerHTML = slug
-        ? `Preview: <code class="bg-slate-100 px-1 rounded">example.com/page/<strong>${slug}</strong></code>`
-        : "";
+
+      const previewEl = document.getElementById("preview");
+      if (slug) {
+        previewEl.textContent = "Preview: ";
+        const codeEl = document.createElement("code");
+        codeEl.className = "bg-slate-100 px-1 rounded";
+        codeEl.textContent = "example.com/page/";
+        const strongEl = document.createElement("strong");
+        strongEl.textContent = slug;
+        codeEl.appendChild(strongEl);
+        previewEl.appendChild(codeEl);
+      } else {
+        previewEl.textContent = "";
+      }
     }
 
     function copyResult() {
