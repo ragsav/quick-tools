@@ -266,22 +266,43 @@ const faqItems = [
           const pdfCache = new Map();
           
           for (let i = 0; i < pages.length; i++) {
-            progressBar.style.width = ((i + 1) / pages.length * 100) + '%';
-            progressText.textContent = 'Adding page ' + (i + 1) + ' of ' + pages.length + '...';
-            
             const page = pages[i];
             const key = page.pdfData;
             
-            let srcDoc;
-            if (pdfCache.has(key)) {
-              srcDoc = pdfCache.get(key);
-            } else {
-              srcDoc = await PDFLib.PDFDocument.load(page.pdfData);
-              pdfCache.set(key, srcDoc);
+            if (!pdfCache.has(key)) {
+              pdfCache.set(key, {
+                pdfData: page.pdfData,
+                indices: [],
+                pageMap: new Map() // Maps original index in the doc to its new copied page
+              });
             }
+            const docInfo = pdfCache.get(key);
+            docInfo.indices.push(page.pageIndex);
+          }
+
+          // Process each unique PDF
+          let docsProcessed = 0;
+          for (const [key, docInfo] of pdfCache.entries()) {
+            progressText.textContent = 'Processing PDF ' + (docsProcessed + 1) + ' of ' + pdfCache.size + '...';
+            const srcDoc = await PDFLib.PDFDocument.load(docInfo.pdfData);
+
+            // Only copy unique indices to avoid duplicate copying overhead
+            const uniqueIndices = [...new Set(docInfo.indices)];
+            const copiedPages = await mergedPdf.copyPages(srcDoc, uniqueIndices);
             
-            const copiedPages = await mergedPdf.copyPages(srcDoc, [page.pageIndex]);
-            mergedPdf.addPage(copiedPages[0]);
+            uniqueIndices.forEach((idx, i) => {
+              docInfo.pageMap.set(idx, copiedPages[i]);
+            });
+            docsProcessed++;
+          }
+
+          // Append pages in the correct original order
+          for (let i = 0; i < pages.length; i++) {
+            progressBar.style.width = ((i + 1) / pages.length * 100) + '%';
+            progressText.textContent = 'Adding page ' + (i + 1) + ' of ' + pages.length + '...';
+            const page = pages[i];
+            const docInfo = pdfCache.get(page.pdfData);
+            mergedPdf.addPage(docInfo.pageMap.get(page.pageIndex));
           }
           
           progressText.textContent = 'Generating merged PDF...';
