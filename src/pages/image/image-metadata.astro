@@ -72,6 +72,16 @@ const faqItems = [
     const noExif = document.getElementById('noExif');
     const resetBtn = document.getElementById('resetBtn');
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function formatSize(bytes) {
       if (bytes < 1024) return bytes + ' B';
       if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
@@ -88,11 +98,11 @@ const faqItems = [
         const img = new Image();
         img.onload = () => {
           basicInfo.innerHTML = `
-            <div><strong>Filename:</strong> ${file.name}</div>
-            <div><strong>Type:</strong> ${file.type}</div>
+            <div><strong>Filename:</strong> ${escapeHtml(file.name)}</div>
+            <div><strong>Type:</strong> ${escapeHtml(file.type)}</div>
             <div><strong>Size:</strong> ${formatSize(file.size)}</div>
             <div><strong>Dimensions:</strong> ${img.width} × ${img.height}</div>
-            <div><strong>Last Modified:</strong> ${new Date(file.lastModified).toLocaleString()}</div>
+            <div><strong>Last Modified:</strong> ${escapeHtml(new Date(file.lastModified).toLocaleString())}</div>
           `;
 
           EXIF.getData(img, function() {
@@ -107,7 +117,7 @@ const faqItems = [
                 hasData = true;
                 const row = document.createElement('tr');
                 row.className = 'border-b border-slate-100';
-                row.innerHTML = `<td class="py-2 px-4 font-medium text-slate-700">${tag}</td><td class="py-2 px-4 text-slate-600">${tags[tag]}</td>`;
+                row.innerHTML = `<td class="py-2 px-4 font-medium text-slate-700">${escapeHtml(tag)}</td><td class="py-2 px-4 text-slate-600">${escapeHtml(tags[tag])}</td>`;
                 exifTable.appendChild(row);
               }
             });
@@ -117,7 +127,7 @@ const faqItems = [
               hasData = true;
               const row = document.createElement('tr');
               row.className = 'border-b border-slate-100';
-              row.innerHTML = `<td class="py-2 px-4 font-medium text-slate-700">${tag}</td><td class="py-2 px-4 text-slate-600">${tags[tag]}</td>`;
+              row.innerHTML = `<td class="py-2 px-4 font-medium text-slate-700">${escapeHtml(tag)}</td><td class="py-2 px-4 text-slate-600">${escapeHtml(tags[tag])}</td>`;
               exifTable.appendChild(row);
             });
 
