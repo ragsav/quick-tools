@@ -214,9 +214,14 @@ const useCases = [
     }
 
     function escapeHtml(text) {
-      const div = document.createElement("div");
-      div.textContent = text;
-      return div.innerHTML;
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      };
+      return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
     }
   </script>
 </TextToolLayout>
