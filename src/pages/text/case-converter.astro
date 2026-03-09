@@ -202,12 +202,9 @@ const useCases = [
             .replace(/(^\s*\w|[.!?]\s+\w)/g, (c) => c.toUpperCase());
           break;
         case "toggle":
-          result = input
-            .split("")
-            .map((c) =>
-              c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase(),
-            )
-            .join("");
+          result = input.replace(/[a-zA-Z]/g, (c) =>
+            String.fromCharCode(c.charCodeAt(0) ^ 32),
+          );
           break;
         case "camel":
           result = input
