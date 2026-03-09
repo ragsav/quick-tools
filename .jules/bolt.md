@@ -1,0 +1,3 @@
+## 2024-05-24 - String Case Toggle Optimization
+**Learning:** In V8 (Node/Bun/Browser), `str.split("").map(...).join("")` is significantly slower for large strings than using `str.replace(/[a-zA-Z]/g, ...)` because of the array allocations and iterations. Furthermore, within the `replace` callback, a bitwise XOR (`String.fromCharCode(c.charCodeAt(0) ^ 32)`) executes faster than ternary checks for case swapping on ASCII characters (`c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()`).
+**Action:** Use regex `replace` with bitwise ASCII manipulation for operations like toggling character cases instead of array mapping string characters for better large-string performance.
