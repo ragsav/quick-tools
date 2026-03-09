@@ -175,8 +175,9 @@ const useCases = [
     </div>
 
     <button
+      id="copyBtn"
       onclick="copyResult()"
-      class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm"
+      class="btn-primary px-6 py-2 font-semibold text-white rounded text-sm transition-colors duration-200"
       >📋 Copy Result</button
     >
   </div>
@@ -240,7 +241,22 @@ const useCases = [
       const output = document.getElementById("output");
       output.select();
       document.execCommand("copy");
-      alert("Copied to clipboard!");
+
+      const btn = document.getElementById("copyBtn");
+      if (btn.dataset.copied === "true") return; // Prevent multiple rapid clicks from breaking the text
+
+      const originalText = btn.innerHTML;
+      btn.dataset.copied = "true";
+      btn.innerHTML = "✅ Copied!";
+      btn.style.backgroundColor = "#059669"; // emerald-600
+      btn.style.borderColor = "#059669";
+
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.backgroundColor = "";
+        btn.style.borderColor = "";
+        btn.dataset.copied = "false";
+      }, 2000);
     }
   </script>
 </TextToolLayout>
